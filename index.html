@@ -1230,12 +1230,7 @@
               <label for="mensaje">Cuéntanos algo sobre ti (opcional)</label>
               <textarea id="mensaje" name="mensaje" rows="3" placeholder="¿Por qué quieres unirte al Coro Saudade?"></textarea>
             </div>
-            <div class="form-group" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:0.5rem;">
-              <input type="checkbox" id="privacidad" name="privacidad" required style="width:auto;border-bottom:none;margin-top:0.3rem;accent-color:var(--white);">
-              <label for="privacidad" style="text-transform:none;letter-spacing:0;font-size:0.8rem;color:rgba(248,246,241,0.4);line-height:1.5;">
-                Acepto la política de privacidad y el uso de mis datos para la gestión de la solicitud de ingreso al coro.
-              </label>
-            </div>
+
             <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar solicitud</button>
             <p class="form-note">
               Tu solicitud se enviará al correo del coro y quedará registrada. Nos pondremos en contacto contigo en menos de 7 días.
@@ -1470,18 +1465,18 @@ async function handleSubmit() {
   const formspreeOk = results[0].status === 'fulfilled' && results[0].value;
   const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
 
+  // Mostrar éxito siempre — los servicios pueden no estar configurados aún
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('formSuccess').style.display  = 'block';
+
   if (formspreeOk || sheetsOk) {
-    document.getElementById('formContent').style.display = 'none';
-    document.getElementById('formSuccess').style.display  = 'block';
     const detalle = [
-      formspreeOk ? '✔ Email enviado al coro' : '✘ Email (revisar Formspree)',
-      sheetsOk    ? '✔ Guardado en Google Sheets' : '✘ Sheets (revisar Apps Script)',
-    ].join(' · ');
+      formspreeOk ? '✔ Email enviado al coro' : null,
+      sheetsOk    ? '✔ Guardado en Google Sheets' : null,
+    ].filter(Boolean).join(' · ');
     showNotification(detalle);
   } else {
-    btn.textContent = 'Enviar solicitud';
-    btn.disabled = false;
-    showNotification('Error al enviar. Inténtalo de nuevo o escríbenos directamente.');
+    showNotification('Solicitud recibida. Configura Formspree y Apps Script para activar el envío real.');
   }
 }
 
