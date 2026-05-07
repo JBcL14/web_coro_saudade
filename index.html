@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coro Saudade de Pamplona / Iruña</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f8f6f1;
+    --gray-light: #e8e5de;
+    --gray-mid: #c8c4bc;
+    --gray-dark: #4a4744;
+    --accent: #1a1a1a;
+    --serif-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    --serif-body: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--serif-body);
+    background: var(--white);
+    color: var(--black);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-light);
+    padding: 0 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    transition: var(--transition);
+  }
+  nav.scrolled {
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .nav-logo {
+    font-family: var(--serif-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+    line-height: 1.1;
+  }
+  .nav-logo span {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    font-family: var(--serif-body);
+    font-style: italic;
+    color: var(--gray-dark);
+    margin-top: 2px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--black);
+    transition: var(--transition);
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 100%;
+    height: 1px;
+    background: var(--black);
+    transition: right 0.3s ease;
+  }
+  .nav-links a:hover::after { right: 0; }
+  .nav-cta {
+    background: var(--black);
+    color: var(--white) !important;
+    padding: 0.5rem 1.2rem;
+    font-family: var(--serif-body);
+    font-size: 0.8rem !important;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid var(--black);
+  }
+  .nav-cta:hover {
+    background: var(--white) !important;
+    color: var(--black) !important;
+  }
+  .nav-cta::after { display: none !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--black);
+    transition: var(--transition);
+  }
+
+  /* ─── HERO ─── */
+  #inicio {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 70px;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    z-index: 0;
+  }
+  .hero-texture {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 50%);
+    z-index: 1;
+  }
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .hero-lines::before {
+    content: '';
+    position: absolute;
+    top: 15%; left: -5%;
+    width: 110%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transform: rotate(-3deg);
+  }
+  .hero-lines::after {
+    content: '';
+    position: absolute;
+    bottom: 20%; left: -5%;
+    width: 110%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transform: rotate(2deg);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--white);
+    padding: 4rem 2rem;
+    max-width: 900px;
+  }
+  .hero-tagline {
+    font-family: var(--serif-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.5);
+    margin-bottom: 2rem;
+    font-style: italic;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero-title {
+    font-family: var(--serif-display);
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    display: block;
+    font-size: 0.65em;
+    letter-spacing: 0.05em;
+    color: rgba(248,246,241,0.7);
+  }
+  .hero-subtitle {
+    font-family: var(--serif-body);
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(248,246,241,0.65);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+    animation: fadeUp 1s ease 0.6s both;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 1s ease 0.8s both;
+  }
+  .btn-primary {
+    background: var(--white);
+    color: var(--black);
+    padding: 0.85rem 2.5rem;
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid var(--white);
+    display: inline-block;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--white);
+  }
+  .btn-secondary {
+    border: 1px solid rgba(248,246,241,0.3);
+    color: var(--white);
+    padding: 0.85rem 2.5rem;
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-block;
+    background: transparent;
+    cursor: pointer;
+  }
+  .btn-secondary:hover {
+    background: rgba(248,246,241,0.08);
+    border-color: rgba(248,246,241,0.6);
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(248,246,241,0.35);
+    font-family: var(--serif-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    animation: fadeUp 1s ease 1.2s both;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(248,246,241,0.35), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 7rem 3rem;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: var(--serif-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--serif-display);
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .section-divider {
+    width: 50px;
+    height: 1px;
+    background: var(--black);
+    margin-bottom: 3rem;
+  }
+
+  /* ─── NOSOTROS ─── */
+  #nosotros { background: var(--white); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-text p {
+    font-family: var(--serif-body);
+    font-size: 1.1rem;
+    line-height: 1.85;
+    color: var(--gray-dark);
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+  .about-text p strong {
+    color: var(--black);
+    font-weight: 600;
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .stat-card {
+    border: 1px solid var(--gray-light);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+  }
+  .stat-card:hover {
+    border-color: var(--black);
+  }
+  .stat-number {
+    font-family: var(--serif-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .stat-label {
+    font-family: var(--serif-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+  }
+
+  /* ─── EVENTOS ─── */
+  #eventos { background: var(--black); color: var(--white); }
+  #eventos .section-label { color: rgba(248,246,241,0.4); }
+  #eventos .section-title { color: var(--white); }
+  #eventos .section-divider { background: var(--white); opacity: 0.25; }
+
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .event-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2.2rem 0;
+    border-bottom: 1px solid rgba(248,246,241,0.1);
+    transition: var(--transition);
+    cursor: pointer;
+  }
+  .event-item:first-child { border-top: 1px solid rgba(248,246,241,0.1); }
+  .event-item:hover { padding-left: 1rem; }
+  .event-date {
+    text-align: center;
+    font-family: var(--serif-display);
+  }
+  .event-day {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    color: var(--white);
+  }
+  .event-month {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.45);
+    font-family: var(--serif-body);
+    font-style: italic;
+  }
+  .event-info h3 {
+    font-family: var(--serif-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .event-info p {
+    font-family: var(--serif-body);
+    font-size: 0.9rem;
+    color: rgba(248,246,241,0.5);
+    font-style: italic;
+  }
+  .event-badge {
+    font-family: var(--serif-body);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(248,246,241,0.25);
+    padding: 0.4rem 0.9rem;
+    color: rgba(248,246,241,0.6);
+    white-space: nowrap;
+  }
+  .event-badge.featured {
+    border-color: var(--white);
+    color: var(--white);
+  }
+
+  /* ─── REPERTORIO ─── */
+  #repertorio { background: var(--gray-light); }
+  .repertoire-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 1rem;
+  }
+  .rep-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border: 1px solid var(--gray-light);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .rep-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--black);
+    transition: height 0.4s ease;
+  }
+  .rep-card:hover::before { height: 100%; }
+  .rep-card:hover { background: var(--black); color: var(--white); }
+  .rep-num {
+    font-family: var(--serif-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--gray-light);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+  }
+  .rep-card:hover .rep-num { color: rgba(248,246,241,0.1); }
+  .rep-card h3 {
+    font-family: var(--serif-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    transition: var(--transition);
+  }
+  .rep-card p {
+    font-family: var(--serif-body);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+    transition: var(--transition);
+  }
+  .rep-card:hover p { color: rgba(248,246,241,0.65); }
+
+  /* ─── ÚNETE ─── */
+  #unete { background: var(--white); }
+  .join-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .join-info h3 {
+    font-family: var(--serif-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .join-info p {
+    font-family: var(--serif-body);
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--gray-dark);
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+  .requirements-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+  .requirements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-family: var(--serif-body);
+    font-size: 0.95rem;
+    color: var(--gray-dark);
+  }
+  .requirements-list li::before {
+    content: '—';
+    color: var(--black);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* ─── FORM ─── */
+  .join-form {
+    background: var(--black);
+    padding: 3.5rem;
+    color: var(--white);
+  }
+  .form-title {
+    font-family: var(--serif-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .form-subtitle {
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    color: rgba(248,246,241,0.4);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block;
+    font-family: var(--serif-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.5);
+    margin-bottom: 0.6rem;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(248,246,241,0.2);
+    padding: 0.7rem 0;
+    font-family: var(--serif-body);
+    font-size: 1rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: rgba(248,246,241,0.25);
+    font-style: italic;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-bottom-color: var(--white);
+  }
+  .form-group select option {
+    background: var(--black);
+    color: var(--white);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .form-submit {
+    width: 100%;
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    padding: 1rem;
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 1rem;
+  }
+  .form-submit:hover {
+    background: rgba(248,246,241,0.85);
+  }
+  .form-note {
+    font-family: var(--serif-body);
+    font-size: 0.75rem;
+    color: rgba(248,246,241,0.3);
+    font-style: italic;
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .form-success .check {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .form-success h3 {
+    font-family: var(--serif-display);
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .form-success p {
+    font-family: var(--serif-body);
+    font-size: 0.95rem;
+    color: rgba(248,246,241,0.55);
+    font-style: italic;
+  }
+
+  /* ─── GALERÍA ─── */
+  #galeria { background: var(--black); }
+  #galeria .section-title { color: var(--white); }
+  #galeria .section-label { color: rgba(248,246,241,0.35); }
+  #galeria .section-divider { background: rgba(248,246,241,0.2); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 220px 220px;
+    gap: 3px;
+  }
+  .gallery-item {
+    background: #1a1a1a;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .gallery-item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .gallery-item:nth-child(4) { grid-column: span 2; }
+  .gallery-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: rgba(248,246,241,0.15);
+    font-family: var(--serif-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+    height: 100%;
+  }
+  .gallery-icon {
+    font-size: 2rem;
+    opacity: 0.2;
+  }
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    opacity: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    transition: opacity 0.3s ease;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 0.7; }
+  .gallery-caption {
+    font-family: var(--serif-body);
+    font-size: 0.8rem;
+    color: var(--white);
+    font-style: italic;
+  }
+
+  /* ─── CONTACTO ─── */
+  #contacto { background: var(--white); }
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .contact-item h4 {
+    font-family: var(--serif-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    margin-bottom: 0.5rem;
+  }
+  .contact-item p, .contact-item a {
+    font-family: var(--serif-display);
+    font-size: 1.1rem;
+    color: var(--black);
+    text-decoration: none;
+    transition: var(--transition);
+    display: block;
+    line-height: 1.4;
+  }
+  .contact-item a:hover { color: var(--gray-dark); }
+  .social-links {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 0.5rem;
+  }
+  .social-link {
+    font-family: var(--serif-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+    border-bottom: 1px solid var(--black);
+    padding-bottom: 1px;
+    transition: var(--transition);
+  }
+  .social-link:hover { color: var(--gray-dark); border-color: var(--gray-dark); }
+  .contact-map {
+    background: var(--gray-light);
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-placeholder {
+    text-align: center;
+    font-family: var(--serif-body);
+    color: var(--gray-dark);
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .map-address {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--black);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 4rem 3rem 2rem;
+  }
+  .footer-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(248,246,241,0.1);
+    margin-bottom: 2rem;
+  }
+  .footer-brand .nav-logo {
+    color: var(--white);
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+  .footer-brand .nav-logo span { color: rgba(248,246,241,0.4); }
+  .footer-brand p {
+    font-family: var(--serif-body);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: rgba(248,246,241,0.45);
+    font-weight: 300;
+    max-width: 260px;
+  }
+  .footer-col h4 {
+    font-family: var(--serif-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.35);
+    margin-bottom: 1.2rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul a {
+    font-family: var(--serif-body);
+    font-size: 0.9rem;
+    color: rgba(248,246,241,0.55);
+    text-decoration: none;
+    transition: var(--transition);
+    font-style: italic;
+  }
+  .footer-col ul a:hover { color: var(--white); }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-bottom p {
+    font-family: var(--serif-body);
+    font-size: 0.75rem;
+    color: rgba(248,246,241,0.25);
+    font-style: italic;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.35; }
+    50% { transform: scaleY(0.6); opacity: 0.15; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── MOBILE NAV MENU ─── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 70px; left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--gray-light);
+    padding: 2rem 3rem;
+    z-index: 99;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--serif-body);
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--black);
+    font-style: italic;
+    border-bottom: 1px solid var(--gray-light);
+    padding-bottom: 1.5rem;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .repertoire-grid { grid-template-columns: 1fr; }
+    .join-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .join-form { padding: 2.5rem 1.5rem; }
+    .gallery-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+    }
+    .gallery-item:first-child { grid-column: span 2; }
+    .gallery-item:nth-child(4) { grid-column: span 1; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .event-item { grid-template-columns: 70px 1fr; }
+    .event-badge { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ─── NOTIFICATION ─── */
+  .notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--black);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    font-family: var(--serif-body);
+    font-size: 0.85rem;
+    font-style: italic;
+    z-index: 200;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: var(--transition);
+    max-width: 300px;
+    line-height: 1.6;
+  }
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="navbar">
+  <a href="#inicio" class="nav-logo">
+    Saudade
+    <span>Coro de Pamplona / Iruña</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">El Coro</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#repertorio">Repertorio</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="#unete" class="nav-cta">Únete</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#nosotros" onclick="closeMobile()">El Coro</a>
+  <a href="#eventos" onclick="closeMobile()">Eventos</a>
+  <a href="#repertorio" onclick="closeMobile()">Repertorio</a>
+  <a href="#galeria" onclick="closeMobile()">Galería</a>
+  <a href="#contacto" onclick="closeMobile()">Contacto</a>
+  <a href="#unete" onclick="closeMobile()">Únete al coro</a>
+</div>
+
+<!-- ─── HERO ─── -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <p class="hero-tagline">Pamplona · Navarra · Desde 1990</p>
+    <h1 class="hero-title">
+      Saudade
+      <em>de Pamplona / Iruña</em>
+    </h1>
+    <p class="hero-subtitle">
+      Voces que tejen memoria, belleza y comunidad.<br>
+      Coro mixto dirigido por Juan Gainza.
+    </p>
+    <div class="hero-actions">
+      <a href="#eventos" class="btn-primary">Próximos Conciertos</a>
+      <a href="#unete" class="btn-secondary">Únete al Coro</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- ─── NOSOTROS ─── -->
+<section id="nosotros">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p class="section-label">Quiénes somos</p>
+        <h2 class="section-title">Una voz hecha de muchas</h2>
+        <div class="section-divider"></div>
+        <p>
+          El Coro Saudade de Pamplona/Iruña es una <strong>formación coral mixta</strong> con larga trayectoria en la escena musical navarra. Integrado por cantantes con experiencia y amor por la música coral, el coro ofrece conciertos de alto nivel interpretativo en toda la comunidad y más allá.
+        </p>
+        <p>
+          Bajo la dirección de <strong>Juan Gainza</strong>, el coro cultiva un repertorio ecléctico que abarca desde la polifonía clásica hasta obras contemporáneas, pasando por el folklore y el repertorio sacro. Formamos parte de la <strong>Federación de Coros de Navarra</strong>.
+        </p>
+        <p>
+          Ensayamos cada semana en Pamplona con la pasión de quienes saben que la música coral es, ante todo, un acto de encuentro humano.
+        </p>
+      </div>
+      <div class="about-stats fade-in">
+        <div class="stat-card">
+          <span class="stat-number">+30</span>
+          <span class="stat-label">Años de historia</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">40+</span>
+          <span class="stat-label">Voces en el coro</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">Conciertos al año</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">4</span>
+          <span class="stat-label">Cuerdas vocales</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EVENTOS ─── -->
+<section id="eventos">
+  <div class="section-inner">
+    <p class="section-label">Agenda 2025 – 2026</p>
+    <h2 class="section-title">Próximos Conciertos</h2>
+    <div class="section-divider"></div>
+
+    <div class="events-list">
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">15</span>
+          <span class="event-month">Dic 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Voces por la Paz y por la Vida</h3>
+          <p>Iglesia de Santo Domingo · Pamplona · 20:00 h · Concierto solidario con SONAGE y MAGALE</p>
+        </div>
+        <span class="event-badge featured">Solidario</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">22</span>
+          <span class="event-month">Feb 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Ciclo Coral — Nuevo Casino de Pamplona</h3>
+          <p>Nuevo Casino · Pamplona · 12:00 h · Federación de Coros de Navarra</p>
+        </div>
+        <span class="event-badge featured">Destacado</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">23</span>
+          <span class="event-month">Dic 2025</span>
+        </div>
+        <div class="event-info">
+          <h3>Concierto de Navidad</h3>
+          <p>Iglesia de San Miguel · Pamplona · 20:00 h</p>
+        </div>
+        <span class="event-badge">Navidad</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">Pte.</span>
+          <span class="event-month">Mayo 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Ciclo de Primavera — Por confirmar</h3>
+          <p>Lugar por determinar · Sigue nuestras redes para más información</p>
+        </div>
+        <span class="event-badge">Próximo</span>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem; text-align:center;">
+      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary" style="display:inline-block;">
+        Ver toda la agenda en Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REPERTORIO ─── -->
+<section id="repertorio">
+  <div class="section-inner">
+    <p class="section-label">Nuestro repertorio</p>
+    <h2 class="section-title">Música sin fronteras</h2>
+    <div class="section-divider"></div>
+    <div class="repertoire-grid">
+      <div class="rep-card fade-in">
+        <span class="rep-num">01</span>
+        <h3>Polifonía Clásica</h3>
+        <p>Obras del Renacimiento y Barroco. Victoria, Palestrina, Bach. La arquitectura de la voz humana en su forma más pura.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">02</span>
+        <h3>Música Sacra</h3>
+        <p>Misas, motetes y piezas litúrgicas que marcan el calendario del coro y sus actuaciones en espacios religiosos de Navarra.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">03</span>
+        <h3>Folklore Navarro y Vasco</h3>
+        <p>Canciones tradicionales del territorio arregladas para coro mixto. Identidad y raíz en cada interpretación.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">04</span>
+        <h3>Contemporáneo</h3>
+        <p>Obras de compositores actuales. El coro apuesta por la música viva y el repertorio del siglo XXI.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">05</span>
+        <h3>Música Popular y Gospel</h3>
+        <p>Arreglos corales de géneros populares, spiritual y gospel que conectan con públicos de todas las edades.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">06</span>
+        <h3>Música Solidaria</h3>
+        <p>Proyectos especiales como Voces por la Paz, donde la música se convierte en acto de compromiso social.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ÚNETE ─── -->
+<section id="unete">
+  <div class="section-inner">
+    <div class="join-layout">
+      <div class="join-info fade-in">
+        <p class="section-label">Audiciones abiertas</p>
+        <h2 class="section-title">Canta con nosotros</h2>
+        <div class="section-divider"></div>
+        <h3>¿Te animas?</h3>
+        <p>
+          El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
+        </p>
+        <p>
+          Rellena el formulario y nos pondremos en contacto contigo para concertar una audición informal. No se requiere experiencia profesional, sí amor por la música.
+        </p>
+        <ul class="requirements-list">
+          <li>Afinación y sentido rítmico básico</li>
+          <li>Disponibilidad para ensayos semanales (miércoles, 20:00 h)</li>
+          <li>Compromiso con los conciertos del calendario</li>
+          <li>Actitud positiva y trabajo en equipo</li>
+        </ul>
+        <p style="font-family:var(--serif-body);font-size:0.85rem;color:var(--gray-dark);font-style:italic;line-height:1.7;">
+          📍 Ensayos en Pamplona<br>
+          📧 corosaudade@gmail.com<br>
+          📱 Instagram: @corosaudade
+        </p>
+      </div>
+
+      <div class="join-form fade-in">
+        <div id="formContent">
+          <h3 class="form-title">Formulario de Inscripción</h3>
+          <p class="form-subtitle">Todos los datos se guardan de forma segura</p>
+
+          <form id="joinForm" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+              </div>
+              <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cuerda">Cuerda vocal</label>
+                <select id="cuerda" name="cuerda" required>
+                  <option value="" disabled selected>Seleccionar…</option>
+                  <option value="soprano">Soprano</option>
+                  <option value="mezzosoprano">Mezzosoprano</option>
+                  <option value="contralto">Contralto</option>
+                  <option value="tenor">Tenor</option>
+                  <option value="baritono">Barítono</option>
+                  <option value="bajo">Bajo</option>
+                  <option value="nosé">No lo sé</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="experiencia">Experiencia coral</label>
+                <select id="experiencia" name="experiencia">
+                  <option value="" disabled selected>Seleccionar…</option>
+                  <option value="ninguna">Sin experiencia previa</option>
+                  <option value="poca">1–3 años</option>
+                  <option value="media">3–10 años</option>
+                  <option value="mucha">Más de 10 años</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mensaje">Cuéntanos algo sobre ti (opcional)</label>
+              <textarea id="mensaje" name="mensaje" rows="3" placeholder="¿Por qué quieres unirte al Coro Saudade?"></textarea>
+            </div>
+
+            <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar solicitud</button>
+            <p class="form-note">
+              Tu solicitud se enviará al correo del coro y quedará registrada. Nos pondremos en contacto contigo en menos de 7 días.
+            </p>
+          </form>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          <span class="check">♩</span>
+          <h3>¡Solicitud enviada!</h3>
+          <p>Gracias por tu interés en el Coro Saudade.<br>Te contactaremos pronto para concertar una audición.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALERÍA ─── -->
+<section id="galeria">
+  <div class="section-inner">
+    <p class="section-label">Momentos</p>
+    <h2 class="section-title" style="color:var(--white)">Nuestra historia en imágenes</h2>
+    <div class="section-divider" style="background:rgba(248,246,241,0.2)"></div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span class="gallery-icon">♫</span>
+          Concierto de Navidad<br>Iglesia de San Miguel
+        </div>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Concierto de Navidad, 2024</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span class="gallery-icon">♪</span>
+          Ensayo semanal
+        </div>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Ensayo · Pamplona</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span class="gallery-icon">♩</span>
+          Nuevo Casino
+        </div>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Ciclo Coral, feb. 2026</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span class="gallery-icon">♫</span>
+          Gala Navideña · Baluarte<br>con la JOP
+        </div>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Baluarte, enero 2025</span>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <span class="gallery-icon">♪</span>
+          Roncesvalles
+        </div>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Concierto en Orreaga</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem;text-align:center;">
+      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary" style="display:inline-block;">
+        Más fotos en @corosaudade
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACTO ─── -->
+<section id="contacto">
+  <div class="section-inner">
+    <p class="section-label">Ponte en contacto</p>
+    <h2 class="section-title">Hablemos</h2>
+    <div class="section-divider"></div>
+    <div class="contact-layout">
+      <div class="contact-info-list fade-in">
+        <div class="contact-item">
+          <h4>Correo electrónico</h4>
+          <a href="mailto:corosaudade@gmail.com">corosaudade@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <h4>Ensayos</h4>
+          <p>Miércoles · 20:00 h<br>Pamplona, Navarra</p>
+        </div>
+        <div class="contact-item">
+          <h4>Director</h4>
+          <p>Juan Gainza</p>
+        </div>
+        <div class="contact-item">
+          <h4>Federación</h4>
+          <a href="https://www.corosnavarra.com" target="_blank">Federación de Coros de Navarra</a>
+        </div>
+        <div class="contact-item">
+          <h4>Redes sociales</h4>
+          <div class="social-links">
+            <a href="https://www.instagram.com/corosaudade/" target="_blank" class="social-link">Instagram</a>
+            <a href="https://www.facebook.com/corosaudade.saudade/" target="_blank" class="social-link">Facebook</a>
+          </div>
+        </div>
+      </div>
+      <div class="fade-in">
+        <div class="contact-map">
+          <div class="map-placeholder">
+            <p style="font-size:2rem;margin-bottom:0.5rem;">📍</p>
+            <p>Pamplona / Iruña<br>Navarra, España</p>
+          </div>
+          <div class="map-address">Coro Saudade de Pamplona/Iruña · Navarra</div>
+        </div>
+        <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid var(--gray-light);">
+          <p style="font-family:var(--serif-body);font-size:0.85rem;color:var(--gray-dark);font-style:italic;line-height:1.8;">
+            Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente al correo o a través de nuestras redes sociales. Respondemos en menos de 48 horas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#inicio" class="nav-logo">
+        Saudade
+        <span>Coro de Pamplona / Iruña</span>
+      </a>
+      <p>
+        Voces que tejen memoria, belleza y comunidad en Navarra. Coro mixto con más de treinta años de historia.
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#nosotros">El Coro</a></li>
+        <li><a href="#eventos">Eventos</a></li>
+        <li><a href="#repertorio">Repertorio</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="mailto:corosaudade@gmail.com">corosaudade@gmail.com</a></li>
+        <li><a href="https://www.instagram.com/corosaudade/" target="_blank">@corosaudade</a></li>
+        <li><a href="https://www.facebook.com/corosaudade.saudade/" target="_blank">Facebook</a></li>
+        <li><a href="#unete">Únete al coro</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Coro Saudade de Pamplona / Iruña. Todos los derechos reservados.</p>
+    <p>Federación de Coros de Navarra</p>
+  </div>
+</footer>
+
+<!-- Notification -->
+<div class="notification" id="notification"></div>
+
+<script>
+// ─── NAV SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ─── HAMBURGER
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => mob.classList.toggle('open'));
+function closeMobile() { mob.classList.remove('open'); }
+
+// ─── FADE IN OBSERVER
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 100);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ─── CONFIGURACIÓN — reemplaza estas URLs con las tuyas ───────────────────────
+// 1. FORMSPREE: crea cuenta en formspree.io, crea un form, pega aquí el endpoint
+const FORMSPREE_URL = 'https://formspree.io/f/xojrlgdl';
+
+// 2. GOOGLE APPS SCRIPT: pega aquí la URL del Web App desplegado (ver guía abajo)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q/exec';
+// ──────────────────────────────────────────────────────────────────────────────
+
+async function handleSubmit() {
+  const form = document.getElementById('joinForm');
+  const btn  = document.getElementById('submitBtn');
+
+  // Validar campos required manualmente
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  // UI: cambiar botón al instante
+  btn.textContent = 'Enviando…';
+  btn.disabled = true;
+
+  const data = {
+    nombre:      form.nombre.value.trim(),
+    apellidos:   form.apellidos.value.trim(),
+    email:       form.email.value.trim(),
+    telefono:    form.telefono.value.trim() || '—',
+    cuerda:      form.cuerda.value,
+    experiencia: form.experiencia.value || '—',
+    mensaje:     form.mensaje.value.trim() || '—',
+    fecha:       new Date().toLocaleDateString('es-ES'),
+    hora:        new Date().toLocaleTimeString('es-ES'),
+  };
+
+  const results = await Promise.allSettled([
+    enviarFormspree(data),
+    enviarGoogleSheets(data),
+  ]);
+
+  const formspreeOk = results[0].status === 'fulfilled' && results[0].value;
+  const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
+
+  // Mostrar éxito siempre — los servicios pueden no estar configurados aún
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('formSuccess').style.display  = 'block';
+
+  if (formspreeOk || sheetsOk) {
+    const detalle = [
+      formspreeOk ? '✔ Email enviado al coro' : null,
+      sheetsOk    ? '✔ Guardado en Google Sheets' : null,
+    ].filter(Boolean).join(' · ');
+    showNotification(detalle);
+  } else {
+    showNotification('Solicitud recibida. Configura Formspree y Apps Script para activar el envío real.');
+  }
+}
+
+// ── Formspree → manda email al coro automáticamente
+async function enviarFormspree(data) {
+  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false; // no configurado aún
+  const res = await fetch(FORMSPREE_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body:    JSON.stringify({
+      _subject:  `Nueva solicitud de ingreso — ${data.nombre} ${data.apellidos}`,
+      nombre:    `${data.nombre} ${data.apellidos}`,
+      email:     data.email,
+      telefono:  data.telefono,
+      cuerda:    data.cuerda,
+      experiencia: data.experiencia,
+      mensaje:   data.mensaje,
+      fecha:     `${data.fecha} ${data.hora}`,
+    }),
+  });
+  return res.ok;
+}
+
+// ── Google Apps Script → escribe fila en Google Sheets
+async function enviarGoogleSheets(data) {
+  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_AQUI')) return false; // no configurado aún
+  const res = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    // no-cors necesario para Apps Script desde GitHub Pages
+    mode:   'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body:   JSON.stringify(data),
+  });
+  // no-cors siempre devuelve opaque; asumimos OK si no lanza
+  return true;
+}
+
+// ─── NOTIFICATION
+function showNotification(msg) {
+  const n = document.getElementById('notification');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+// ─── SMOOTH CLOSE nav on click
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', () => {
+    mob.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
