@@ -1428,7 +1428,7 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 const FORMSPREE_URL = 'https://formspree.io/f/xojrlgdl';
 
 // 2. GOOGLE APPS SCRIPT: pega aquí la URL del Web App desplegado (ver guía abajo)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzowMw0OM4jck78PIZNnYNVCpLEpQsfqLMRlVEKdEmV8NRb5CdcxwUmlNbkFW-VUN1Ufg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q/exec';
 // ──────────────────────────────────────────────────────────────────────────────
 
 async function handleSubmit() {
@@ -1502,7 +1502,7 @@ async function enviarFormspree(data) {
 
 // ── Google Apps Script → escribe fila en Google Sheets
 async function enviarGoogleSheets(data) {
-  if (APPS_SCRIPT_URL.includes('AKfycbzowMw0OM4jck78PIZNnYNVCpLEpQsfqLMRlVEKdEmV8NRb5CdcxwUmlNbkFW-VUN1Ufg')) return false; // no configurado aún
+  if (APPS_SCRIPT_URL.includes('AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q')) return false; // no configurado aún
   const res = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     // no-cors necesario para Apps Script desde GitHub Pages
