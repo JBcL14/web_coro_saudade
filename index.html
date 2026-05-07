@@ -1482,7 +1482,7 @@ async function handleSubmit(e) {
 
 // ── Formspree → manda email al coro automáticamente
 async function enviarFormspree(data) {
-  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false; // no configurado aún
+  if (FORMSPREE_URL.includes('xojrlgdl')) return false; // no configurado aún
   const res = await fetch(FORMSPREE_URL, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -1502,7 +1502,7 @@ async function enviarFormspree(data) {
 
 // ── Google Apps Script → escribe fila en Google Sheets
 async function enviarGoogleSheets(data) {
-  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_ID_AQUI')) return false; // no configurado aún
+  if (APPS_SCRIPT_URL.includes('AKfycbzowMw0OM4jck78PIZNnYNVCpLEpQsfqLMRlVEKdEmV8NRb5CdcxwUmlNbkFW-VUN1Ufg')) return false; // no configurado aún
   const res = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     // no-cors necesario para Apps Script desde GitHub Pages
