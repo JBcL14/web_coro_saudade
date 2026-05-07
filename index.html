@@ -1428,52 +1428,90 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// ─── FORM SUBMIT
-function handleSubmit(e) {
+// ─── CONFIGURACIÓN — reemplaza estas URLs con las tuyas ───────────────────────
+// 1. FORMSPREE: crea cuenta en formspree.io, crea un form, pega aquí el endpoint
+const FORMSPREE_URL = 'https://formspree.io/f/xojrlgdl';
+
+// 2. GOOGLE APPS SCRIPT: pega aquí la URL del Web App desplegado (ver guía abajo)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzowMw0OM4jck78PIZNnYNVCpLEpQsfqLMRlVEKdEmV8NRb5CdcxwUmlNbkFW-VUN1Ufg/exec';
+// ──────────────────────────────────────────────────────────────────────────────
+
+async function handleSubmit(e) {
   e.preventDefault();
   const form = e.target;
+  const btn  = form.querySelector('.form-submit');
+
   const data = {
-    nombre: form.nombre.value,
-    apellidos: form.apellidos.value,
-    email: form.email.value,
-    telefono: form.telefono.value,
-    cuerda: form.cuerda.value,
-    experiencia: form.experiencia.value,
-    mensaje: form.mensaje.value,
-    fecha: new Date().toLocaleDateString('es-ES'),
-    hora: new Date().toLocaleTimeString('es-ES')
+    nombre:      form.nombre.value.trim(),
+    apellidos:   form.apellidos.value.trim(),
+    email:       form.email.value.trim(),
+    telefono:    form.telefono.value.trim() || '—',
+    cuerda:      form.cuerda.value,
+    experiencia: form.experiencia.value || '—',
+    mensaje:     form.mensaje.value.trim() || '—',
+    fecha:       new Date().toLocaleDateString('es-ES'),
+    hora:        new Date().toLocaleTimeString('es-ES'),
   };
 
-  // Save to localStorage (simulated DB)
-  const stored = JSON.parse(localStorage.getItem('saudade_inscripciones') || '[]');
-  stored.push(data);
-  localStorage.setItem('saudade_inscripciones', JSON.stringify(stored));
+  // UI: estado enviando
+  btn.textContent = 'Enviando…';
+  btn.disabled = true;
 
-  // Build mailto link
-  const subject = encodeURIComponent(`Solicitud de ingreso - ${data.nombre} ${data.apellidos}`);
-  const body = encodeURIComponent(
-`NUEVA SOLICITUD DE INGRESO — CORO SAUDADE
-==========================================
-Nombre:      ${data.nombre} ${data.apellidos}
-Email:       ${data.email}
-Teléfono:    ${data.telefono || 'No indicado'}
-Cuerda:      ${data.cuerda}
-Experiencia: ${data.experiencia || 'No indicado'}
-Mensaje:     ${data.mensaje || '—'}
-Fecha:       ${data.fecha} · ${data.hora}
-==========================================
-(Mensaje enviado desde la web del coro)`
-  );
-  
-  window.location.href = `mailto:corosaudade@gmail.com?subject=${subject}&body=${body}`;
+  const results = await Promise.allSettled([
+    enviarFormspree(data),
+    enviarGoogleSheets(data),
+  ]);
 
-  // Show success
-  setTimeout(() => {
+  const formspreeOk = results[0].status === 'fulfilled' && results[0].value;
+  const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
+
+  if (formspreeOk || sheetsOk) {
     document.getElementById('formContent').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  }, 800);
+    document.getElementById('formSuccess').style.display  = 'block';
+    const detalle = [
+      formspreeOk ? '✔ Email enviado al coro' : '✘ Email (revisar Formspree)',
+      sheetsOk    ? '✔ Guardado en Google Sheets' : '✘ Sheets (revisar Apps Script)',
+    ].join(' · ');
+    showNotification(detalle);
+  } else {
+    btn.textContent = 'Enviar solicitud';
+    btn.disabled = false;
+    showNotification('Error al enviar. Inténtalo de nuevo o escríbenos directamente.');
+  }
+}
 
-  showNotification('¡Solicitud preparada! Se abrirá tu cliente de correo.');
+// ── Formspree → manda email al coro automáticamente
+async function enviarFormspree(data) {
+  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false; // no configurado aún
+  const res = await fetch(FORMSPREE_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body:    JSON.stringify({
+      _subject:  `Nueva solicitud de ingreso — ${data.nombre} ${data.apellidos}`,
+      nombre:    `${data.nombre} ${data.apellidos}`,
+      email:     data.email,
+      telefono:  data.telefono,
+      cuerda:    data.cuerda,
+      experiencia: data.experiencia,
+      mensaje:   data.mensaje,
+      fecha:     `${data.fecha} ${data.hora}`,
+    }),
+  });
+  return res.ok;
+}
+
+// ── Google Apps Script → escribe fila en Google Sheets
+async function enviarGoogleSheets(data) {
+  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_ID_AQUI')) return false; // no configurado aún
+  const res = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    // no-cors necesario para Apps Script desde GitHub Pages
+    mode:   'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body:   JSON.stringify(data),
+  });
+  // no-cors siempre devuelve opaque; asumimos OK si no lanza
+  return true;
 }
 
 // ─── NOTIFICATION
