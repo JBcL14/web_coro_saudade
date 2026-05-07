@@ -1182,7 +1182,7 @@
           <h3 class="form-title">Formulario de Inscripción</h3>
           <p class="form-subtitle">Todos los datos se guardan de forma segura</p>
 
-          <form id="joinForm" onsubmit="handleSubmit(event)">
+          <form id="joinForm">
             <div class="form-row">
               <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -1236,7 +1236,7 @@
                 Acepto la política de privacidad y el uso de mis datos para la gestión de la solicitud de ingreso al coro.
               </label>
             </div>
-            <button type="submit" class="form-submit">Enviar solicitud</button>
+            <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar solicitud</button>
             <p class="form-note">
               Tu solicitud se enviará al correo del coro y quedará registrada. Nos pondremos en contacto contigo en menos de 7 días.
             </p>
@@ -1436,10 +1436,19 @@ const FORMSPREE_URL = 'https://formspree.io/f/xojrlgdl';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzowMw0OM4jck78PIZNnYNVCpLEpQsfqLMRlVEKdEmV8NRb5CdcxwUmlNbkFW-VUN1Ufg/exec';
 // ──────────────────────────────────────────────────────────────────────────────
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  const form = e.target;
-  const btn  = form.querySelector('.form-submit');
+async function handleSubmit() {
+  const form = document.getElementById('joinForm');
+  const btn  = document.getElementById('submitBtn');
+
+  // Validar campos required manualmente
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  // UI: cambiar botón al instante
+  btn.textContent = 'Enviando…';
+  btn.disabled = true;
 
   const data = {
     nombre:      form.nombre.value.trim(),
@@ -1452,10 +1461,6 @@ async function handleSubmit(e) {
     fecha:       new Date().toLocaleDateString('es-ES'),
     hora:        new Date().toLocaleTimeString('es-ES'),
   };
-
-  // UI: estado enviando
-  btn.textContent = 'Enviando…';
-  btn.disabled = true;
 
   const results = await Promise.allSettled([
     enviarFormspree(data),
