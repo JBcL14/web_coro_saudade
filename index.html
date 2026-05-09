@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coro Saudade de Pamplona / Iruña</title>
+<title>Coro Saudade de Pamplona</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -1041,7 +1041,7 @@
 <nav id="navbar">
   <a href="#inicio" class="nav-logo">
     Saudade
-    <span>♦ Coro de Pamplona / Iruña ♦</span>
+    <span>♦ Coro de Pamplona ♦</span>
   </a>
   <ul class="nav-links">
     <li><a href="#nosotros">El Coro</a></li>
@@ -1344,7 +1344,7 @@
         </ul>
         <p style="font-family:var(--serif-title);font-size:0.9rem;color:var(--gray-mid);font-style:italic;line-height:1.9;">
           📍 Ensayos en Pamplona<br>
-          📧 corosaudade@gmail.com<br>
+          📧 corosaudadepamplona@gmail.com<br>
           📱 Instagram: @corosaudade
         </p>
       </div>
@@ -1428,7 +1428,7 @@
       <div class="contact-info-list fade-in">
         <div class="contact-item">
           <h4>Correo electrónico</h4>
-          <a href="mailto:corosaudade@gmail.com">corosaudade@gmail.com</a>
+          <a href="mailto:corosaudadepamplona@gmail.com">corosaudadepamplona@gmail.com</a>
         </div>
         <div class="contact-item">
           <h4>Ensayos</h4>
@@ -1454,13 +1454,13 @@
         <div class="contact-map">
           <div class="map-placeholder">
             <p style="font-size:2rem;margin-bottom:0.5rem;">📍</p>
-            <p>Pamplona / Iruña<br>Navarra, España</p>
+            <p>Pamplona<br>Navarra, España</p>
           </div>
-          <div class="map-address">Coro Saudade de Pamplona / Iruña · Navarra</div>
+          <div class="map-address">Coro Saudade de Pamplona · Navarra</div>
         </div>
         <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid var(--gold-pale);background:var(--off-white);">
           <p style="font-family:var(--serif-title);font-size:0.88rem;color:var(--gray-mid);font-style:italic;line-height:1.8;">
-            Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente al correo o a través de nuestras redes sociales. Respondemos en menos de 48 horas.
+            Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente al correo o a través de nuestras redes sociales.
           </p>
         </div>
       </div>
@@ -1474,10 +1474,10 @@
     <div class="footer-brand">
       <a href="#inicio" class="nav-logo">
         Saudade
-        <span>♦ Coro de Pamplona / Iruña ♦</span>
+        <span>♦ Coro de Pamplona ♦</span>
       </a>
       <p>
-        Voces que tejen memoria, belleza y comunidad en Navarra. Coro mixto con más de treinta años de historia.
+        Voces que tejen memoria, belleza y comunidad en Navarra. Coro mixto desde 2018.
       </p>
     </div>
     <div class="footer-col">
@@ -1493,15 +1493,14 @@
     <div class="footer-col">
       <h4>Contacto</h4>
       <ul>
-        <li><a href="mailto:corosaudade@gmail.com">corosaudade@gmail.com</a></li>
+        <li><a href="mailto:corosaudadepamplona@gmail.com">corosaudadepamplona@gmail.com</a></li>
         <li><a href="https://www.instagram.com/corosaudade/" target="_blank">@corosaudade</a></li>
-        <li><a href="https://www.facebook.com/corosaudade.saudade/" target="_blank">Facebook</a></li>
         <li><a href="#unete">Únete al coro</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 Coro Saudade de Pamplona / Iruña. Todos los derechos reservados.</p>
+    <p>© 2025 Coro Saudade de Pamplona. Todos los derechos reservados.</p>
     <div class="footer-gold-rule"></div>
     <p>Federación de Coros de Navarra</p>
   </div>
@@ -1659,7 +1658,7 @@ async function handleSubmit() {
     const detalle = [formspreeOk ? '✔ Email enviado al coro' : null, sheetsOk ? '✔ Guardado en Google Sheets' : null].filter(Boolean).join(' · ');
     showNotification(detalle);
   } else {
-    showNotification('Solicitud recibida. Configura Formspree y Apps Script para activar el envío real.');
+    showNotification('Solicitud recibida. Contactaremos contigo en breve.');
   }
 }
 async function enviarFormspree(data) {
