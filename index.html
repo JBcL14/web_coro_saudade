@@ -6,32 +6,63 @@
 <title>Coro Saudade de Pamplona / Iruña</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --black: #0a0a0a;
-    --white: #f8f6f1;
-    --gray-light: #e8e5de;
-    --gray-mid: #c8c4bc;
-    --gray-dark: #4a4744;
-    --accent: #1a1a1a;
-    --serif-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-    --serif-body: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
-    --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --black:       #0e0c09;
+    --white:       #f0ece3;   /* crema medio, no tan claro */
+    --off-white:   #e6e0d4;   /* crema más oscuro para secciones alternas */
+    --gold:        #a07c18;   /* dorado más sobrio */
+    --gold-light:  #b8941f;
+    --gold-pale:   #c8a93a;
+    --gold-faint:  #dfc97a22; /* casi transparente, solo toque */
+    --gray-mid:    #5c5549;   /* gris cálido más oscuro */
+    --gray-light:  #9e9385;
+    --serif-title: 'Cormorant Infant', Georgia, serif;
+    --serif-sc:    'Cormorant SC', 'Cormorant Infant', Georgia, serif;
+    --serif-felt:  'IM Fell English', Georgia, serif;
+    --transition:  all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     background: var(--white);
     color: var(--black);
     font-size: 18px;
     line-height: 1.7;
     overflow-x: hidden;
+  }
+
+  /* ─── ORNAMENT ─── */
+  .ornament {
+    display: block;
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.5em;
+    margin: 0 auto 1.2rem;
+    opacity: 0.8;
+  }
+  .ornament-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .ornament-line::before,
+  .ornament-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  }
+  .ornament-line span {
+    color: var(--gold);
+    font-size: 1.1rem;
   }
 
   /* ─── NAVBAR ─── */
@@ -40,52 +71,52 @@
     top: 0; left: 0; right: 0;
     z-index: 100;
     background: var(--white);
-    border-bottom: 1px solid var(--gray-light);
+    border-bottom: 1px solid var(--gold-pale);
     padding: 0 3rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 72px;
     transition: var(--transition);
   }
   nav.scrolled {
-    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 30px rgba(184,148,31,0.08);
   }
   .nav-logo {
-    font-family: var(--serif-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--serif-sc);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     color: var(--black);
     text-decoration: none;
     line-height: 1.1;
   }
   .nav-logo span {
     display: block;
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     font-weight: 400;
-    letter-spacing: 0.25em;
-    font-family: var(--serif-body);
+    letter-spacing: 0.35em;
+    font-family: var(--serif-title);
     font-style: italic;
-    color: var(--gray-dark);
-    margin-top: 2px;
+    color: var(--gray-mid);
+    margin-top: 3px;
+    text-transform: uppercase;
   }
   .nav-links {
     display: flex;
     gap: 2.5rem;
     list-style: none;
+    align-items: center;
   }
   .nav-links a {
-    font-family: var(--serif-body);
-    font-size: 0.85rem;
+    font-family: var(--serif-sc);
+    font-size: 0.78rem;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
     text-decoration: none;
     color: var(--black);
-    transition: var(--transition);
+    transition: color 0.3s;
     position: relative;
-    padding-bottom: 2px;
+    padding-bottom: 3px;
   }
   .nav-links a::after {
     content: '';
@@ -93,24 +124,25 @@
     bottom: 0; left: 0; right: 100%;
     height: 1px;
     background: var(--black);
-    transition: right 0.3s ease;
+    transition: right 0.35s ease;
   }
+  .nav-links a:hover { color: var(--black); }
   .nav-links a:hover::after { right: 0; }
   .nav-cta {
-    background: var(--black);
+    background: var(--black) !important;
     color: var(--white) !important;
-    padding: 0.5rem 1.2rem;
-    font-family: var(--serif-body);
-    font-size: 0.8rem !important;
+    padding: 0.5rem 1.3rem;
+    font-family: var(--serif-sc) !important;
+    font-size: 0.75rem !important;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
     text-decoration: none;
-    transition: var(--transition);
     border: 1px solid var(--black);
+    transition: var(--transition) !important;
   }
   .nav-cta:hover {
     background: var(--white) !important;
     color: var(--black) !important;
+    border-color: var(--black) !important;
   }
   .nav-cta::after { display: none !important; }
 
@@ -138,90 +170,96 @@
     place-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 70px;
+    padding-top: 72px;
+    background: var(--white);
   }
-  .hero-bg {
+  .hero-pattern {
     position: absolute;
     inset: 0;
-    background: var(--black);
+    background-image:
+      radial-gradient(ellipse at 15% 85%, rgba(184,148,31,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 15%, rgba(184,148,31,0.05) 0%, transparent 45%);
     z-index: 0;
   }
-  .hero-texture {
+  /* Subtle music staff lines */
+  .hero-staff {
     position: absolute;
-    inset: 0;
-    background-image: 
-      radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 50%);
-    z-index: 1;
-  }
-  .hero-lines {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
+    left: 0; right: 0;
+    z-index: 0;
     overflow: hidden;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.04;
   }
-  .hero-lines::before {
-    content: '';
-    position: absolute;
-    top: 15%; left: -5%;
-    width: 110%;
+  .hero-staff-line {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-    transform: rotate(-3deg);
-  }
-  .hero-lines::after {
-    content: '';
-    position: absolute;
-    bottom: 20%; left: -5%;
-    width: 110%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-    transform: rotate(2deg);
+    background: var(--black);
+    margin: 12px 0;
   }
   .hero-content {
     position: relative;
     z-index: 2;
     text-align: center;
-    color: var(--white);
     padding: 4rem 2rem;
-    max-width: 900px;
+    max-width: 820px;
   }
-  .hero-tagline {
-    font-family: var(--serif-body);
-    font-size: 0.8rem;
-    letter-spacing: 0.4em;
+  .hero-eyebrow {
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    color: var(--gray-mid);
     text-transform: uppercase;
-    color: rgba(248,246,241,0.5);
-    margin-bottom: 2rem;
-    font-style: italic;
+    margin-bottom: 2.2rem;
     animation: fadeUp 1s ease 0.2s both;
   }
   .hero-title {
-    font-family: var(--serif-display);
-    font-size: clamp(3.5rem, 9vw, 7.5rem);
-    font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.5rem;
+    font-family: var(--serif-title);
+    font-size: clamp(4rem, 10vw, 8.5rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--black);
+    margin-bottom: 0.6rem;
     animation: fadeUp 1s ease 0.4s both;
   }
-  .hero-title em {
+  .hero-title-italic {
     font-style: italic;
-    font-weight: 400;
+    font-weight: 300;
     display: block;
-    font-size: 0.65em;
-    letter-spacing: 0.05em;
-    color: rgba(248,246,241,0.7);
+    font-size: 0.55em;
+    letter-spacing: 0.08em;
+    color: var(--gray-mid);
+    margin-top: 0.4rem;
   }
+  .hero-gold-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem auto;
+    animation: fadeUp 1s ease 0.55s both;
+  }
+  .hero-gold-rule::before,
+  .hero-gold-rule::after {
+    content: '';
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .hero-gold-rule::after {
+    background: linear-gradient(to left, transparent, var(--gold));
+  }
+  .hero-gold-rule span { color: var(--gold); font-size: 1.2rem; }
   .hero-subtitle {
-    font-family: var(--serif-body);
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: rgba(248,246,241,0.65);
-    max-width: 520px;
+    font-family: var(--serif-title);
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    max-width: 460px;
     margin: 0 auto 3rem;
     font-weight: 300;
-    animation: fadeUp 1s ease 0.6s both;
+    font-style: italic;
+    animation: fadeUp 1s ease 0.65s both;
   }
   .hero-actions {
     display: flex;
@@ -231,31 +269,29 @@
     animation: fadeUp 1s ease 0.8s both;
   }
   .btn-primary {
-    background: var(--white);
-    color: var(--black);
-    padding: 0.85rem 2.5rem;
-    font-family: var(--serif-body);
-    font-size: 0.85rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    background: var(--black);
+    color: var(--white);
+    padding: 0.9rem 2.8rem;
+    font-family: var(--serif-sc);
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
     text-decoration: none;
     transition: var(--transition);
-    border: 1px solid var(--white);
+    border: 1px solid var(--black);
     display: inline-block;
     cursor: pointer;
   }
   .btn-primary:hover {
     background: transparent;
-    color: var(--white);
+    color: var(--black);
   }
   .btn-secondary {
-    border: 1px solid rgba(248,246,241,0.3);
-    color: var(--white);
-    padding: 0.85rem 2.5rem;
-    font-family: var(--serif-body);
-    font-size: 0.85rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    border: 1px solid var(--black);
+    color: var(--black);
+    padding: 0.9rem 2.8rem;
+    font-family: var(--serif-sc);
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
     text-decoration: none;
     transition: var(--transition);
     display: inline-block;
@@ -263,8 +299,8 @@
     cursor: pointer;
   }
   .btn-secondary:hover {
-    background: rgba(248,246,241,0.08);
-    border-color: rgba(248,246,241,0.6);
+    background: var(--black);
+    color: var(--white);
   }
   .hero-scroll {
     position: absolute;
@@ -276,108 +312,106 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    color: rgba(248,246,241,0.35);
-    font-family: var(--serif-body);
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
+    opacity: 0.6;
     animation: fadeUp 1s ease 1.2s both;
   }
   .hero-scroll-line {
     width: 1px;
     height: 50px;
-    background: linear-gradient(to bottom, rgba(248,246,241,0.35), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
+    background: linear-gradient(to bottom, var(--gray-mid), transparent);
+    animation: scrollPulse 2.5s ease-in-out infinite;
   }
 
   /* ─── SECTIONS ─── */
-  section {
-    padding: 7rem 3rem;
-  }
-  .section-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  section { padding: 7rem 3rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
   .section-label {
-    font-family: var(--serif-body);
-    font-size: 0.72rem;
-    letter-spacing: 0.4em;
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.45em;
     text-transform: uppercase;
-    color: var(--gray-dark);
-    font-style: italic;
-    margin-bottom: 1rem;
+    color: var(--gray-mid);
+    margin-bottom: 0.6rem;
   }
   .section-title {
-    font-family: var(--serif-display);
-    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-    font-weight: 700;
-    line-height: 1.05;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.01em;
+    font-family: var(--serif-title);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: 0.01em;
   }
-  .section-divider {
-    width: 50px;
-    height: 1px;
-    background: var(--black);
-    margin-bottom: 3rem;
-  }
+  .section-title em { font-style: italic; font-weight: 300; color: var(--gray-mid); }
 
   /* ─── NOSOTROS ─── */
   #nosotros { background: var(--white); }
   .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5rem;
+    gap: 6rem;
     align-items: center;
   }
   .about-text p {
-    font-family: var(--serif-body);
-    font-size: 1.1rem;
-    line-height: 1.85;
-    color: var(--gray-dark);
-    margin-bottom: 1.5rem;
-    font-weight: 300;
+    font-family: var(--serif-title);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 1.4rem;
+    font-weight: 400;
   }
-  .about-text p strong {
-    color: var(--black);
-    font-weight: 600;
-  }
+  .about-text p strong { color: var(--black); font-weight: 600; }
   .about-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 2px;
   }
   .stat-card {
-    border: 1px solid var(--gray-light);
-    padding: 2rem 1.5rem;
+    border: 1px solid var(--gold-pale);
+    padding: 2.2rem 1.5rem;
     text-align: center;
     transition: var(--transition);
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
   }
-  .stat-card:hover {
-    border-color: var(--black);
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
   }
+  .stat-card:hover { background: var(--off-white); }
+  .stat-card:hover::after { transform: scaleX(1); }
   .stat-number {
-    font-family: var(--serif-display);
+    font-family: var(--serif-title);
     font-size: 3rem;
-    font-weight: 700;
+    font-weight: 300;
     line-height: 1;
     display: block;
     margin-bottom: 0.5rem;
+    color: var(--black);
   }
   .stat-label {
-    font-family: var(--serif-body);
-    font-size: 0.8rem;
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gray-dark);
+    color: var(--gray-mid);
   }
 
   /* ─── EVENTOS ─── */
-  #eventos { background: var(--black); color: var(--white); }
-  #eventos .section-label { color: rgba(248,246,241,0.4); }
-  #eventos .section-title { color: var(--white); }
-  #eventos .section-divider { background: var(--white); opacity: 0.25; }
-
+  #eventos {
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
+  }
   .events-list {
     display: flex;
     flex-direction: column;
@@ -385,75 +419,211 @@
   }
   .event-item {
     display: grid;
-    grid-template-columns: 100px 1fr auto;
+    grid-template-columns: 90px 1fr auto;
     gap: 2.5rem;
     align-items: center;
-    padding: 2.2rem 0;
-    border-bottom: 1px solid rgba(248,246,241,0.1);
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--gold-pale);
     transition: var(--transition);
     cursor: pointer;
+    position: relative;
   }
-  .event-item:first-child { border-top: 1px solid rgba(248,246,241,0.1); }
-  .event-item:hover { padding-left: 1rem; }
-  .event-date {
-    text-align: center;
-    font-family: var(--serif-display);
+  .event-item:first-child { border-top: 1px solid var(--gold-pale); }
+  .event-item::before {
+    content: '';
+    position: absolute;
+    left: -3rem; top: 0; bottom: 0;
+    width: 0;
+    background: var(--off-white);
+    transition: width 0.4s ease;
+    z-index: 0;
   }
+  .event-item:hover::before { width: calc(100% + 6rem); }
+  .event-item > * { position: relative; z-index: 1; }
+  .event-date { text-align: center; }
   .event-day {
+    font-family: var(--serif-title);
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 300;
     line-height: 1;
     display: block;
-    color: var(--white);
+    color: var(--black);
   }
   .event-month {
-    font-size: 0.7rem;
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
     letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(248,246,241,0.45);
-    font-family: var(--serif-body);
-    font-style: italic;
+    color: var(--gray-mid);
   }
   .event-info h3 {
-    font-family: var(--serif-display);
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.4rem;
+    font-family: var(--serif-title);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 0.35rem;
   }
   .event-info p {
-    font-family: var(--serif-body);
-    font-size: 0.9rem;
-    color: rgba(248,246,241,0.5);
+    font-family: var(--serif-title);
+    font-size: 0.88rem;
+    color: var(--gray-mid);
     font-style: italic;
   }
   .event-badge {
-    font-family: var(--serif-body);
-    font-size: 0.68rem;
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
-    border: 1px solid rgba(248,246,241,0.25);
-    padding: 0.4rem 0.9rem;
-    color: rgba(248,246,241,0.6);
+    border: 1px solid var(--gold-pale);
+    padding: 0.35rem 0.9rem;
+    color: var(--gray-mid);
     white-space: nowrap;
   }
   .event-badge.featured {
-    border-color: var(--white);
+    border-color: var(--black);
+    color: var(--black);
+    background: transparent;
+  }
+
+  /* ─── CAROUSEL / GALERÍA ─── */
+  #galeria {
+    background: var(--white);
+    padding: 7rem 0;
+  }
+  #galeria .section-inner { padding: 0 3rem; }
+  .carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-top: 3rem;
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .carousel-slide {
+    flex: 0 0 33.333%;
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--off-white);
+    border-right: 1px solid var(--gold-pale);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .carousel-slide:last-child { border-right: none; }
+  .carousel-slide:hover { background: var(--off-white); }
+  .carousel-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    color: var(--gray-mid);
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    height: 100%;
+  }
+  .carousel-note {
+    position: absolute;
+    font-size: 3.5rem;
+    color: var(--gray-light);
+    line-height: 1;
+    font-family: var(--serif-title);
+    top: 1.5rem;
+    right: 1.5rem;
+    opacity: 0.25;
+  }
+  .carousel-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(14,12,9,0.6), transparent);
+    padding: 2rem 1.5rem 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .carousel-slide:hover .carousel-caption { opacity: 1; }
+  .carousel-caption span {
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
     color: var(--white);
+    font-style: italic;
+  }
+  .carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 0 3rem;
+  }
+  .carousel-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--gray-light);
+    background: var(--white);
+    color: var(--black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: var(--transition);
+    font-family: var(--serif-title);
+  }
+  .carousel-btn:hover {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+  .carousel-dots {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gray-light);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .carousel-dot.active {
+    background: var(--black);
+    width: 20px;
+  }
+  .carousel-counter {
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    min-width: 60px;
+    text-align: center;
   }
 
   /* ─── REPERTORIO ─── */
-  #repertorio { background: var(--gray-light); }
+  #repertorio { background: var(--black); }
+  #repertorio .section-label { color: var(--gold); }
+  #repertorio .section-title { color: var(--white); }
   .repertoire-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 1px;
     margin-top: 1rem;
+    background: rgba(184,148,31,0.12);
   }
   .rep-card {
-    background: var(--white);
+    background: var(--black);
     padding: 2.5rem 2rem;
-    border: 1px solid var(--gray-light);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -461,42 +631,41 @@
   .rep-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 0;
-    background: var(--black);
-    transition: height 0.4s ease;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
   }
-  .rep-card:hover::before { height: 100%; }
-  .rep-card:hover { background: var(--black); color: var(--white); }
+  .rep-card:hover::before { transform: scaleX(1); }
+  .rep-card:hover { background: #16130e; }
   .rep-num {
-    font-family: var(--serif-display);
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--gray-light);
+    font-family: var(--serif-title);
+    font-size: 3rem;
+    font-weight: 300;
+    color: rgba(248,246,241,0.12);
     line-height: 1;
     margin-bottom: 1rem;
-    transition: var(--transition);
+    transition: opacity 0.3s;
   }
-  .rep-card:hover .rep-num { color: rgba(248,246,241,0.1); }
+  .rep-card:hover .rep-num { color: rgba(248,246,241,0.25); }
   .rep-card h3 {
-    font-family: var(--serif-display);
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-family: var(--serif-title);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--white);
     margin-bottom: 0.8rem;
-    transition: var(--transition);
   }
   .rep-card p {
-    font-family: var(--serif-body);
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--gray-dark);
-    transition: var(--transition);
+    font-family: var(--serif-title);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--gray-mid);
+    font-style: italic;
   }
-  .rep-card:hover p { color: rgba(248,246,241,0.65); }
 
   /* ─── ÚNETE ─── */
-  #unete { background: var(--white); }
+  #unete { background: var(--off-white); border-top: 1px solid var(--gold-pale); }
   .join-layout {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
@@ -504,72 +673,69 @@
     align-items: start;
   }
   .join-info h3 {
-    font-family: var(--serif-display);
+    font-family: var(--serif-title);
     font-size: 1.6rem;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 1.2rem;
   }
   .join-info p {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 1rem;
-    line-height: 1.85;
-    color: var(--gray-dark);
-    margin-bottom: 2rem;
-    font-weight: 300;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 1.8rem;
   }
   .requirements-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.7rem;
     margin-bottom: 2.5rem;
   }
   .requirements-list li {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.95rem;
-    color: var(--gray-dark);
+    color: var(--gray-mid);
+    font-style: italic;
   }
   .requirements-list li::before {
     content: '—';
-    color: var(--black);
-    font-weight: 600;
+    color: var(--gray-mid);
+    font-size: 0.85rem;
     flex-shrink: 0;
     margin-top: 0.1rem;
   }
 
-  /* ─── FORM ─── */
+  /* ─── FORM (unchanged styling) ─── */
   .join-form {
     background: var(--black);
     padding: 3.5rem;
     color: var(--white);
   }
   .form-title {
-    font-family: var(--serif-display);
+    font-family: var(--serif-title);
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--white);
     margin-bottom: 0.5rem;
   }
   .form-subtitle {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.85rem;
     color: rgba(248,246,241,0.4);
     font-style: italic;
     margin-bottom: 2.5rem;
     letter-spacing: 0.05em;
   }
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
+  .form-group { margin-bottom: 1.5rem; }
   .form-group label {
     display: block;
-    font-family: var(--serif-body);
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-family: var(--serif-sc);
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
     color: rgba(248,246,241,0.5);
     margin-bottom: 0.6rem;
   }
@@ -579,9 +745,9 @@
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(248,246,241,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.3);
     padding: 0.7rem 0;
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 1rem;
     color: var(--white);
     outline: none;
@@ -591,44 +757,32 @@
   }
   .form-group input::placeholder,
   .form-group textarea::placeholder {
-    color: rgba(248,246,241,0.25);
+    color: rgba(248,246,241,0.2);
     font-style: italic;
   }
   .form-group input:focus,
   .form-group select:focus,
-  .form-group textarea:focus {
-    border-bottom-color: var(--white);
-  }
-  .form-group select option {
-    background: var(--black);
-    color: var(--white);
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
+  .form-group textarea:focus { border-bottom-color: rgba(248,246,241,0.7); }
+  .form-group select option { background: var(--black); color: var(--white); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .form-submit {
     width: 100%;
     background: var(--white);
     color: var(--black);
     border: none;
     padding: 1rem;
-    font-family: var(--serif-body);
-    font-size: 0.85rem;
+    font-family: var(--serif-sc);
+    font-size: 0.82rem;
     letter-spacing: 0.25em;
-    text-transform: uppercase;
     cursor: pointer;
     transition: var(--transition);
     margin-top: 1rem;
   }
-  .form-submit:hover {
-    background: rgba(248,246,241,0.85);
-  }
+  .form-submit:hover { background: var(--off-white); }
   .form-note {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.75rem;
-    color: rgba(248,246,241,0.3);
+    color: rgba(248,246,241,0.25);
     font-style: italic;
     margin-top: 1rem;
     line-height: 1.6;
@@ -642,81 +796,18 @@
     font-size: 3rem;
     margin-bottom: 1rem;
     display: block;
+    color: var(--white);
   }
   .form-success h3 {
-    font-family: var(--serif-display);
+    font-family: var(--serif-title);
     font-size: 1.5rem;
     color: var(--white);
     margin-bottom: 0.8rem;
   }
   .form-success p {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.95rem;
     color: rgba(248,246,241,0.55);
-    font-style: italic;
-  }
-
-  /* ─── GALERÍA ─── */
-  #galeria { background: var(--black); }
-  #galeria .section-title { color: var(--white); }
-  #galeria .section-label { color: rgba(248,246,241,0.35); }
-  #galeria .section-divider { background: rgba(248,246,241,0.2); }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 220px 220px;
-    gap: 3px;
-  }
-  .gallery-item {
-    background: #1a1a1a;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .gallery-item:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-  .gallery-item:nth-child(4) { grid-column: span 2; }
-  .gallery-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    color: rgba(248,246,241,0.15);
-    font-family: var(--serif-body);
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-style: italic;
-    text-align: center;
-    padding: 1rem;
-    width: 100%;
-    height: 100%;
-  }
-  .gallery-icon {
-    font-size: 2rem;
-    opacity: 0.2;
-  }
-  .gallery-overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--black);
-    opacity: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 1.5rem;
-    transition: opacity 0.3s ease;
-  }
-  .gallery-item:hover .gallery-overlay { opacity: 0.7; }
-  .gallery-caption {
-    font-family: var(--serif-body);
-    font-size: 0.8rem;
-    color: var(--white);
     font-style: italic;
   }
 
@@ -731,45 +822,44 @@
   .contact-info-list {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2.2rem;
   }
   .contact-item h4 {
-    font-family: var(--serif-body);
-    font-size: 0.72rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gray-dark);
-    margin-bottom: 0.5rem;
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--gray-mid);
+    margin-bottom: 0.4rem;
   }
   .contact-item p, .contact-item a {
-    font-family: var(--serif-display);
-    font-size: 1.1rem;
+    font-family: var(--serif-title);
+    font-size: 1.05rem;
     color: var(--black);
     text-decoration: none;
     transition: var(--transition);
     display: block;
-    line-height: 1.4;
+    line-height: 1.5;
   }
-  .contact-item a:hover { color: var(--gray-dark); }
+  .contact-item a:hover { color: var(--gray-mid); }
   .social-links {
     display: flex;
     gap: 1.2rem;
     margin-top: 0.5rem;
   }
   .social-link {
-    font-family: var(--serif-body);
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
     color: var(--black);
     text-decoration: none;
-    border-bottom: 1px solid var(--black);
+    border-bottom: 1px solid var(--gray-light);
     padding-bottom: 1px;
     transition: var(--transition);
   }
-  .social-link:hover { color: var(--gray-dark); border-color: var(--gray-dark); }
+  .social-link:hover { color: var(--gray-mid); border-color: var(--gray-mid); }
   .contact-map {
-    background: var(--gray-light);
+    background: var(--off-white);
+    border: 1px solid var(--gold-pale);
     height: 300px;
     display: flex;
     align-items: center;
@@ -779,8 +869,8 @@
   }
   .map-placeholder {
     text-align: center;
-    font-family: var(--serif-body);
-    color: var(--gray-dark);
+    font-family: var(--serif-title);
+    color: var(--gray-mid);
     font-style: italic;
     font-size: 0.9rem;
   }
@@ -788,18 +878,19 @@
     position: absolute;
     bottom: 0; left: 0; right: 0;
     background: var(--black);
-    color: var(--white);
-    padding: 1rem 1.5rem;
-    font-family: var(--serif-body);
-    font-size: 0.85rem;
-    font-style: italic;
+    color: var(--gold-pale);
+    padding: 0.9rem 1.5rem;
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
   }
 
   /* ─── FOOTER ─── */
   footer {
     background: var(--black);
     color: var(--white);
-    padding: 4rem 3rem 2rem;
+    padding: 5rem 3rem 2.5rem;
+    border-top: 1px solid rgba(184,148,31,0.25);
   }
   .footer-grid {
     max-width: 1100px;
@@ -808,36 +899,31 @@
     grid-template-columns: 2fr 1fr 1fr;
     gap: 4rem;
     padding-bottom: 3rem;
-    border-bottom: 1px solid rgba(248,246,241,0.1);
+    border-bottom: 1px solid rgba(184,148,31,0.12);
     margin-bottom: 2rem;
   }
-  .footer-brand .nav-logo {
-    color: var(--white);
-    display: inline-block;
-    margin-bottom: 1.5rem;
-  }
+  .footer-brand .nav-logo { color: var(--white); display: inline-block; margin-bottom: 1.5rem; }
   .footer-brand .nav-logo span { color: rgba(248,246,241,0.4); }
   .footer-brand p {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.9rem;
     line-height: 1.8;
-    color: rgba(248,246,241,0.45);
-    font-weight: 300;
+    color: rgba(248,246,241,0.4);
+    font-style: italic;
     max-width: 260px;
   }
   .footer-col h4 {
-    font-family: var(--serif-body);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(248,246,241,0.35);
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    color: rgba(248,246,241,0.4);
     margin-bottom: 1.2rem;
   }
   .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
   .footer-col ul a {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.9rem;
-    color: rgba(248,246,241,0.55);
+    color: rgba(248,246,241,0.5);
     text-decoration: none;
     transition: var(--transition);
     font-style: italic;
@@ -851,39 +937,41 @@
     align-items: center;
   }
   .footer-bottom p {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.75rem;
-    color: rgba(248,246,241,0.25);
+    color: rgba(248,246,241,0.2);
     font-style: italic;
+  }
+  .footer-gold-rule {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
   }
 
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes scrollPulse {
-    0%, 100% { transform: scaleY(1); opacity: 0.35; }
-    50% { transform: scaleY(0.6); opacity: 0.15; }
+    0%, 100% { opacity: 0.6; transform: scaleY(1); }
+    50%      { opacity: 0.2; transform: scaleY(0.5); }
   }
-
   .fade-in {
     opacity: 0;
-    transform: translateY(25px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateY(22px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
   }
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-  /* ─── MOBILE NAV MENU ─── */
+  /* ─── MOBILE MENU ─── */
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 70px; left: 0; right: 0;
+    top: 72px; left: 0; right: 0;
     background: var(--white);
-    border-top: 1px solid var(--gray-light);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
     padding: 2rem 3rem;
     z-index: 99;
     flex-direction: column;
@@ -891,39 +979,16 @@
   }
   .mobile-menu.open { display: flex; }
   .mobile-menu a {
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 1.1rem;
     text-decoration: none;
     color: var(--black);
     font-style: italic;
-    border-bottom: 1px solid var(--gray-light);
-    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gold-pale);
+    padding-bottom: 1.2rem;
+    transition: color 0.3s;
   }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 900px) {
-    nav { padding: 0 1.5rem; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    section { padding: 5rem 1.5rem; }
-    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .repertoire-grid { grid-template-columns: 1fr; }
-    .join-layout { grid-template-columns: 1fr; gap: 3rem; }
-    .join-form { padding: 2.5rem 1.5rem; }
-    .gallery-grid {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto;
-    }
-    .gallery-item:first-child { grid-column: span 2; }
-    .gallery-item:nth-child(4) { grid-column: span 1; }
-    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
-    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
-    .event-item { grid-template-columns: 70px 1fr; }
-    .event-badge { display: none; }
-    .form-row { grid-template-columns: 1fr; }
-    .about-stats { grid-template-columns: 1fr 1fr; }
-  }
+  .mobile-menu a:hover { color: var(--black); }
 
   /* ─── NOTIFICATION ─── */
   .notification {
@@ -931,9 +996,9 @@
     bottom: 2rem;
     right: 2rem;
     background: var(--black);
-    color: var(--white);
+    color: var(--gold-pale);
     padding: 1rem 1.5rem;
-    font-family: var(--serif-body);
+    font-family: var(--serif-title);
     font-size: 0.85rem;
     font-style: italic;
     z-index: 200;
@@ -942,10 +1007,31 @@
     transition: var(--transition);
     max-width: 300px;
     line-height: 1.6;
+    border-left: 2px solid var(--gray-mid);
   }
-  .notification.show {
-    transform: translateY(0);
-    opacity: 1;
+  .notification.show { transform: translateY(0); opacity: 1; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 5rem 1.5rem; }
+    #galeria { padding: 5rem 0; }
+    #galeria .section-inner { padding: 0 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .repertoire-grid { grid-template-columns: 1fr; }
+    .join-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .join-form { padding: 2.5rem 1.5rem; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .event-item { grid-template-columns: 70px 1fr; }
+    .event-badge { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .carousel-slide { flex: 0 0 100%; }
+    .hero-title { font-size: clamp(3.5rem, 15vw, 6rem); }
   }
 </style>
 </head>
@@ -955,7 +1041,7 @@
 <nav id="navbar">
   <a href="#inicio" class="nav-logo">
     Saudade
-    <span>Coro de Pamplona / Iruña</span>
+    <span>♦ Coro de Pamplona / Iruña ♦</span>
   </a>
   <ul class="nav-links">
     <li><a href="#nosotros">El Coro</a></li>
@@ -970,7 +1056,6 @@
   </button>
 </nav>
 
-<!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#nosotros" onclick="closeMobile()">El Coro</a>
   <a href="#eventos" onclick="closeMobile()">Eventos</a>
@@ -982,15 +1067,23 @@
 
 <!-- ─── HERO ─── -->
 <section id="inicio">
-  <div class="hero-bg"></div>
-  <div class="hero-texture"></div>
-  <div class="hero-lines"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-staff" aria-hidden="true">
+    <div class="hero-staff-line"></div>
+    <div class="hero-staff-line"></div>
+    <div class="hero-staff-line"></div>
+    <div class="hero-staff-line"></div>
+    <div class="hero-staff-line"></div>
+  </div>
   <div class="hero-content">
-    <p class="hero-tagline">Pamplona · Navarra · Desde 1990</p>
+    <p class="hero-eyebrow">Pamplona · Navarra · Desde 1990</p>
     <h1 class="hero-title">
       Saudade
-      <em>de Pamplona / Iruña</em>
+      <span class="hero-title-italic">de Pamplona / Iruña</span>
     </h1>
+    <div class="hero-gold-rule">
+      <span>♦</span>
+    </div>
     <p class="hero-subtitle">
       Voces que tejen memoria, belleza y comunidad.<br>
       Coro mixto dirigido por Juan Gainza.
@@ -1011,9 +1104,9 @@
   <div class="section-inner">
     <div class="about-grid">
       <div class="about-text fade-in">
-        <p class="section-label">Quiénes somos</p>
-        <h2 class="section-title">Una voz hecha de muchas</h2>
-        <div class="section-divider"></div>
+        <p class="section-label">♦ Quiénes somos</p>
+        <h2 class="section-title">Una voz hecha<br>de <em>muchas</em></h2>
+        <div class="ornament-line"><span>✦</span></div>
         <p>
           El Coro Saudade de Pamplona/Iruña es una <strong>formación coral mixta</strong> con larga trayectoria en la escena musical navarra. Integrado por cantantes con experiencia y amor por la música coral, el coro ofrece conciertos de alto nivel interpretativo en toda la comunidad y más allá.
         </p>
@@ -1049,10 +1142,9 @@
 <!-- ─── EVENTOS ─── -->
 <section id="eventos">
   <div class="section-inner">
-    <p class="section-label">Agenda 2025 – 2026</p>
-    <h2 class="section-title">Próximos Conciertos</h2>
-    <div class="section-divider"></div>
-
+    <p class="section-label">♦ Agenda 2025 – 2026</p>
+    <h2 class="section-title">Próximos <em>Conciertos</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
     <div class="events-list">
       <div class="event-item fade-in">
         <div class="event-date">
@@ -1099,21 +1191,101 @@
         <span class="event-badge">Próximo</span>
       </div>
     </div>
-
     <div style="margin-top:3rem; text-align:center;">
-      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary" style="display:inline-block;">
+      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary">
         Ver toda la agenda en Instagram
       </a>
     </div>
   </div>
 </section>
 
+<!-- ─── GALERÍA ─── -->
+<section id="galeria">
+  <div class="section-inner">
+    <p class="section-label">♦ Momentos</p>
+    <h2 class="section-title">Nuestra historia<br>en <em>imágenes</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
+  </div>
+
+  <div class="carousel-wrapper">
+    <div class="carousel-track" id="carouselTrack">
+      <!-- Slide 1 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♫</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Concierto de Navidad</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Iglesia de San Miguel · Pamplona</span>
+        </div>
+        <div class="carousel-caption"><span>Concierto de Navidad, diciembre 2024</span></div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♪</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Ensayo semanal</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Pamplona · Miércoles 20:00 h</span>
+        </div>
+        <div class="carousel-caption"><span>Ensayo · Pamplona</span></div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♩</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Ciclo Coral</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Nuevo Casino · Pamplona</span>
+        </div>
+        <div class="carousel-caption"><span>Ciclo Coral, febrero 2026</span></div>
+      </div>
+      <!-- Slide 4 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♫</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Gala Navideña · Baluarte</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Con la JOP · Enero 2025</span>
+        </div>
+        <div class="carousel-caption"><span>Baluarte, enero 2025</span></div>
+      </div>
+      <!-- Slide 5 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♪</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Roncesvalles / Orreaga</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Concierto en el Camino</span>
+        </div>
+        <div class="carousel-caption"><span>Concierto en Orreaga</span></div>
+      </div>
+      <!-- Slide 6 -->
+      <div class="carousel-slide">
+        <span class="carousel-note">♩</span>
+        <div class="carousel-placeholder">
+          <span style="font-size:1.1rem;color:var(--black);">Voces por la Paz</span>
+          <span style="font-size:0.8rem;color:var(--gray-mid);">Concierto solidario · SONAGE · MAGALE</span>
+        </div>
+        <div class="carousel-caption"><span>Voces por la Paz y por la Vida</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8592;</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <span class="carousel-counter" id="carouselCounter">1 / 4</span>
+    <button class="carousel-btn" id="nextBtn" aria-label="Siguiente">&#8594;</button>
+  </div>
+
+  <div class="section-inner" style="margin-top:2.5rem;text-align:center;">
+    <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary">
+      Más fotos en @corosaudade
+    </a>
+  </div>
+</section>
+
 <!-- ─── REPERTORIO ─── -->
 <section id="repertorio">
   <div class="section-inner">
-    <p class="section-label">Nuestro repertorio</p>
-    <h2 class="section-title">Música sin fronteras</h2>
-    <div class="section-divider"></div>
+    <p class="section-label">♦ Nuestro repertorio</p>
+    <h2 class="section-title">Música sin <em>fronteras</em></h2>
+    <div class="ornament-line" style="--gold-light:#b8941f;"><span style="color:var(--gold);">✦</span></div>
     <div class="repertoire-grid">
       <div class="rep-card fade-in">
         <span class="rep-num">01</span>
@@ -1154,9 +1326,9 @@
   <div class="section-inner">
     <div class="join-layout">
       <div class="join-info fade-in">
-        <p class="section-label">Audiciones abiertas</p>
-        <h2 class="section-title">Canta con nosotros</h2>
-        <div class="section-divider"></div>
+        <p class="section-label">♦ Audiciones abiertas</p>
+        <h2 class="section-title">Canta con<br><em>nosotros</em></h2>
+        <div class="ornament-line"><span>✦</span></div>
         <h3>¿Te animas?</h3>
         <p>
           El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
@@ -1170,18 +1342,18 @@
           <li>Compromiso con los conciertos del calendario</li>
           <li>Actitud positiva y trabajo en equipo</li>
         </ul>
-        <p style="font-family:var(--serif-body);font-size:0.85rem;color:var(--gray-dark);font-style:italic;line-height:1.7;">
+        <p style="font-family:var(--serif-title);font-size:0.9rem;color:var(--gray-mid);font-style:italic;line-height:1.9;">
           📍 Ensayos en Pamplona<br>
           📧 corosaudade@gmail.com<br>
           📱 Instagram: @corosaudade
         </p>
       </div>
 
+      <!-- FORMULARIO — igual que el original -->
       <div class="join-form fade-in">
         <div id="formContent">
           <h3 class="form-title">Formulario de Inscripción</h3>
           <p class="form-subtitle">Todos los datos se guardan de forma segura</p>
-
           <form id="joinForm" method="POST">
             <div class="form-row">
               <div class="form-group">
@@ -1230,14 +1402,12 @@
               <label for="mensaje">Cuéntanos algo sobre ti (opcional)</label>
               <textarea id="mensaje" name="mensaje" rows="3" placeholder="¿Por qué quieres unirte al Coro Saudade?"></textarea>
             </div>
-
             <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar solicitud</button>
             <p class="form-note">
               Tu solicitud se enviará al correo del coro y quedará registrada. Nos pondremos en contacto contigo en menos de 7 días.
             </p>
           </form>
         </div>
-
         <div class="form-success" id="formSuccess">
           <span class="check">♩</span>
           <h3>¡Solicitud enviada!</h3>
@@ -1248,73 +1418,12 @@
   </div>
 </section>
 
-<!-- ─── GALERÍA ─── -->
-<section id="galeria">
-  <div class="section-inner">
-    <p class="section-label">Momentos</p>
-    <h2 class="section-title" style="color:var(--white)">Nuestra historia en imágenes</h2>
-    <div class="section-divider" style="background:rgba(248,246,241,0.2)"></div>
-    <div class="gallery-grid">
-      <div class="gallery-item">
-        <div class="gallery-placeholder">
-          <span class="gallery-icon">♫</span>
-          Concierto de Navidad<br>Iglesia de San Miguel
-        </div>
-        <div class="gallery-overlay">
-          <span class="gallery-caption">Concierto de Navidad, 2024</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder">
-          <span class="gallery-icon">♪</span>
-          Ensayo semanal
-        </div>
-        <div class="gallery-overlay">
-          <span class="gallery-caption">Ensayo · Pamplona</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder">
-          <span class="gallery-icon">♩</span>
-          Nuevo Casino
-        </div>
-        <div class="gallery-overlay">
-          <span class="gallery-caption">Ciclo Coral, feb. 2026</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder">
-          <span class="gallery-icon">♫</span>
-          Gala Navideña · Baluarte<br>con la JOP
-        </div>
-        <div class="gallery-overlay">
-          <span class="gallery-caption">Baluarte, enero 2025</span>
-        </div>
-      </div>
-      <div class="gallery-item">
-        <div class="gallery-placeholder">
-          <span class="gallery-icon">♪</span>
-          Roncesvalles
-        </div>
-        <div class="gallery-overlay">
-          <span class="gallery-caption">Concierto en Orreaga</span>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top:2.5rem;text-align:center;">
-      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary" style="display:inline-block;">
-        Más fotos en @corosaudade
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- ─── CONTACTO ─── -->
 <section id="contacto">
   <div class="section-inner">
-    <p class="section-label">Ponte en contacto</p>
-    <h2 class="section-title">Hablemos</h2>
-    <div class="section-divider"></div>
+    <p class="section-label">♦ Ponte en contacto</p>
+    <h2 class="section-title"><em>Hablemos</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
     <div class="contact-layout">
       <div class="contact-info-list fade-in">
         <div class="contact-item">
@@ -1347,10 +1456,10 @@
             <p style="font-size:2rem;margin-bottom:0.5rem;">📍</p>
             <p>Pamplona / Iruña<br>Navarra, España</p>
           </div>
-          <div class="map-address">Coro Saudade de Pamplona/Iruña · Navarra</div>
+          <div class="map-address">Coro Saudade de Pamplona / Iruña · Navarra</div>
         </div>
-        <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid var(--gray-light);">
-          <p style="font-family:var(--serif-body);font-size:0.85rem;color:var(--gray-dark);font-style:italic;line-height:1.8;">
+        <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid var(--gold-pale);background:var(--off-white);">
+          <p style="font-family:var(--serif-title);font-size:0.88rem;color:var(--gray-mid);font-style:italic;line-height:1.8;">
             Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente al correo o a través de nuestras redes sociales. Respondemos en menos de 48 horas.
           </p>
         </div>
@@ -1365,7 +1474,7 @@
     <div class="footer-brand">
       <a href="#inicio" class="nav-logo">
         Saudade
-        <span>Coro de Pamplona / Iruña</span>
+        <span>♦ Coro de Pamplona / Iruña ♦</span>
       </a>
       <p>
         Voces que tejen memoria, belleza y comunidad en Navarra. Coro mixto con más de treinta años de historia.
@@ -1393,11 +1502,11 @@
   </div>
   <div class="footer-bottom">
     <p>© 2025 Coro Saudade de Pamplona / Iruña. Todos los derechos reservados.</p>
+    <div class="footer-gold-rule"></div>
     <p>Federación de Coros de Navarra</p>
   </div>
 </footer>
 
-<!-- Notification -->
 <div class="notification" id="notification"></div>
 
 <script>
@@ -1416,117 +1525,175 @@ function closeMobile() { mob.classList.remove('open'); }
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
     if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 100);
+      setTimeout(() => e.target.classList.add('visible'), i * 120);
       observer.unobserve(e.target);
     }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// ─── CONFIGURACIÓN — reemplaza estas URLs con las tuyas ───────────────────────
-// 1. FORMSPREE: crea cuenta en formspree.io, crea un form, pega aquí el endpoint
-const FORMSPREE_URL = 'https://formspree.io/f/xojrlgdl';
+// ─── CAROUSEL
+(function() {
+  const track    = document.getElementById('carouselTrack');
+  const slides   = track.querySelectorAll('.carousel-slide');
+  const dotsEl   = document.getElementById('carouselDots');
+  const counter  = document.getElementById('carouselCounter');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
 
-// 2. GOOGLE APPS SCRIPT: pega aquí la URL del Web App desplegado (ver guía abajo)
+  let current = 0;
+  let autoTimer;
+
+  // How many slides visible at once?
+  function slidesVisible() {
+    return window.innerWidth <= 900 ? 1 : 3;
+  }
+
+  const total = slides.length;
+
+  // Build dots
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    const pages = Math.ceil(total / slidesVisible());
+    for (let i = 0; i < pages; i++) {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i * slidesVisible()));
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function updateUI() {
+    const sv = slidesVisible();
+    const pct = (current / total) * 100;
+    track.style.transform = `translateX(-${pct}%)`;
+    // dots
+    const pages = Math.ceil(total / sv);
+    const currentPage = Math.floor(current / sv);
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentPage);
+    });
+    // counter
+    const maxPage = pages - 1;
+    counter.textContent = `${currentPage + 1} / ${pages}`;
+    // slide width
+    slides.forEach(s => {
+      s.style.flex = `0 0 ${100 / (sv === 1 ? 1 : (sv === 2 ? 2 : 3))}%`;
+    });
+  }
+
+  function goTo(idx) {
+    const sv = slidesVisible();
+    const maxPage = Math.ceil(total / sv) - 1;
+    const page = Math.max(0, Math.min(Math.floor(idx / sv), maxPage));
+    current = page * sv;
+    updateUI();
+  }
+
+  function next() {
+    const sv = slidesVisible();
+    const pages = Math.ceil(total / sv);
+    const currentPage = Math.floor(current / sv);
+    goTo(((currentPage + 1) % pages) * sv);
+  }
+  function prev() {
+    const sv = slidesVisible();
+    const pages = Math.ceil(total / sv);
+    const currentPage = Math.floor(current / sv);
+    goTo(((currentPage - 1 + pages) % pages) * sv);
+  }
+
+  nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+  prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 5000);
+  }
+
+  // Touch/drag
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); resetAuto(); }
+  });
+
+  window.addEventListener('resize', () => { buildDots(); updateUI(); });
+
+  buildDots();
+  updateUI();
+  resetAuto();
+})();
+
+// ─── FORM BACKEND CONFIG
+const FORMSPREE_URL  = 'https://formspree.io/f/xojrlgdl';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q/exec';
-// ──────────────────────────────────────────────────────────────────────────────
 
 async function handleSubmit() {
   const form = document.getElementById('joinForm');
   const btn  = document.getElementById('submitBtn');
-
-  // Validar campos required manualmente
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-
-  // UI: cambiar botón al instante
+  if (!form.checkValidity()) { form.reportValidity(); return; }
   btn.textContent = 'Enviando…';
   btn.disabled = true;
-
   const data = {
-    nombre:      form.nombre.value.trim(),
-    apellidos:   form.apellidos.value.trim(),
-    email:       form.email.value.trim(),
-    telefono:    form.telefono.value.trim() || '—',
-    cuerda:      form.cuerda.value,
+    nombre: form.nombre.value.trim(),
+    apellidos: form.apellidos.value.trim(),
+    email: form.email.value.trim(),
+    telefono: form.telefono.value.trim() || '—',
+    cuerda: form.cuerda.value,
     experiencia: form.experiencia.value || '—',
-    mensaje:     form.mensaje.value.trim() || '—',
-    fecha:       new Date().toLocaleDateString('es-ES'),
-    hora:        new Date().toLocaleTimeString('es-ES'),
+    mensaje: form.mensaje.value.trim() || '—',
+    fecha: new Date().toLocaleDateString('es-ES'),
+    hora: new Date().toLocaleTimeString('es-ES'),
   };
-
   const results = await Promise.allSettled([
     enviarFormspree(data),
     enviarGoogleSheets(data),
   ]);
-
   const formspreeOk = results[0].status === 'fulfilled' && results[0].value;
   const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
-
-  // Mostrar éxito siempre — los servicios pueden no estar configurados aún
   document.getElementById('formContent').style.display = 'none';
   document.getElementById('formSuccess').style.display  = 'block';
-
   if (formspreeOk || sheetsOk) {
-    const detalle = [
-      formspreeOk ? '✔ Email enviado al coro' : null,
-      sheetsOk    ? '✔ Guardado en Google Sheets' : null,
-    ].filter(Boolean).join(' · ');
+    const detalle = [formspreeOk ? '✔ Email enviado al coro' : null, sheetsOk ? '✔ Guardado en Google Sheets' : null].filter(Boolean).join(' · ');
     showNotification(detalle);
   } else {
     showNotification('Solicitud recibida. Configura Formspree y Apps Script para activar el envío real.');
   }
 }
-
-// ── Formspree → manda email al coro automáticamente
 async function enviarFormspree(data) {
-  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false; // no configurado aún
+  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false;
   const res = await fetch(FORMSPREE_URL, {
-    method:  'POST',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body:    JSON.stringify({
-      _subject:  `Nueva solicitud de ingreso — ${data.nombre} ${data.apellidos}`,
-      nombre:    `${data.nombre} ${data.apellidos}`,
-      email:     data.email,
-      telefono:  data.telefono,
-      cuerda:    data.cuerda,
-      experiencia: data.experiencia,
-      mensaje:   data.mensaje,
-      fecha:     `${data.fecha} ${data.hora}`,
+    body: JSON.stringify({
+      _subject: `Nueva solicitud de ingreso — ${data.nombre} ${data.apellidos}`,
+      nombre: `${data.nombre} ${data.apellidos}`,
+      email: data.email, telefono: data.telefono,
+      cuerda: data.cuerda, experiencia: data.experiencia,
+      mensaje: data.mensaje, fecha: `${data.fecha} ${data.hora}`,
     }),
   });
   return res.ok;
 }
-
-// ── Google Apps Script → escribe fila en Google Sheets
 async function enviarGoogleSheets(data) {
-  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_AQUI')) return false; // no configurado aún
-  const res = await fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    // no-cors necesario para Apps Script desde GitHub Pages
-    mode:   'no-cors',
+  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_AQUI')) return false;
+  await fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body:   JSON.stringify(data),
+    body: JSON.stringify(data),
   });
-  // no-cors siempre devuelve opaque; asumimos OK si no lanza
   return true;
 }
-
-// ─── NOTIFICATION
 function showNotification(msg) {
   const n = document.getElementById('notification');
   n.textContent = msg;
   n.classList.add('show');
   setTimeout(() => n.classList.remove('show'), 4000);
 }
-
-// ─── SMOOTH CLOSE nav on click
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', () => {
-    mob.classList.remove('open');
-  });
+  a.addEventListener('click', () => mob.classList.remove('open'));
 });
 </script>
 </body>
