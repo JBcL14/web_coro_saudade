@@ -1248,6 +1248,97 @@
     background: rgba(184,148,31,0.05);
   }
   .custom-option.selected::before { opacity: 1; background: var(--gold-pale); }
+  /* ─── DIRECTOR ─── */
+  #director { background: var(--off-white); border-top: 1px solid var(--gold-pale); }
+  .director-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .director-photo-wrap {
+    position: sticky;
+    top: 100px;
+  }
+  .director-photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gold-pale);
+  }
+  .director-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: grayscale(20%) sepia(10%) brightness(0.9);
+    display: block;
+    transition: filter 0.8s ease, transform 0.8s ease;
+  }
+  .director-photo:hover img {
+    filter: grayscale(0%) sepia(5%) brightness(0.95);
+    transform: scale(1.02);
+  }
+  .director-photo-caption {
+    margin-top: 1rem;
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    text-align: center;
+  }
+  .director-info .section-label { margin-bottom: 0.6rem; }
+  .director-info .section-title { margin-bottom: 0.5rem; }
+  .director-name-sub {
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--gray-mid);
+    margin-bottom: 2rem;
+  }
+  .director-bio p {
+    font-family: var(--serif-title);
+    font-size: 1.02rem;
+    line-height: 1.95;
+    color: var(--gray-mid);
+    margin-bottom: 1.4rem;
+  }
+  .director-bio p strong { color: var(--black); font-weight: 600; }
+  .director-milestones {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--gold-pale);
+  }
+  .milestone {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--gold-pale);
+    align-items: baseline;
+  }
+  .milestone-year {
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+  }
+  .milestone-desc {
+    font-family: var(--serif-title);
+    font-size: 0.92rem;
+    color: var(--gray-mid);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .director-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .director-photo-wrap { position: static; max-width: 320px; margin: 0 auto; }
+  }
 </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
@@ -1263,6 +1354,7 @@
   </a>
   <ul class="nav-links">
     <li><a href="#nosotros">El Coro</a></li>
+    <li><a href="#director">Director</a></li>
     <li><a href="#eventos">Eventos</a></li>
     <li><a href="#repertorio">Repertorio</a></li>
     <li><a href="#galeria">Galería</a></li>
@@ -1276,6 +1368,7 @@
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="#nosotros" onclick="closeMobile()">El Coro</a>
+  <a href="#director" onclick="closeMobile()">Director</a>
   <a href="#eventos" onclick="closeMobile()">Eventos</a>
   <a href="#repertorio" onclick="closeMobile()">Repertorio</a>
   <a href="#galeria" onclick="closeMobile()">Galería</a>
@@ -1370,6 +1463,66 @@
           <span class="stat-label">Cuerdas vocales</span>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DIRECTOR ─── -->
+<section id="director">
+  <div class="section-inner">
+    <div class="director-grid">
+
+      <div class="director-photo-wrap fade-in">
+        <div class="director-photo">
+          <img
+            src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=700&q=80&fit=crop&crop=top"
+            alt="Juan Gainza Berro, director del Coro Saudade"
+          >
+        </div>
+        <p class="director-photo-caption">Juan Gainza Berro · Director</p>
+      </div>
+
+      <div class="director-info fade-in">
+        <p class="section-label">♦ Al frente del coro</p>
+        <h2 class="section-title">Juan Gainza<br><em>Berro</em></h2>
+        <p class="director-name-sub">Director artístico · Coro Saudade de Pamplona</p>
+        <div class="ornament-line"><span>✦</span></div>
+
+        <div class="director-bio">
+          <p>
+            Juan Gainza Berro es una de las figuras más sólidas de la dirección coral en Navarra. Formado en el <strong>Conservatorio Superior de Música Pablo Sarasate de Pamplona</strong>, es Profesor Superior de Violonchelo y de Música de Cámara, además de Licenciado en Derecho por la Universidad de Navarra.
+          </p>
+          <p>
+            Su trayectoria en el mundo coral es amplia y variada: durante <strong>dos décadas fue cantante del Orfeón Pamplonés</strong>, donde ejerció como jefe de la cuerda de tenores hasta 2019. Desde 2004 dirige la <strong>Escolanía y el Coro Joven del Orfeón Pamplonés</strong>, formaciones con las que ha abordado un repertorio que va desde la polifonía renacentista hasta grandes obras sinfónico-corales como la <em>Octava Sinfonía</em> de Mahler o el <em>Carmina Burana</em> de Orff.
+          </p>
+          <p>
+            Ha perfeccionado su técnica de dirección con maestros como <strong>Johan Duijck, Javi Busto, Juan Luis Martínez o Elisenda Carrasco</strong>, entre otros. Es asimismo profesor de Lenguaje Musical, director de talleres corales juveniles para distintas federaciones, y jurado habitual en certámenes de composición e interpretación coral.
+          </p>
+          <p>
+            Al frente del Coro Saudade, Gainza imprime su sello de rigor y calidez humana, construyendo un ensemble donde la excelencia técnica y el disfrute colectivo caminan de la mano.
+          </p>
+        </div>
+
+        <div class="director-milestones">
+          <div class="milestone">
+            <span class="milestone-year">2004</span>
+            <span class="milestone-desc">Asume la dirección de la Escolanía y el Coro Joven del Orfeón Pamplonés</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">2004–19</span>
+            <span class="milestone-desc">Jefe de la cuerda de tenores y cantante del Orfeón Pamplonés</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">2014</span>
+            <span class="milestone-desc">Premio absoluto en el certamen coral La Antigua de Zumárraga con la Escolanía</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">Hoy</span>
+            <span class="milestone-desc">Director artístico del Coro Saudade de Pamplona · Profesor y jurado en certámenes corales</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1750,6 +1903,7 @@
       <h4>Navegación</h4>
       <ul>
         <li><a href="#nosotros">El Coro</a></li>
+        <li><a href="#director">Director</a></li>
         <li><a href="#eventos">Eventos</a></li>
         <li><a href="#repertorio">Repertorio</a></li>
         <li><a href="#galeria">Galería</a></li>
