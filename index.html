@@ -1139,6 +1139,114 @@
     .hero-title { font-size: clamp(3.5rem, 15vw, 6rem); }
     .hero-side { display: none; }
   }
+
+  /* ─── CUSTOM SELECT ─── */
+  .custom-select-wrapper {
+    position: relative;
+  }
+  .custom-select-wrapper select {
+    display: none;
+  }
+  .custom-select {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  .custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(184,148,31,0.3);
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    color: var(--white);
+    transition: border-color 0.3s ease;
+  }
+  .custom-select-trigger.placeholder-active {
+    color: rgba(248,246,241,0.25);
+    font-style: italic;
+  }
+  .custom-select-trigger .select-arrow {
+    font-size: 0.6rem;
+    color: rgba(184,148,31,0.6);
+    transition: transform 0.3s ease, color 0.3s ease;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+  .custom-select.open .custom-select-trigger {
+    border-bottom-color: rgba(248,246,241,0.7);
+  }
+  .custom-select.open .custom-select-trigger .select-arrow {
+    transform: rotate(180deg);
+    color: var(--gold-pale);
+  }
+  .custom-select-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #1a1710;
+    border: 1px solid rgba(184,148,31,0.25);
+    border-top: none;
+    z-index: 50;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                border-color 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .custom-select.open .custom-select-options {
+    max-height: 260px;
+    opacity: 1;
+    pointer-events: all;
+    border-top: 1px solid rgba(184,148,31,0.25);
+    overflow-y: auto;
+  }
+  .custom-select-options::-webkit-scrollbar { width: 3px; }
+  .custom-select-options::-webkit-scrollbar-track { background: transparent; }
+  .custom-select-options::-webkit-scrollbar-thumb {
+    background: rgba(184,148,31,0.3);
+    border-radius: 2px;
+  }
+  .custom-option {
+    padding: 0.75rem 1rem;
+    font-family: var(--serif-title);
+    font-size: 0.9rem;
+    color: rgba(248,246,241,0.55);
+    font-style: italic;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(184,148,31,0.08);
+    transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .custom-option:last-child { border-bottom: none; }
+  .custom-option::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+  }
+  .custom-option:hover {
+    background: rgba(184,148,31,0.08);
+    color: rgba(248,246,241,0.9);
+    padding-left: 1.3rem;
+  }
+  .custom-option:hover::before { opacity: 1; }
+  .custom-option.selected {
+    color: var(--gold-pale);
+    background: rgba(184,148,31,0.05);
+  }
+  .custom-option.selected::before { opacity: 1; background: var(--gold-pale); }
 </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
@@ -1502,27 +1610,58 @@
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="cuerda">Cuerda vocal</label>
-                <select id="cuerda" name="cuerda" required>
-                  <option value="" disabled selected>Seleccionar…</option>
-                  <option value="soprano">Soprano</option>
-                  <option value="mezzosoprano">Mezzosoprano</option>
-                  <option value="contralto">Contralto</option>
-                  <option value="tenor">Tenor</option>
-                  <option value="baritono">Barítono</option>
-                  <option value="bajo">Bajo</option>
-                  <option value="nosé">No lo sé</option>
-                </select>
+                <label>Cuerda vocal</label>
+                <div class="custom-select-wrapper">
+                  <select id="cuerda" name="cuerda" required>
+                    <option value="" disabled selected>Seleccionar…</option>
+                    <option value="soprano">Soprano</option>
+                    <option value="mezzosoprano">Mezzosoprano</option>
+                    <option value="contralto">Contralto</option>
+                    <option value="tenor">Tenor</option>
+                    <option value="baritono">Barítono</option>
+                    <option value="bajo">Bajo</option>
+                    <option value="nosé">No lo sé</option>
+                  </select>
+                  <div class="custom-select" data-for="cuerda">
+                    <div class="custom-select-trigger placeholder-active">
+                      <span>Seleccionar…</span>
+                      <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options">
+                      <div class="custom-option" data-value="soprano">Soprano</div>
+                      <div class="custom-option" data-value="mezzosoprano">Mezzosoprano</div>
+                      <div class="custom-option" data-value="contralto">Contralto</div>
+                      <div class="custom-option" data-value="tenor">Tenor</div>
+                      <div class="custom-option" data-value="baritono">Barítono</div>
+                      <div class="custom-option" data-value="bajo">Bajo</div>
+                      <div class="custom-option" data-value="nosé">No lo sé</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="form-group">
-                <label for="experiencia">Experiencia coral</label>
-                <select id="experiencia" name="experiencia">
-                  <option value="" disabled selected>Seleccionar…</option>
-                  <option value="ninguna">Sin experiencia previa</option>
-                  <option value="poca">1–3 años</option>
-                  <option value="media">3–10 años</option>
-                  <option value="mucha">Más de 10 años</option>
-                </select>
+                <label>Experiencia coral</label>
+                <div class="custom-select-wrapper">
+                  <select id="experiencia" name="experiencia">
+                    <option value="" disabled selected>Seleccionar…</option>
+                    <option value="ninguna">Sin experiencia previa</option>
+                    <option value="poca">1–3 años</option>
+                    <option value="media">3–10 años</option>
+                    <option value="mucha">Más de 10 años</option>
+                  </select>
+                  <div class="custom-select" data-for="experiencia">
+                    <div class="custom-select-trigger placeholder-active">
+                      <span>Seleccionar…</span>
+                      <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="custom-select-options">
+                      <div class="custom-option" data-value="ninguna">Sin experiencia previa</div>
+                      <div class="custom-option" data-value="poca">1–3 años</div>
+                      <div class="custom-option" data-value="media">3–10 años</div>
+                      <div class="custom-option" data-value="mucha">Más de 10 años</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -1912,6 +2051,37 @@ function showNotification(msg) {
 }
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', () => mob.classList.remove('open'));
+});
+// ─── CUSTOM SELECTS
+document.querySelectorAll('.custom-select').forEach(cs => {
+  const trigger = cs.querySelector('.custom-select-trigger');
+  const options = cs.querySelectorAll('.custom-option');
+  const nativeSelect = document.getElementById(cs.dataset.for);
+
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.custom-select.open').forEach(o => {
+      if (o !== cs) o.classList.remove('open');
+    });
+    cs.classList.toggle('open');
+  });
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      const val = opt.dataset.value;
+      const label = opt.textContent.trim();
+      trigger.querySelector('span:first-child').textContent = label;
+      trigger.classList.remove('placeholder-active');
+      options.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      nativeSelect.value = val;
+      cs.classList.remove('open');
+    });
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.custom-select.open').forEach(cs => cs.classList.remove('open'));
 });
 </script>
 </body>
