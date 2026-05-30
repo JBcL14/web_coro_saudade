@@ -90,6 +90,7 @@
     color: var(--black);
     text-decoration: none;
     line-height: 1.1;
+    display: inline-block;
   }
   .nav-logo span {
     display: block;
@@ -101,6 +102,24 @@
     color: var(--gray-mid);
     margin-top: 3px;
     text-transform: uppercase;
+  }
+  .nav-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el texto y la imagen al centro */
+    gap: 0.75rem;        /* El espacio exacto que quieres entre la imagen y el texto (puedes poner 0 si los quieres 100% pegados) */
+    text-decoration: none; /* Elimina subrayados indeseados en el texto */
+  }
+  .nav-logo-img {
+    height: 42px;
+    width: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.92;
+    transition: opacity 0.3s ease;
+  }
+  .nav-logo-img:hover {
+    opacity: 1;
   }
   .nav-links {
     display: flex;
@@ -128,7 +147,7 @@
   }
   .nav-links a:hover { color: var(--black); }
   .nav-links a:hover::after { right: 0; }
-  .nav-cta {
+  /*.nav-cta {
     background: var(--black) !important;
     color: var(--white) !important;
     padding: 0.5rem 1.3rem;
@@ -144,7 +163,7 @@
     color: var(--black) !important;
     border-color: var(--black) !important;
   }
-  .nav-cta::after { display: none !important; }
+  .nav-cta::after { display: none !important; }*/
 
   /* ─── NAV SOCIAL ICONS ─── */
   .nav-social {
@@ -193,175 +212,83 @@
 
   /* ─── HERO ─── */
   #inicio {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
     overflow: hidden;
     padding-top: 72px;
     background: var(--white);
+    min-height: 100vh;
   }
 
-  /* Lateral image panels */
-  .hero-side {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 22%;
-    z-index: 1;
+  /* Full-width banner image */
+  .hero-banner {
+    width: 100%;
+    height: clamp(260px, 42vw, 400px);
     overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
   }
-  .hero-side-left  { left: 0; }
-  .hero-side-right { right: 0; }
-
-  .hero-side img {
+  .hero-banner img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center 30%;
     display: block;
-    filter: grayscale(30%) brightness(0.82) sepia(15%);
-    transition: filter 1.2s ease, transform 8s ease;
-    transform: scale(1.04);
+    filter: grayscale(18%) brightness(0.88) sepia(8%);
   }
-  #inicio:hover .hero-side img {
-    filter: grayscale(20%) brightness(0.88) sepia(10%);
-    transform: scale(1.0);
-  }
-
-  /* Gradient fade toward center */
-  .hero-side-left::after,
-  .hero-side-right::after {
+  /* Subtle bottom fade so the banner blends into the cream background */
+  .hero-banner::after {
     content: '';
     position: absolute;
-    inset: 0;
+    bottom: 0; left: 0; right: 0;
+    height: 17%;
+    background: linear-gradient(to bottom, transparent, var(--white));
     pointer-events: none;
   }
-  .hero-side-left::after {
-    background: linear-gradient(to right,
-      rgba(240,236,227,0.15) 0%,
-      rgba(240,236,227,0.65) 60%,
-      rgba(240,236,227,1)   100%
-    );
-  }
-  .hero-side-right::after {
-    background: linear-gradient(to left,
-      rgba(240,236,227,0.15) 0%,
-      rgba(240,236,227,0.65) 60%,
-      rgba(240,236,227,1)   100%
-    );
-  }
 
-  /* Thin gold border on image edge */
-  .hero-side-left::before,
-  .hero-side-right::before {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--gold-pale), transparent);
-    z-index: 2;
-  }
-  .hero-side-left::before  { right: 0; }
-  .hero-side-right::before { left: 0; }
-
-  .hero-pattern {
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(ellipse at 50% 50%, rgba(184,148,31,0.04) 0%, transparent 60%);
-    z-index: 0;
-  }
-  /* Subtle music staff lines */
-  .hero-staff {
-    position: absolute;
-    left: 0; right: 0;
-    z-index: 0;
-    overflow: hidden;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.04;
-  }
-  .hero-staff-line {
-    height: 1px;
-    background: var(--black);
-    margin: 12px 0;
-  }
   .hero-content {
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: 4rem 2rem;
-    max-width: 820px;
+    padding: 2.5rem 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
   }
+
+  /* Logo image */
+  .hero-logo-img {
+    width: clamp(120px, 22vw, 250px);
+    height: auto;
+    display: block;
+    margin: 0 auto 1.6rem;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
   .hero-eyebrow {
     font-family: var(--serif-sc);
     font-size: 0.72rem;
-    letter-spacing: 0.45em;
+    letter-spacing: 0.4em;
     color: var(--gray-mid);
     text-transform: uppercase;
-    margin-bottom: 2.2rem;
-    animation: fadeUp 1s ease 0.2s both;
+    margin-bottom: 0;
+    animation: fadeUp 1s ease 0.5s both;
   }
-  .hero-title {
-    font-family: var(--serif-title);
-    font-size: clamp(4rem, 10vw, 8.5rem);
-    font-weight: 300;
-    line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: var(--black);
-    margin-bottom: 0.6rem;
-    animation: fadeUp 1s ease 0.4s both;
-  }
-  .hero-title-italic {
-    font-style: italic;
-    font-weight: 300;
-    display: block;
-    font-size: 0.55em;
-    letter-spacing: 0.08em;
-    color: var(--gray-mid);
-    margin-top: 0.4rem;
-  }
-  .hero-gold-rule {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin: 2rem auto;
-    animation: fadeUp 1s ease 0.55s both;
-  }
-  .hero-gold-rule::before,
-  .hero-gold-rule::after {
-    content: '';
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold));
-  }
-  .hero-gold-rule::after {
-    background: linear-gradient(to left, transparent, var(--gold));
-  }
-  .hero-gold-rule span { color: var(--gold); font-size: 1.2rem; }
-  .hero-subtitle {
-    font-family: var(--serif-title);
-    font-size: 1.1rem;
-    line-height: 1.9;
-    color: var(--gray-mid);
-    max-width: 460px;
-    margin: 0 auto 3rem;
-    font-weight: 300;
-    font-style: italic;
-    animation: fadeUp 1s ease 0.65s both;
-  }
+
   .hero-actions {
     display: flex;
     gap: 1.2rem;
     justify-content: center;
     flex-wrap: wrap;
-    animation: fadeUp 1s ease 0.8s both;
+    margin-top: 2.4rem;
+    animation: fadeUp 1s ease 0.7s both;
   }
   .btn-primary {
-    background: var(--black);
-    color: var(--white);
+    background: transparent;
+    color: var(--black);
     padding: 0.9rem 2.8rem;
     font-family: var(--serif-sc);
     font-size: 0.8rem;
@@ -373,8 +300,8 @@
     cursor: pointer;
   }
   .btn-primary:hover {
-    background: transparent;
-    color: var(--black);
+    background: var(--black);
+    color: var(--white);
   }
   .btn-secondary {
     border: 1px solid var(--black);
@@ -394,10 +321,8 @@
     color: var(--white);
   }
   .hero-scroll {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 0;
-    right: 0;
+    margin-top: auto;
+    padding: 2rem 0 2.5rem;
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -410,7 +335,7 @@
     letter-spacing: 0.35em;
     text-transform: uppercase;
     opacity: 0.6;
-    animation: fadeUp 1s ease 1.2s both;
+    animation: fadeUp 1s ease 1s both;
     pointer-events: none;
   }
   .hero-scroll-line {
@@ -805,6 +730,10 @@
     gap: 6rem;
     align-items: start;
   }
+  .join-info-only {
+    max-width: 680px;
+    margin: 0 auto;
+  }
   .join-info h3 {
     font-family: var(--serif-title);
     font-size: 1.6rem;
@@ -946,141 +875,131 @@
   }
 
   /* ─── CONTACTO ─── */
-  #contacto { background: var(--white); }
-  .contact-layout {
+  #contacto { background: var(--white); padding: 0; }
+  .contact-split {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 5rem;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    min-height: 700px;
   }
-  .contact-info-list {
+  .contact-split-left {
+    background: var(--black);
+    padding: 7rem 4rem;
     display: flex;
     flex-direction: column;
-    gap: 2.2rem;
+    justify-content: center;
   }
-  .contact-item h4 {
+  .contact-split-left-inner {
+    max-width: 480px;
+  }
+  .contact-split-right {
+    background: var(--black);
+    padding: 0;
+  }
+  .contact-split-right .join-form {
+    height: 100%;
+    padding: 7rem 4rem;
+  }
+  .contact-split .contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .contact-split .contact-item h4 {
     font-family: var(--serif-sc);
     font-size: 0.62rem;
     letter-spacing: 0.3em;
-    color: var(--gray-mid);
+    color: rgba(248,246,241,0.4);
     margin-bottom: 0.4rem;
   }
-  .contact-item p, .contact-item a {
+  .contact-split .contact-item p,
+  .contact-split .contact-item a {
     font-family: var(--serif-title);
-    font-size: 1.05rem;
-    color: var(--black);
+    font-size: 0.98rem;
+    color: rgba(248,246,241,0.8);
     text-decoration: none;
     transition: var(--transition);
     display: block;
-    line-height: 1.5;
+    line-height: 1.6;
   }
-  .contact-item a:hover { color: var(--gray-mid); }
-  .social-links {
+  .contact-split .contact-item a:hover { color: var(--white); }
+  .contact-split .ornament-line::before,
+  .contact-split .ornament-line::after {
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.35), transparent);
+  }
+  .contact-social-links {
     display: flex;
-    gap: 1.2rem;
-    margin-top: 0.5rem;
+    gap: 1.5rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
   }
-  .social-link {
-    font-family: var(--serif-sc);
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
-    color: var(--black);
-    text-decoration: none;
-    border-bottom: 1px solid var(--gray-light);
-    padding-bottom: 1px;
-    transition: var(--transition);
-  }
-  .social-link:hover { color: var(--gray-mid); border-color: var(--gray-mid); }
-  .contact-map {
-    background: var(--off-white);
-    border: 1px solid var(--gold-pale);
-    height: 300px;
+  .contact-social-link {
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .map-placeholder {
-    text-align: center;
-    font-family: var(--serif-title);
-    color: var(--gray-mid);
-    font-style: italic;
-    font-size: 0.9rem;
-  }
-  .map-address {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: var(--black);
-    color: var(--gold-pale);
-    padding: 0.9rem 1.5rem;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: rgba(248,246,241,0.6);
     font-family: var(--serif-sc);
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    border-bottom: 1px solid rgba(248,246,241,0.2);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .contact-social-link:hover {
+    color: var(--white);
+    border-color: rgba(184,148,31,0.6);
+  }
+  .contact-social-link svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+  @media (max-width: 900px) {
+    .contact-split { grid-template-columns: 1fr; }
+    .contact-split-left { padding: 4rem 1.5rem; }
+    .contact-split-right .join-form { padding: 3rem 1.5rem; }
   }
 
-  /* ─── FOOTER ─── */
-  footer {
-    background: var(--black);
-    color: var(--white);
-    padding: 5rem 3rem 2.5rem;
-    border-top: 1px solid rgba(184,148,31,0.25);
-  }
-  .footer-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 4rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid rgba(184,148,31,0.12);
-    margin-bottom: 2rem;
-  }
-  .footer-brand .nav-logo { color: var(--white); display: inline-block; margin-bottom: 1.5rem; }
-  .footer-brand .nav-logo span { color: rgba(248,246,241,0.4); }
-  .footer-brand p {
-    font-family: var(--serif-title);
-    font-size: 0.9rem;
-    line-height: 1.8;
-    color: rgba(248,246,241,0.4);
-    font-style: italic;
-    max-width: 260px;
-  }
-  .footer-col h4 {
-    font-family: var(--serif-sc);
-    font-size: 0.62rem;
-    letter-spacing: 0.35em;
-    color: rgba(248,246,241,0.4);
-    margin-bottom: 1.2rem;
-  }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .footer-col ul a {
-    font-family: var(--serif-title);
-    font-size: 0.9rem;
-    color: rgba(248,246,241,0.5);
-    text-decoration: none;
-    transition: var(--transition);
-    font-style: italic;
-  }
-  .footer-col ul a:hover { color: var(--white); }
-  .footer-bottom {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-bottom p {
-    font-family: var(--serif-title);
-    font-size: 0.75rem;
-    color: rgba(248,246,241,0.2);
-    font-style: italic;
-  }
-  .footer-gold-rule {
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold), transparent);
-  }
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 4rem 3rem 2.5rem;
+  border-top: 1px solid rgba(184,148,31,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.footer-logo {
+  width: clamp(160px, 22vw, 260px);
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 0.9;
+  display: block;
+}
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+.footer-bottom p {
+  font-family: var(--serif-title);
+  font-size: 0.75rem;
+  color: rgba(248,246,241,0.2);
+  font-style: italic;
+  text-align: center;
+}
+.footer-gold-rule {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gray-mid), transparent);
+  opacity: 0.4;
+}
 
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
@@ -1166,8 +1085,9 @@
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    .hero-title { font-size: clamp(3.5rem, 15vw, 6rem); }
-    .hero-side { display: none; }
+    .hero-banner { height: clamp(180px, 45vw, 320px); }
+    .hero-logo-img { width: clamp(90px, 30vw, 160px); }
+    #inicio { padding-top: 72px; }
   }
 
   /* ─── CUSTOM SELECT ─── */
@@ -1369,6 +1289,21 @@
     .director-photo-wrap { position: static; max-width: 320px; margin: 0 auto; }
   }
 
+  /* ─── VÍDEOS EN NOSOTROS ─── */
+  .nosotros-video-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 0;
+  }
+  .nosotros-video-row .video-frame {
+    border-color: var(--gold-pale);
+    background: var(--off-white);
+  }
+  @media (max-width: 900px) {
+    .nosotros-video-row { grid-template-columns: 1fr; }
+  }
+
   /* ─── VÍDEOS ─── */
   #videos {
     background: var(--black);
@@ -1541,19 +1476,21 @@
 
 <!-- ─── NAV ─── -->
 <nav id="navbar">
-  <a href="#inicio" class="nav-logo">
-    Coro Saudade
-    <span>♦ de Pamplona ♦</span>
+  <span class="nav-container">
+    <a href="#inicio" class="nav-container" aria-label="Inicio, Coro Saudade">
+    <img src="imagenes/logo_redondo.png" alt="Logo Coro Saudade" class="nav-logo-img">
+    <span class="nav-logo">Coro Saudade</span>
   </a>
+  </span>
   <ul class="nav-links">
     <li><a href="#nosotros">El Coro</a></li>
     <li><a href="#director">Director</a></li>
-    <li><a href="#eventos">Eventos</a></li>
-    <li><a href="#repertorio">Repertorio</a></li>
+    <li><a href="#eventos">Conciertos</a></li>
+    <!-- <li><a href="#repertorio">Repertorio</a></li> -->
     <li><a href="#galeria">Galería</a></li>
-    <li><a href="#videos">Vídeos</a></li>
+    <!-- <li><a href="#videos">Vídeos</a></li> -->
+     <li><a href="#unete" class="nav-cta">Únete</a></li>
     <li><a href="#contacto">Contacto</a></li>
-    <li><a href="#unete" class="nav-cta">Únete</a></li>
   </ul>
   <div class="nav-social">
     <!-- Mail -->
@@ -1583,59 +1520,42 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#nosotros" onclick="closeMobile()">El Coro</a>
   <a href="#director" onclick="closeMobile()">Director</a>
-  <a href="#eventos" onclick="closeMobile()">Eventos</a>
-  <a href="#repertorio" onclick="closeMobile()">Repertorio</a>
+  <a href="#eventos" onclick="closeMobile()">Conciertos</a>
+  <!-- <a href="#repertorio" onclick="closeMobile()">Repertorio</a> -->
   <a href="#galeria" onclick="closeMobile()">Galería</a>
-  <a href="#videos" onclick="closeMobile()">Vídeos</a>
-  <a href="#contacto" onclick="closeMobile()">Contacto</a>
+  <!-- <a href="#videos" onclick="closeMobile()">Vídeos</a> -->
   <a href="#unete" onclick="closeMobile()">Únete al coro</a>
+  <a href="#contacto" onclick="closeMobile()">Contacto</a>
 </div>
 
 <!-- ─── HERO ─── -->
 <section id="inicio">
-  <div class="hero-pattern"></div>
 
-  <!-- Lateral image panels -->
-  <div class="hero-side hero-side-left" aria-hidden="true">
+  <!-- Full-width banner image -->
+  <div class="hero-banner" aria-hidden="true">
     <img
-      src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80&fit=crop"
-      alt=""
-      loading="eager"
-    >
-  </div>
-  <div class="hero-side hero-side-right" aria-hidden="true">
-    <img
-      src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&q=80&fit=crop&crop=center"
-      alt=""
+      src="imagenes/inicio.JPG"
+      alt="Coro Saudade de Pamplona"
       loading="eager"
     >
   </div>
 
-  <div class="hero-staff" aria-hidden="true">
-    <div class="hero-staff-line"></div>
-    <div class="hero-staff-line"></div>
-    <div class="hero-staff-line"></div>
-    <div class="hero-staff-line"></div>
-    <div class="hero-staff-line"></div>
-  </div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Pamplona · Navarra · Desde 2018</p>
-    <h1 class="hero-title">
-      Coro Saudade
-      <span class="hero-title-italic">de Pamplona</span>
-    </h1>
-    <div class="hero-gold-rule">
-      <span>♦</span>
-    </div>
-    <p class="hero-subtitle">
-      Voces que tejen memoria, belleza y comunidad.<br>
-      Coro mixto dirigido por Juan Gainza.
-    </p>
+    <!-- Logo -->
+    <img
+      src="imagenes/logo.png"
+      alt="Logotipo Coro Saudade"
+      class="hero-logo-img"
+    >
+    <!-- Localización y año -->
+    <p class="hero-eyebrow">Pamplona, Navarra. Desde 2018.</p>
+    <!-- Botones -->
     <div class="hero-actions">
-      <a href="#eventos" class="btn-primary">Próximos Conciertos</a>
+      <a href="#eventos" class="btn-primary">Conciertos</a>
       <a href="#unete" class="btn-secondary">Únete al Coro</a>
     </div>
   </div>
+
   <div class="hero-scroll">
     <div class="hero-scroll-line"></div>
     <span>Descubrir</span>
@@ -1651,13 +1571,13 @@
         <h2 class="section-title">Una voz hecha<br>de <em>muchas</em></h2>
         <div class="ornament-line"><span>✦</span></div>
         <p>
-          El Coro Saudade de Pamplona es una <strong>formación coral mixta</strong> en la escena musical navarra. Integrado por cantantes con experiencia y amor por la música coral, el coro ofrece conciertos de alto nivel interpretativo en toda la comunidad y más allá.
+          Somos una <strong>formación integrada por personas con experiencia en el mundo coral</strong> que aborda diferentes géneros y estilos participando en proyectos muy diversos.
         </p>
         <p>
-          Bajo la dirección de <strong>Juan Gainza</strong>, el coro cultiva un repertorio ecléctico que abarca desde la polifonía clásica hasta obras contemporáneas, pasando por el folklore y el repertorio sacro. Formamos parte de la <strong>Federación de Coros de Navarra</strong>.
+          Bajo el nombre del coro subyace la idea de la importancia que han tenido determinadas personas y momentos en nuestras vidas. Afrontamos la interpretación desde un punto de vista <strong>exigente y dinámico</strong>, con el fin de disfrutar y de hacer disfrutar.
         </p>
         <p>
-          Ensayamos cada semana en Pamplona con la pasión de quienes saben que la música coral es, ante todo, un acto de encuentro humano.
+          Nuestro repertorio abarca distintas épocas de la historia de la música con obras religiosas y profanas, así como procedentes de folklores de todo el mundo. Actuamos en Pamplona y su entorno, en otras localidades de Navarra y fuera de nuestra comunidad.
         </p>
       </div>
       <div class="about-stats fade-in">
@@ -1680,6 +1600,43 @@
       </div>
     </div>
   </div>
+
+  <!-- Vídeos del coro en fila -->
+  <div class="section-inner" style="margin-top:4rem;">
+    <div class="ornament-line"><span>✦</span></div>
+    <div class="nosotros-video-row" id="nosotrosVideoRow">
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <span class="video-sync-badge">Sincronizado</span>
+          <video id="nvid1" src="videos/video1.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Fauré · Après une rêve</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coro mixto · Polifonía romántica</p>
+        </div>
+      </div>
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <span class="video-sync-badge">Sincronizado</span>
+          <video id="nvid2" src="videos/video2.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Anónimo s. XV · Rorate Coeli</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Música polifónica · Renacimiento</p>
+        </div>
+      </div>
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <span class="video-sync-badge">Sincronizado</span>
+          <video id="nvid3" src="videos/video3.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Eccard · Übers Gebirg Maria geht</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coral renacentista · Polifonía a 5 voces</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ─── DIRECTOR ─── -->
@@ -1690,50 +1647,47 @@
       <div class="director-photo-wrap fade-in">
         <div class="director-photo">
           <img
-            src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=700&q=80&fit=crop&crop=top"
-            alt="Juan Gainza Berro, director del Coro Saudade"
+            src="imagenes/juan.jpeg"
+            alt="Juan Gainza, director del Coro Saudade"
           >
         </div>
-        <p class="director-photo-caption">Juan Gainza Berro · Director</p>
+        <p class="director-photo-caption">Juan Gainza · Director</p>
       </div>
 
       <div class="director-info fade-in">
         <p class="section-label">♦ Al frente del coro</p>
-        <h2 class="section-title">Juan Gainza<br><em>Berro</em></h2>
-        <p class="director-name-sub">Director artístico · Coro Saudade de Pamplona</p>
+        <h2 class="section-title">Juan <em>Gainza</em></h2>
+        <p class="director-name-sub">Miembro fundador y director · Coro Saudade de Pamplona</p>
         <div class="ornament-line"><span>✦</span></div>
 
         <div class="director-bio">
           <p>
-            Juan Gainza Berro es una de las figuras más sólidas de la dirección coral en Navarra. Formado en el <strong>Conservatorio Superior de Música Pablo Sarasate de Pamplona</strong>, es Profesor Superior de Violonchelo y de Música de Cámara, además de Licenciado en Derecho por la Universidad de Navarra.
+            Realiza sus estudios musicales en el <strong>Conservatorio Superior de Música Pablo Sarasate de Pamplona</strong>, donde obtiene los títulos de Profesor Superior de Violonchelo y Profesor Superior de Música de Cámara. Es Licenciado en Derecho por la Universidad de Navarra.
           </p>
           <p>
-            Su trayectoria en el mundo coral es amplia y variada: durante <strong>dos décadas fue cantante del Orfeón Pamplonés</strong>, donde ejerció como jefe de la cuerda de tenores hasta 2019. Desde 2004 dirige la <strong>Escolanía y el Coro Joven del Orfeón Pamplonés</strong>, formaciones con las que ha abordado un repertorio que va desde la polifonía renacentista hasta grandes obras sinfónico-corales como la <em>Octava Sinfonía</em> de Mahler o el <em>Carmina Burana</em> de Orff.
+            Trabaja como director de la <strong>Escolanía y del Coro Juvenil del Orfeón Pamplonés</strong> desde 2004 y 2007 respectivamente, así como de profesor de Lenguaje Musical en su Escuela Coral y para adultos. Ha sido cantante y jefe de cuerda de tenores del Orfeón Pamplonés durante <strong>veinte años</strong>.
           </p>
           <p>
-            Ha perfeccionado su técnica de dirección con maestros como <strong>Johan Duijck, Javi Busto, Juan Luis Martínez o Elisenda Carrasco</strong>, entre otros. Es asimismo profesor de Lenguaje Musical, director de talleres corales juveniles para distintas federaciones, y jurado habitual en certámenes de composición e interpretación coral.
-          </p>
-          <p>
-            Al frente del Coro Saudade, Gainza imprime su sello de rigor y calidez humana, construyendo un ensemble donde la excelencia técnica y el disfrute colectivo caminan de la mano.
+            Imparte talleres corales para diferentes federaciones de coros y es requerido como jurado en diversos certámenes. Ha realizado cursos de Dirección Coral con profesores como <strong>J. Duijck, N. Andrenacci, J. Prats, J. Esteban, J. Faller, J. L. Martínez, J. Busto, B. Astúlez o E. Carrasco</strong>, entre otros. Asimismo, ha recibido formación en técnica vocal con I. Arruabarrena.
           </p>
         </div>
 
         <div class="director-milestones">
           <div class="milestone">
             <span class="milestone-year">2004</span>
-            <span class="milestone-desc">Asume la dirección de la Escolanía y el Coro Joven del Orfeón Pamplonés</span>
+            <span class="milestone-desc">Director de la Escolanía del Orfeón Pamplonés</span>
           </div>
           <div class="milestone">
-            <span class="milestone-year">2004–19</span>
-            <span class="milestone-desc">Jefe de la cuerda de tenores y cantante del Orfeón Pamplonés</span>
+            <span class="milestone-year">2007</span>
+            <span class="milestone-desc">Director del Coro Juvenil del Orfeón Pamplonés</span>
           </div>
           <div class="milestone">
-            <span class="milestone-year">2014</span>
-            <span class="milestone-desc">Premio absoluto en el certamen coral La Antigua de Zumárraga con la Escolanía</span>
+            <span class="milestone-year">20 años</span>
+            <span class="milestone-desc">Cantante y jefe de cuerda de tenores del Orfeón Pamplonés</span>
           </div>
           <div class="milestone">
             <span class="milestone-year">Hoy</span>
-            <span class="milestone-desc">Director artístico del Coro Saudade de Pamplona · Profesor y jurado en certámenes corales</span>
+            <span class="milestone-desc">Miembro fundador y director artístico del Coro Saudade</span>
           </div>
         </div>
       </div>
@@ -1890,179 +1844,350 @@
     <p class="section-label">♦ En vivo</p>
     <h2 class="section-title">Escúchanos <em>cantar</em></h2>
     <div class="ornament-line"><span>✦</span></div>
-
-    <div class="video-row" id="videoRow">
-
-      <!-- Vídeo 1: Coro polifónico, dominio público (Wikimedia) -->
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <span class="video-sync-badge">Sincronizado</span>
-          <video
-            id="vid1"
-            src="videos/video1.mp4"
-            preload="metadata"
-            playsinline
-            loop
-          ></video>
-        </div>
-        <div class="video-caption">
-          <h4>Fauré · Après une rêve</h4>
-          <p>Coro mixto · Polifonía romántica</p>
-        </div>
-      </div>
-
-      <!-- Vídeo 2: Ensemble coral, dominio público (Wikimedia) -->
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <span class="video-sync-badge">Sincronizado</span>
-          <video
-            id="vid2"
-            src="videos/video2.mp4"
-            preload="metadata"
-            playsinline
-            loop
-          ></video>
-        </div>
-        <div class="video-caption">
-          <h4>Anónimo s. XV · Rorate Coeli</h4>
-          <p>Música polifónica · Renacimiento</p>
-        </div>
-      </div>
-
-      <!-- Vídeo 3: Coral, dominio público (Wikimedia) -->
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <span class="video-sync-badge">Sincronizado</span>
-          <video
-            id="vid3"
-            src="videos/video3.mp4"
-            preload="metadata"
-            playsinline
-            loop
-          ></video>
-        </div>
-        <div class="video-caption">
-          <h4>Eccard · Übers Gebirg Maria geht</h4>
-          <p>Coral renacentista · Polifonía a 5 voces</p>
-        </div>
-      </div>
-
-    </div><!-- /.video-row -->
-
-    <!-- Barra de control sincronizado -->
-    <div class="video-control" id="videoControl">
-      <button class="video-btn" id="videoPlayBtn" onclick="syncPlay()">
-        <span id="videoPlayLabel">▶ &nbsp;Reproducir todos</span>
-      </button>
-      <div class="video-progress-wrap">
-        <div class="video-progress-bar" id="videoProgressBar" onclick="seekVideos(event)">
-          <div class="video-progress-fill" id="videoProgressFill"></div>
-        </div>
-        <span class="video-time" id="videoTime">0:00</span>
-      </div>
-      <button class="video-btn" onclick="syncMute()">
-        <span id="videoMuteLabel">🔇 &nbsp;Sin sonido</span>
-      </button>
-    </div>
-
   </div>
+
+  <div class="carousel-wrapper" id="videoCarouselWrapper">
+    <div class="carousel-progress" id="videoCarouselProgress"></div>
+    <div class="carousel-track" id="videoCarouselTrack">
+
+      <!-- Añade aquí tantos slides como vídeos tengas en videos/ -->
+
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video1.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Título del vídeo 1</span></div>
+      </div>
+
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video2.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Título del vídeo 2</span></div>
+      </div>
+
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video3.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Título del vídeo 3</span></div>
+      </div>
+
+    </div><!-- /.carousel-track -->
+  </div><!-- /.carousel-wrapper -->
+
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="vcPrevBtn" aria-label="Anterior"><span>&#8592;</span></button>
+    <div class="carousel-dots" id="vcDots"></div>
+    <span class="carousel-counter" id="vcCounter">1 / 3</span>
+    <button class="carousel-btn" id="vcNextBtn" aria-label="Siguiente"><span>&#8594;</span></button>
+  </div>
+
 </section>
 
-<!-- Script de sincronización de vídeos -->
+<style>
+  /* ─── CARRUSEL DE VÍDEOS ─── */
+  #videos {
+    background: var(--black);
+    border-top: 1px solid rgba(184,148,31,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.2);
+    padding: 7rem 0;
+  }
+  #videos .section-inner { padding: 0 3rem; }
+  #videos .section-label { color: rgba(184,148,31,0.7); }
+  #videos .section-title { color: var(--white); }
+  #videos .ornament-line::before,
+  #videos .ornament-line::after {
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.45), transparent);
+  }
+  #videos .ornament-line span { color: rgba(184,148,31,0.6); }
+  #videos .carousel-wrapper {
+    background: #000;
+    border-top: 1px solid rgba(184,148,31,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.2);
+  }
+  #videos .carousel-slide {
+    background: #000;
+    border-right-color: rgba(184,148,31,0.15);
+    height: 520px;
+  }
+  .vc-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.4s ease;
+    filter: brightness(0.7);
+  }
+  .carousel-slide.active .vc-video { filter: brightness(0.85); }
+  .vc-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .vc-play-btn {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid rgba(184,148,31,0.6);
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    opacity: 0;
+  }
+  .carousel-slide.active .vc-play-btn { opacity: 1; }
+  .vc-play-btn:hover {
+    background: rgba(184,148,31,0.25);
+    border-color: rgba(184,148,31,1);
+    transform: scale(1.08);
+  }
+  .vc-play-btn.playing {
+    opacity: 1;
+    border-color: rgba(184,148,31,0.4);
+    background: rgba(0,0,0,0.3);
+  }
+  .vc-play-btn svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--white);
+    margin-left: 3px; /* compensa el triángulo de play */
+    transition: none;
+  }
+  .vc-play-btn.playing svg { margin-left: 0; }
+  #videos .carousel-btn {
+    background: transparent;
+    border-color: rgba(184,148,31,0.4);
+    color: rgba(248,246,241,0.7);
+  }
+  #videos .carousel-btn::after { background: rgba(184,148,31,0.15); }
+  #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.8); }
+  #videos .carousel-btn:hover span { color: var(--white); }
+  #videos .carousel-dot { background: rgba(248,246,241,0.2); }
+  #videos .carousel-dot.active { background: rgba(184,148,31,0.8); }
+  #videos .carousel-counter { color: rgba(248,246,241,0.4); }
+  #videos .carousel-progress {
+    background: linear-gradient(to right, rgba(184,148,31,0.7), rgba(184,148,31,0.4));
+  }
+</style>
+
 <script>
 (function () {
   'use strict';
-  const videos   = ['vid1', 'vid2', 'vid3'].map(id => document.getElementById(id));
-  const playBtn  = document.getElementById('videoPlayBtn');
-  const playLbl  = document.getElementById('videoPlayLabel');
-  const muteLbl  = document.getElementById('videoMuteLabel');
-  const fill     = document.getElementById('videoProgressFill');
-  const timeEl   = document.getElementById('videoTime');
-  const bar      = document.getElementById('videoProgressBar');
 
-  let playing = false;
-  let muted   = true;
+  const wrapper  = document.getElementById('videoCarouselWrapper');
+  const track    = document.getElementById('videoCarouselTrack');
+  const dotsEl   = document.getElementById('vcDots');
+  const counter  = document.getElementById('vcCounter');
+  const prevBtn  = document.getElementById('vcPrevBtn');
+  const nextBtn  = document.getElementById('vcNextBtn');
+  const progress = document.getElementById('videoCarouselProgress');
+  const slides   = Array.from(track.querySelectorAll('.vc-slide'));
+  const total    = slides.length;
 
-  // Todos empiezan sin sonido para evitar problemas de autoplay
-  videos.forEach(v => { v.muted = true; v.volume = 0.85; });
+  let currentPage = 0;
+  let autoTimer;
+  let isDragging = false, dragStartX = 0, dragStartTranslate = 0, dragCurrentX = 0;
 
-  function fmt(s) {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60).toString().padStart(2, '0');
-    return `${m}:${sec}`;
+  // ── Helpers
+  function slideWidth()   { return wrapper.offsetWidth; }
+  function totalPages()   { return total; }
+  function translateFor(p){ return -(p * slideWidth()); }
+
+  function applyTranslate(x, animate) {
+    track.classList.toggle('animating', animate);
+    track.style.transform = `translateX(${x}px)`;
   }
 
-  function syncPlay() {
-    if (!playing) {
-      // Intentar reproducir todos al mismo tiempo
-      const promises = videos.map(v => { v.currentTime = videos[0].currentTime; return v.play(); });
-      Promise.allSettled(promises).then(() => {
-        playing = true;
-        playLbl.textContent = '⏸ \u00a0Pausar todos';
-      });
-    } else {
-      videos.forEach(v => v.pause());
-      playing = false;
-      playLbl.textContent = '▶ \u00a0Reproducir todos';
+  function updateSlideWidths() {
+    slides.forEach(s => { s.style.flex = '0 0 100%'; });
+  }
+
+  function pauseAllVideos() {
+    slides.forEach(s => {
+      const v = s.querySelector('.vc-video');
+      const btn = s.querySelector('.vc-play-btn');
+      if (v && !v.paused) {
+        v.pause();
+        btn.classList.remove('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      }
+    });
+  }
+
+  function updateActiveSlides() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === currentPage));
+  }
+
+  function updateDots() {
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentPage);
+    });
+  }
+
+  function updateCounter() {
+    counter.textContent = `${currentPage + 1} / ${totalPages()}`;
+  }
+
+  function updateProgress() {
+    progress.style.width = `${((currentPage + 1) / totalPages()) * 100}%`;
+  }
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < totalPages(); i++) {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === currentPage ? ' active' : '');
+      d.addEventListener('click', () => { goTo(i); resetAuto(); });
+      dotsEl.appendChild(d);
     }
   }
 
-  function syncMute() {
-    muted = !muted;
-    videos.forEach(v => { v.muted = muted; });
-    muteLbl.textContent = muted ? '🔇 \u00a0Sin sonido' : '🔊 \u00a0Con sonido';
+  function goTo(page, animate = true) {
+    pauseAllVideos();
+    currentPage = Math.max(0, Math.min(page, totalPages() - 1));
+    applyTranslate(translateFor(currentPage), animate);
+    updateActiveSlides();
+    updateDots();
+    updateCounter();
+    updateProgress();
   }
 
-  // Actualizar barra de progreso con el primer vídeo como referencia
-  function tick() {
-    const v = videos[0];
-    if (!v || !v.duration) { requestAnimationFrame(tick); return; }
-    const pct = (v.currentTime / v.duration) * 100;
-    fill.style.width = pct + '%';
-    timeEl.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+  function next() { goTo((currentPage + 1) % totalPages()); }
+  function prev() { goTo((currentPage - 1 + totalPages()) % totalPages()); }
 
-  // Click en la barra para buscar posición
-  function seekVideos(e) {
-    const rect = bar.getBoundingClientRect();
-    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const v0 = videos[0];
-    if (!v0.duration) return;
-    const t = ratio * v0.duration;
-    videos.forEach(v => { v.currentTime = t; });
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 6000);
   }
 
-  // Sincronizar si algún vídeo se desincroniza
-  videos.slice(1).forEach(v => {
-    v.addEventListener('timeupdate', () => {
-      if (!playing) return;
-      const diff = Math.abs(v.currentTime - videos[0].currentTime);
-      if (diff > 0.25) v.currentTime = videos[0].currentTime;
+  // ── Play/Pausa individual al clicar el botón
+  slides.forEach(slide => {
+    const btn = slide.querySelector('.vc-play-btn');
+    const vid = slide.querySelector('.vc-video');
+    if (!btn || !vid) return;
+
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (vid.paused) {
+        vid.muted = false;
+        vid.play();
+        btn.classList.add('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        clearInterval(autoTimer); // no avanzar mientras hay vídeo sonando
+      } else {
+        vid.pause();
+        btn.classList.remove('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        resetAuto();
+      }
+    });
+
+    // Al terminar el vídeo, volver al estado de pausa
+    vid.addEventListener('ended', () => {
+      btn.classList.remove('playing');
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      resetAuto();
     });
   });
 
-  // Exponer funciones globales
-  window.syncPlay   = syncPlay;
-  window.syncMute   = syncMute;
-  window.seekVideos = seekVideos;
+  // ── Drag (ratón)
+  wrapper.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartTranslate = translateFor(currentPage);
+    wrapper.classList.add('dragging');
+    track.classList.remove('animating');
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    dragCurrentX = e.clientX;
+    const delta = dragCurrentX - dragStartX;
+    const newX = dragStartTranslate + delta;
+    const minX = translateFor(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  });
+  window.addEventListener('mouseup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrapper.classList.remove('dragging');
+    const delta = e.clientX - dragStartX;
+    const threshold = slideWidth() * 0.2;
+    if (delta < -threshold) next();
+    else if (delta > threshold) prev();
+    else goTo(currentPage);
+    resetAuto();
+  });
 
-  // Auto-iniciar en silencio al entrar en viewport
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !playing) {
-        syncPlay();
-      }
-    });
-  }, { threshold: 0.4 });
-  const section = document.getElementById('videos');
-  if (section) observer.observe(section);
+  // ── Touch
+  let touchStartX = 0;
+  wrapper.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    dragStartTranslate = translateFor(currentPage);
+    track.classList.remove('animating');
+  }, { passive: true });
+  wrapper.addEventListener('touchmove', e => {
+    const delta = e.touches[0].clientX - touchStartX;
+    const newX = dragStartTranslate + delta;
+    const minX = translateFor(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  }, { passive: true });
+  wrapper.addEventListener('touchend', e => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (delta < -slideWidth() * 0.18) next();
+    else if (delta > slideWidth() * 0.18) prev();
+    else goTo(currentPage);
+    resetAuto();
+  });
+
+  prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
+  nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+
+  wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+  wrapper.addEventListener('mouseleave', () => resetAuto());
+
+  window.addEventListener('resize', () => {
+    updateSlideWidths();
+    buildDots();
+    goTo(Math.min(currentPage, totalPages() - 1), false);
+  });
+
+  // Init
+  updateSlideWidths();
+  buildDots();
+  goTo(0, false);
+  resetAuto();
 })();
 </script>
 
 <!-- ─── REPERTORIO ─── -->
-<section id="repertorio">
+<!-- <section id="repertorio">
   <div class="section-inner">
     <p class="section-label">♦ Nuestro repertorio</p>
     <h2 class="section-title">Música sin <em>fronteras</em></h2>
@@ -2101,39 +2226,96 @@
     </div>
   </div>
 </section>
-
+-->
 <!-- ─── ÚNETE ─── -->
 <section id="unete">
   <div class="section-inner">
-    <div class="join-layout">
-      <div class="join-info fade-in">
-        <p class="section-label">♦ Audiciones abiertas</p>
-        <h2 class="section-title">Canta con<br><em>nosotros</em></h2>
-        <div class="ornament-line"><span>✦</span></div>
-        <h3>¿Te animas?</h3>
-        <p>
-          El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
+    <div class="join-info-only fade-in">
+      <p class="section-label">♦ Audiciones abiertas</p>
+      <h2 class="section-title">Canta con<br><em>nosotros</em></h2>
+      <div class="ornament-line"><span>✦</span></div>
+      <h3 style="font-family:var(--serif-title);font-size:1.6rem;font-weight:500;margin-bottom:1.2rem;">¿Te animas?</h3>
+      <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:var(--gray-mid);margin-bottom:1.8rem;">
+        El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
+      </p>
+      <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:var(--gray-mid);margin-bottom:1.8rem;">
+        No se requiere experiencia profesional, sí amor por la música. Si estás interesado, acércate a uno de nuestros ensayos o escríbenos.
+      </p>
+      <ul class="requirements-list">
+        <li>Afinación y sentido rítmico básico</li>
+        <li>Disponibilidad para los ensayos semanales</li>
+        <li>Compromiso con los conciertos del calendario</li>
+        <li>Actitud positiva y trabajo en equipo</li>
+      </ul>
+      <div style="margin-top:2rem;padding:2rem 2.5rem;border:1px solid var(--gold-pale);background:var(--white);">
+        <p style="font-family:var(--serif-sc);font-size:0.65rem;letter-spacing:0.3em;color:var(--gray-mid);margin-bottom:1.2rem;">📅 Ensayos</p>
+        <p style="font-family:var(--serif-title);font-size:1.15rem;color:var(--black);line-height:1.7;margin-bottom:0.4rem;">
+          <strong>Martes y jueves</strong>, de 19:45 a 21:15 h
         </p>
-        <p>
-          Rellena el formulario y nos pondremos en contacto contigo para concertar una audición informal. No se requiere experiencia profesional, sí amor por la música.
-        </p>
-        <ul class="requirements-list">
-          <li>Afinación y sentido rítmico básico</li>
-          <li>Disponibilidad para ensayos semanales (miércoles, 20:00 h)</li>
-          <li>Compromiso con los conciertos del calendario</li>
-          <li>Actitud positiva y trabajo en equipo</li>
-        </ul>
-        <p style="font-family:var(--serif-title);font-size:0.9rem;color:var(--gray-mid);font-style:italic;line-height:1.9;">
-          📍 Ensayos en Pamplona<br>
-          📧 corosaudadepamplona@gmail.com<br>
-          📱 Instagram: @corosaudade
+        <p style="font-family:var(--serif-title);font-size:1rem;color:var(--gray-mid);font-style:italic;line-height:1.6;">
+          Iglesia de San Antonio Capuchinos · Pamplona · Centro
         </p>
       </div>
+      <div style="margin-top:2rem;">
+        <a href="#contacto" class="btn-primary">Escríbenos</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <!-- FORMULARIO — igual que el original -->
-      <div class="join-form fade-in">
+<!-- ─── CONTACTO ─── -->
+<section id="contacto" style="background:var(--white);padding:0;">
+  <div class="contact-split">
+    <!-- Columna izquierda: info con fondo azulado -->
+    <div class="contact-split-left fade-in">
+      <div class="contact-split-left-inner">
+        <p class="section-label" style="color:rgba(248,246,241,0.5);">♦ Ponte en contacto</p>
+        <h2 class="section-title" style="color:var(--white);margin-bottom:2rem;"><em>Hablemos</em></h2>
+        <div class="ornament-line" style="margin-bottom:2.5rem;">
+          <span style="color:rgba(184,148,31,0.6);">✦</span>
+        </div>
+        <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:rgba(248,246,241,0.65);margin-bottom:2.5rem;">
+          Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente. También puedes encontrarnos en nuestras redes.
+        </p>
+        <div class="contact-info-list">
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Correo electrónico</h4>
+            <a href="mailto:corosaudadepamplona@gmail.com" style="color:var(--white);">corosaudadepamplona@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Ensayos</h4>
+            <p style="color:rgba(248,246,241,0.8);">Martes y jueves · 19:45 – 21:15 h<br>Iglesia de San Antonio Capuchinos · Pamplona</p>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Director</h4>
+            <p style="color:rgba(248,246,241,0.8);">Juan Gainza</p>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Redes sociales</h4>
+            <div class="contact-social-links">
+              <a href="mailto:corosaudadepamplona@gmail.com" class="contact-social-link" title="Email">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span>Email</span>
+              </a>
+              <a href="https://www.tiktok.com/@corosaudade" target="_blank" class="contact-social-link" title="TikTok">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+                <span>TikTok</span>
+              </a>
+              <a href="https://www.instagram.com/corosaudade/" target="_blank" class="contact-social-link" title="Instagram">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                <span>Instagram</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: formulario -->
+    <div class="contact-split-right fade-in">
+      <div class="join-form" style="height:100%;min-height:600px;">
         <div id="formContent">
-          <h3 class="form-title">Formulario de Inscripción</h3>
+          <h3 class="form-title">Formulario de Contacto</h3>
           <p class="form-subtitle">Todos los datos se guardan de forma segura</p>
           <form id="joinForm" method="POST">
             <div class="form-row">
@@ -2154,125 +2336,20 @@
               <label for="telefono">Teléfono</label>
               <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000" required>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Cuerda vocal</label>
-                <div class="custom-select-wrapper">
-                  <select id="cuerda" name="cuerda" required>
-                    <option value="" disabled selected>Seleccionar…</option>
-                    <option value="soprano">Soprano</option>
-                    <option value="mezzosoprano">Mezzosoprano</option>
-                    <option value="contralto">Contralto</option>
-                    <option value="tenor">Tenor</option>
-                    <option value="baritono">Barítono</option>
-                    <option value="bajo">Bajo</option>
-                    <option value="nosé">No lo sé</option>
-                  </select>
-                  <div class="custom-select" data-for="cuerda">
-                    <div class="custom-select-trigger placeholder-active">
-                      <span>Seleccionar…</span>
-                      <span class="select-arrow">▼</span>
-                    </div>
-                    <div class="custom-select-options">
-                      <div class="custom-option" data-value="soprano">Soprano</div>
-                      <div class="custom-option" data-value="mezzosoprano">Mezzosoprano</div>
-                      <div class="custom-option" data-value="contralto">Contralto</div>
-                      <div class="custom-option" data-value="tenor">Tenor</div>
-                      <div class="custom-option" data-value="baritono">Barítono</div>
-                      <div class="custom-option" data-value="bajo">Bajo</div>
-                      <div class="custom-option" data-value="nosé">No lo sé</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Experiencia coral</label>
-                <div class="custom-select-wrapper">
-                  <select id="experiencia" name="experiencia">
-                    <option value="" disabled selected>Seleccionar…</option>
-                    <option value="ninguna">Sin experiencia previa</option>
-                    <option value="poca">1–3 años</option>
-                    <option value="media">3–10 años</option>
-                    <option value="mucha">Más de 10 años</option>
-                  </select>
-                  <div class="custom-select" data-for="experiencia">
-                    <div class="custom-select-trigger placeholder-active">
-                      <span>Seleccionar…</span>
-                      <span class="select-arrow">▼</span>
-                    </div>
-                    <div class="custom-select-options">
-                      <div class="custom-option" data-value="ninguna">Sin experiencia previa</div>
-                      <div class="custom-option" data-value="poca">1–3 años</div>
-                      <div class="custom-option" data-value="media">3–10 años</div>
-                      <div class="custom-option" data-value="mucha">Más de 10 años</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="form-group">
-              <label for="mensaje">Cuéntanos algo sobre ti (opcional)</label>
-              <textarea id="mensaje" name="mensaje" rows="3" placeholder="¿Por qué quieres unirte al Coro Saudade?"></textarea>
+              <label for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" rows="3" placeholder="Cuéntanos"></textarea>
             </div>
-            <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar solicitud</button>
+            <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar mensaje</button>
             <p class="form-note">
-              Tu solicitud se enviará al correo del coro y quedará registrada. Nos pondremos en contacto contigo en menos de 7 días.
+              Tu mensaje se enviará al correo del coro. Nos pondremos en contacto contigo lo antes posible. Muchas gracias.
             </p>
           </form>
         </div>
         <div class="form-success" id="formSuccess">
           <span class="check">♩</span>
-          <h3>¡Solicitud enviada!</h3>
-          <p>Gracias por tu interés en el Coro Saudade.<br>Te contactaremos pronto para concertar una audición.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── CONTACTO ─── -->
-<section id="contacto">
-  <div class="section-inner">
-    <p class="section-label">♦ Ponte en contacto</p>
-    <h2 class="section-title"><em>Hablemos</em></h2>
-    <div class="ornament-line"><span>✦</span></div>
-    <div class="contact-layout">
-      <div class="contact-info-list fade-in">
-        <div class="contact-item">
-          <h4>Correo electrónico</h4>
-          <a href="mailto:corosaudadepamplona@gmail.com">corosaudadepamplona@gmail.com</a>
-        </div>
-        <div class="contact-item">
-          <h4>Ensayos</h4>
-          <p>Miércoles · 20:00 h<br>Pamplona, Navarra</p>
-        </div>
-        <div class="contact-item">
-          <h4>Director</h4>
-          <p>Juan Gainza</p>
-        </div>
-        <div class="contact-item">
-          <h4>Federación</h4>
-          <a href="https://www.corosnavarra.com" target="_blank">Federación de Coros de Navarra</a>
-        </div>
-        <div class="contact-item">
-          <h4>Redes sociales</h4>
-          <div class="social-links">
-            <a href="https://www.instagram.com/corosaudade/" target="_blank" class="social-link">Instagram</a>
-          </div>
-        </div>
-      </div>
-      <div class="fade-in">
-        <div class="contact-map">
-          <div class="map-placeholder">
-            <p style="font-size:2rem;margin-bottom:0.5rem;">📍</p>
-            <p>Pamplona<br>Navarra, España</p>
-          </div>
-          <div class="map-address">Coro Saudade de Pamplona · Navarra</div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1.5rem;border:1px solid var(--gold-pale);background:var(--off-white);">
-          <p style="font-family:var(--serif-title);font-size:0.88rem;color:var(--gray-mid);font-style:italic;line-height:1.8;">
-            Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente al correo o a través de nuestras redes sociales.
-          </p>
+          <h3>¡Mensaje enviado!</h3>
+          <p>Gracias por contactar con el Coro Saudade.<br>Te responderemos en breve.</p>
         </div>
       </div>
     </div>
@@ -2281,47 +2358,33 @@
 
 <!-- ─── FOOTER ─── -->
 <footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#inicio" class="nav-logo">
-        Saudade
-        <span>♦ Coro de Pamplona ♦</span>
-      </a>
-      <p>
-        Voces que tejen memoria, belleza y comunidad en Navarra. Coro mixto desde 2018.
-      </p>
-    </div>
-    <div class="footer-col">
-      <h4>Navegación</h4>
-      <ul>
-        <li><a href="#nosotros">El Coro</a></li>
-        <li><a href="#director">Director</a></li>
-        <li><a href="#eventos">Eventos</a></li>
-        <li><a href="#repertorio">Repertorio</a></li>
-        <li><a href="#galeria">Galería</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contacto</h4>
-      <ul>
-        <li><a href="mailto:corosaudadepamplona@gmail.com">corosaudadepamplona@gmail.com</a></li>
-        <li><a href="https://www.instagram.com/corosaudade/" target="_blank">@corosaudade</a></li>
-        <li><a href="#unete">Únete al coro</a></li>
-      </ul>
-    </div>
-  </div>
+  <img src="imagenes/logo_redondo_negativo.png" alt="Logo Coro Saudade" class="footer-logo">
   <div class="footer-bottom">
     <p>© 2025 Coro Saudade de Pamplona. Todos los derechos reservados.</p>
     <div class="footer-gold-rule"></div>
-    <p>Federación de Coros de Navarra</p>
   </div>
 </footer>
 
 <div class="notification" id="notification"></div>
 
 <script>
-// ─── NAV SCROLL
+// Autoplay vídeos de la sección coro al entrar en viewport
+(function() {
+  const nvideos = ['nvid1','nvid2','nvid3'].map(id => document.getElementById(id)).filter(Boolean);
+  nvideos.forEach(v => { v.muted = true; });
+  const nobs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        nvideos.forEach(v => v.play().catch(()=>{}));
+      } else {
+        nvideos.forEach(v => v.pause());
+      }
+    });
+  }, { threshold: 0.3 });
+  const nrow = document.getElementById('nosotrosVideoRow');
+  if (nrow) nobs.observe(nrow);
+})();
+
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
 });
