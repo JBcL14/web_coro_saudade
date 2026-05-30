@@ -1,0 +1,2686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coro Saudade de Pamplona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --black:       #192338;
+    --white:       #f0ece3;   /* crema medio, no tan claro */
+    --off-white:   #e6e0d4;   /* crema más oscuro para secciones alternas */
+    --gold:        #192338;   /* dorado más sobrio */
+    --gold-light:  #192338;
+    --gold-pale:   #192338;
+    --gold-faint:  #192338; /* casi transparente, solo toque */
+    --gray-mid:    #5c5549;   /* gris cálido más oscuro */
+    --gray-light:  #9e9385;
+    --serif-title: 'Cormorant Infant', Georgia, serif;
+    --serif-sc:    'Cormorant SC', 'Cormorant Infant', Georgia, serif;
+    --serif-felt:  'IM Fell English', Georgia, serif;
+    --transition:  all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--serif-title);
+    background: var(--white);
+    color: var(--black);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── ORNAMENT ─── */
+  .ornament {
+    display: block;
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.5em;
+    margin: 0 auto 1.2rem;
+    opacity: 0.8;
+  }
+  .ornament-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .ornament-line::before,
+  .ornament-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  }
+  .ornament-line span {
+    color: var(--gold);
+    font-size: 1.1rem;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--gold-pale);
+    padding: 0 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    transition: var(--transition);
+  }
+  nav.scrolled {
+    box-shadow: 0 2px 30px rgba(184,148,31,0.08);
+  }
+  .nav-logo {
+    font-family: var(--serif-sc);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--black);
+    text-decoration: none;
+    line-height: 1.1;
+    display: inline-block;
+  }
+  .nav-logo span {
+    display: block;
+    font-size: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    font-family: var(--serif-title);
+    font-style: italic;
+    color: var(--gray-mid);
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+  .nav-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el texto y la imagen al centro */
+    gap: 0.75rem;        /* El espacio exacto que quieres entre la imagen y el texto (puedes poner 0 si los quieres 100% pegados) */
+    text-decoration: none; /* Elimina subrayados indeseados en el texto */
+  }
+  .nav-logo-img {
+    height: 42px;
+    width: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.92;
+    transition: opacity 0.3s ease;
+  }
+  .nav-logo-img:hover {
+    opacity: 1;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    font-family: var(--serif-sc);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    color: var(--black);
+    transition: color 0.3s;
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 100%;
+    height: 1px;
+    background: var(--black);
+    transition: right 0.35s ease;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after { right: 0; }
+  /*.nav-cta {
+    background: var(--black) !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1.3rem;
+    font-family: var(--serif-sc) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    border: 1px solid var(--black);
+    transition: var(--transition) !important;
+  }
+  .nav-cta:hover {
+    background: var(--white) !important;
+    color: var(--black) !important;
+    border-color: var(--black) !important;
+  }
+  .nav-cta::after { display: none !important; }*/
+
+  /* ─── NAV SOCIAL ICONS ─── */
+  .nav-social {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 1.8rem;
+    padding-left: 1.8rem;
+    border-left: 1px solid var(--gold-pale);
+  }
+  .nav-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    opacity: 0.75;
+  }
+  .nav-social a:hover {
+    opacity: 1;
+  }
+  .nav-social svg {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+    display: block;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--black);
+    transition: var(--transition);
+  }
+
+  /* ─── HERO ─── */
+  #inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 72px;
+    background: var(--white);
+    min-height: 100vh;
+  }
+
+  /* Full-width banner image */
+  .hero-banner {
+    width: 100%;
+    height: clamp(260px, 42vw, 400px);
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .hero-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    filter: grayscale(18%) brightness(0.88) sepia(8%);
+  }
+  /* Subtle bottom fade so the banner blends into the cream background */
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 17%;
+    background: linear-gradient(to bottom, transparent, var(--white));
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2.5rem 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  /* Logo image */
+  .hero-logo-img {
+    width: clamp(120px, 22vw, 250px);
+    height: auto;
+    display: block;
+    margin: 0 auto 1.6rem;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-bottom: 0;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.4rem;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+  .btn-primary {
+    background: transparent;
+    color: var(--black);
+    padding: 0.9rem 2.8rem;
+    font-family: var(--serif-sc);
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid var(--black);
+    display: inline-block;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: var(--black);
+    color: var(--white);
+  }
+  .btn-secondary {
+    border: 1px solid var(--black);
+    color: var(--black);
+    padding: 0.9rem 2.8rem;
+    font-family: var(--serif-sc);
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-block;
+    background: transparent;
+    cursor: pointer;
+  }
+  .btn-secondary:hover {
+    background: var(--black);
+    color: var(--white);
+  }
+  .hero-scroll {
+    margin-top: auto;
+    padding: 2rem 0 2.5rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--gray-mid);
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    animation: fadeUp 1s ease 1s both;
+    pointer-events: none;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--gray-mid), transparent);
+    animation: scrollPulse 2.5s ease-in-out infinite;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 7rem 3rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: var(--serif-title);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: 0.01em;
+  }
+  .section-title em { font-style: italic; font-weight: 300; color: var(--gray-mid); }
+
+  /* ─── NOSOTROS ─── */
+  #nosotros { background: var(--white); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .about-text p {
+    font-family: var(--serif-title);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 1.4rem;
+    font-weight: 400;
+  }
+  .about-text p strong { color: var(--black); font-weight: 600; }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .stat-card {
+    border: 1px solid var(--gold-pale);
+    padding: 2.2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .stat-card:hover { background: var(--off-white); }
+  .stat-card:hover::after { transform: scaleX(1); }
+  .stat-number {
+    font-family: var(--serif-title);
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--black);
+  }
+  .stat-label {
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+  }
+
+  /* ─── EVENTOS ─── */
+  #eventos {
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
+  }
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .event-item {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--gold-pale);
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+  }
+  .event-item:first-child { border-top: 1px solid var(--gold-pale); }
+  .event-item::before {
+    content: '';
+    position: absolute;
+    left: -3rem; top: 0; bottom: 0;
+    width: 0;
+    background: var(--off-white);
+    transition: width 0.4s ease;
+    z-index: 0;
+  }
+  .event-item:hover::before { width: calc(100% + 6rem); }
+  .event-item > * { position: relative; z-index: 1; }
+  .event-date { text-align: center; }
+  .event-day {
+    font-family: var(--serif-title);
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1;
+    display: block;
+    color: var(--black);
+  }
+  .event-month {
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+  }
+  .event-info h3 {
+    font-family: var(--serif-title);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 0.35rem;
+  }
+  .event-info p {
+    font-family: var(--serif-title);
+    font-size: 0.88rem;
+    color: var(--gray-mid);
+    font-style: italic;
+  }
+  .event-badge {
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    border: 1px solid var(--gold-pale);
+    padding: 0.35rem 0.9rem;
+    color: var(--gray-mid);
+    white-space: nowrap;
+  }
+  .event-badge.featured {
+    border-color: var(--black);
+    color: var(--black);
+    background: transparent;
+  }
+
+  /* ─── CAROUSEL / GALERÍA ─── */
+  #galeria {
+    background: var(--white);
+    padding: 7rem 0;
+  }
+  #galeria .section-inner { padding: 0 3rem; }
+  .carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin-top: 3rem;
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
+    cursor: grab;
+    user-select: none;
+  }
+  .carousel-wrapper.dragging { cursor: grabbing; }
+  .carousel-track {
+    display: flex;
+    /* transition controlled by JS — set only when not dragging */
+    will-change: transform;
+  }
+  .carousel-track.animating {
+    transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .carousel-slide {
+    flex: 0 0 33.333%;
+    position: relative;
+    height: 520px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--off-white);
+    border-right: 1px solid var(--gold-pale);
+    cursor: pointer;
+    transition: background 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.92) saturate(0.85);
+    opacity: 0.75;
+  }
+  .carousel-slide.active {
+    filter: brightness(1) saturate(1);
+    opacity: 1;
+  }
+  .carousel-slide:last-child { border-right: none; }
+  .carousel-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    color: var(--gray-mid);
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease;
+  }
+  .carousel-slide.active .carousel-placeholder {
+    transform: scale(1.02);
+  }
+  .carousel-note {
+    position: absolute;
+    font-size: 3.5rem;
+    color: var(--gray-light);
+    line-height: 1;
+    font-family: var(--serif-title);
+    top: 1.5rem;
+    right: 1.5rem;
+    opacity: 0.25;
+    transition: opacity 0.4s ease;
+  }
+  .carousel-slide.active .carousel-note { opacity: 0.45; }
+  .carousel-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(14,12,9,0.65), transparent);
+    padding: 2.5rem 1.5rem 1.4rem;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    transform: translateY(4px);
+  }
+  .carousel-slide.active:hover .carousel-caption,
+  .carousel-slide:hover .carousel-caption { opacity: 1; transform: translateY(0); }
+  .carousel-caption span {
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    color: var(--white);
+    font-style: italic;
+  }
+  /* Progress bar */
+  .carousel-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), var(--gold-light));
+    transition: width 0.4s ease;
+    z-index: 3;
+  }
+  .carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 0 3rem;
+  }
+  .carousel-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--gray-light);
+    background: var(--white);
+    color: var(--black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: var(--transition);
+    font-family: var(--serif-title);
+    position: relative;
+    overflow: hidden;
+  }
+  .carousel-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: 0;
+  }
+  .carousel-btn:hover::after { transform: scaleX(1); }
+  .carousel-btn span { position: relative; z-index: 1; transition: color 0.3s ease; }
+  .carousel-btn:hover span { color: var(--white); }
+  .carousel-btn:hover { border-color: var(--black); }
+  .carousel-dots {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gray-light);
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 0;
+  }
+  .carousel-dot.active {
+    background: var(--black);
+    width: 24px;
+  }
+  .carousel-counter {
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ─── REPERTORIO ─── */
+  #repertorio { background: var(--black); }
+  #repertorio .section-label { color: var(--gold); }
+  #repertorio .section-title { color: var(--white); }
+  .repertoire-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 1rem;
+    background: rgba(184,148,31,0.12);
+  }
+  .rep-card {
+    background: var(--black);
+    padding: 2.5rem 2rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .rep-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .rep-card:hover::before { transform: scaleX(1); }
+  .rep-card:hover { background: #16130e; }
+  .rep-num {
+    font-family: var(--serif-title);
+    font-size: 3rem;
+    font-weight: 300;
+    color: rgba(248,246,241,0.12);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: opacity 0.3s;
+  }
+  .rep-card:hover .rep-num { color: rgba(248,246,241,0.25); }
+  .rep-card h3 {
+    font-family: var(--serif-title);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .rep-card p {
+    font-family: var(--serif-title);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--gray-mid);
+    font-style: italic;
+  }
+
+  /* ─── ÚNETE ─── */
+  #unete { background: var(--off-white); border-top: 1px solid var(--gold-pale); }
+  .join-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .join-info-only {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .join-info h3 {
+    font-family: var(--serif-title);
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+  }
+  .join-info p {
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--gray-mid);
+    margin-bottom: 1.8rem;
+  }
+  .requirements-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 2.5rem;
+  }
+  .requirements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-family: var(--serif-title);
+    font-size: 0.95rem;
+    color: var(--gray-mid);
+    font-style: italic;
+  }
+  .requirements-list li::before {
+    content: '—';
+    color: var(--gray-mid);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* ─── FORM (unchanged styling) ─── */
+  .join-form {
+    background: var(--black);
+    padding: 3.5rem;
+    color: var(--white);
+  }
+  .form-title {
+    font-family: var(--serif-title);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .form-subtitle {
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    color: rgba(248,246,241,0.4);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+  }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label {
+    display: block;
+    font-family: var(--serif-sc);
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    color: rgba(248,246,241,0.5);
+    margin-bottom: 0.6rem;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(184,148,31,0.3);
+    padding: 0.7rem 0;
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    resize: none;
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: rgba(248,246,241,0.2);
+    font-style: italic;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-bottom-color: rgba(248,246,241,0.7); }
+  .form-group select option { background: var(--black); color: var(--white); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .form-submit {
+    width: 100%;
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    padding: 1rem;
+    font-family: var(--serif-sc);
+    font-size: 0.82rem;
+    letter-spacing: 0.25em;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 1rem;
+  }
+  .form-submit:hover { background: var(--off-white); }
+  .form-note {
+    font-family: var(--serif-title);
+    font-size: 0.75rem;
+    color: rgba(248,246,241,0.25);
+    font-style: italic;
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .form-success .check {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--white);
+  }
+  .form-success h3 {
+    font-family: var(--serif-title);
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .form-success p {
+    font-family: var(--serif-title);
+    font-size: 0.95rem;
+    color: rgba(248,246,241,0.55);
+    font-style: italic;
+  }
+
+  /* ─── CONTACTO ─── */
+  #contacto { background: var(--white); padding: 0; }
+  .contact-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 700px;
+  }
+  .contact-split-left {
+    background: var(--black);
+    padding: 7rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .contact-split-left-inner {
+    max-width: 480px;
+  }
+  .contact-split-right {
+    background: var(--black);
+    padding: 0;
+  }
+  .contact-split-right .join-form {
+    height: 100%;
+    padding: 7rem 4rem;
+  }
+  .contact-split .contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .contact-split .contact-item h4 {
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: rgba(248,246,241,0.4);
+    margin-bottom: 0.4rem;
+  }
+  .contact-split .contact-item p,
+  .contact-split .contact-item a {
+    font-family: var(--serif-title);
+    font-size: 0.98rem;
+    color: rgba(248,246,241,0.8);
+    text-decoration: none;
+    transition: var(--transition);
+    display: block;
+    line-height: 1.6;
+  }
+  .contact-split .contact-item a:hover { color: var(--white); }
+  .contact-split .ornament-line::before,
+  .contact-split .ornament-line::after {
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.35), transparent);
+  }
+  .contact-social-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .contact-social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: rgba(248,246,241,0.6);
+    font-family: var(--serif-sc);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    border-bottom: 1px solid rgba(248,246,241,0.2);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .contact-social-link:hover {
+    color: var(--white);
+    border-color: rgba(184,148,31,0.6);
+  }
+  .contact-social-link svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+  @media (max-width: 900px) {
+    .contact-split { grid-template-columns: 1fr; }
+    .contact-split-left { padding: 4rem 1.5rem; }
+    .contact-split-right .join-form { padding: 3rem 1.5rem; }
+  }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 4rem 3rem 2.5rem;
+  border-top: 1px solid rgba(184,148,31,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.footer-logo {
+  width: clamp(160px, 22vw, 260px);
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 0.9;
+  display: block;
+}
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+.footer-bottom p {
+  font-family: var(--serif-title);
+  font-size: 0.75rem;
+  color: rgba(248,246,241,0.2);
+  font-style: italic;
+  text-align: center;
+}
+.footer-gold-rule {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gray-mid), transparent);
+  opacity: 0.4;
+}
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.6; transform: scaleY(1); }
+    50%      { opacity: 0.2; transform: scaleY(0.5); }
+  }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── MOBILE MENU ─── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
+    padding: 2rem 3rem;
+    z-index: 99;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--serif-title);
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--black);
+    font-style: italic;
+    border-bottom: 1px solid var(--gold-pale);
+    padding-bottom: 1.2rem;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--black); }
+
+  /* ─── NOTIFICATION ─── */
+  .notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--black);
+    color: var(--gold-pale);
+    padding: 1rem 1.5rem;
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    font-style: italic;
+    z-index: 200;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: var(--transition);
+    max-width: 300px;
+    line-height: 1.6;
+    border-left: 2px solid var(--gray-mid);
+  }
+  .notification.show { transform: translateY(0); opacity: 1; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .nav-social { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 5rem 1.5rem; }
+    #galeria { padding: 5rem 0; }
+    #galeria .section-inner { padding: 0 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .repertoire-grid { grid-template-columns: 1fr; }
+    .join-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .join-form { padding: 2.5rem 1.5rem; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .event-item { grid-template-columns: 70px 1fr; }
+    .event-badge { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .carousel-slide { flex: 0 0 100%; }
+    .hero-banner { height: clamp(180px, 45vw, 320px); }
+    .hero-logo-img { width: clamp(90px, 30vw, 160px); }
+    #inicio { padding-top: 72px; }
+  }
+
+  /* ─── CUSTOM SELECT ─── */
+  .custom-select-wrapper {
+    position: relative;
+  }
+  .custom-select-wrapper select {
+    display: none;
+  }
+  .custom-select {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  .custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(184,148,31,0.3);
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    color: var(--white);
+    transition: border-color 0.3s ease;
+  }
+  .custom-select-trigger.placeholder-active {
+    color: rgba(248,246,241,0.25);
+    font-style: italic;
+  }
+  .custom-select-trigger .select-arrow {
+    font-size: 0.6rem;
+    color: rgba(184,148,31,0.6);
+    transition: transform 0.3s ease, color 0.3s ease;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+  .custom-select.open .custom-select-trigger {
+    border-bottom-color: rgba(248,246,241,0.7);
+  }
+  .custom-select.open .custom-select-trigger .select-arrow {
+    transform: rotate(180deg);
+    color: var(--gold-pale);
+  }
+  .custom-select-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #1a1710;
+    border: 1px solid rgba(184,148,31,0.25);
+    border-top: none;
+    z-index: 50;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                border-color 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .custom-select.open .custom-select-options {
+    max-height: 260px;
+    opacity: 1;
+    pointer-events: all;
+    border-top: 1px solid rgba(184,148,31,0.25);
+    overflow-y: auto;
+  }
+  .custom-select-options::-webkit-scrollbar { width: 3px; }
+  .custom-select-options::-webkit-scrollbar-track { background: transparent; }
+  .custom-select-options::-webkit-scrollbar-thumb {
+    background: rgba(184,148,31,0.3);
+    border-radius: 2px;
+  }
+  .custom-option {
+    padding: 0.75rem 1rem;
+    font-family: var(--serif-title);
+    font-size: 0.9rem;
+    color: rgba(248,246,241,0.55);
+    font-style: italic;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(184,148,31,0.08);
+    transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .custom-option:last-child { border-bottom: none; }
+  .custom-option::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+  }
+  .custom-option:hover {
+    background: rgba(184,148,31,0.08);
+    color: rgba(248,246,241,0.9);
+    padding-left: 1.3rem;
+  }
+  .custom-option:hover::before { opacity: 1; }
+  .custom-option.selected {
+    color: var(--gold-pale);
+    background: rgba(184,148,31,0.05);
+  }
+  .custom-option.selected::before { opacity: 1; background: var(--gold-pale); }
+  /* ─── DIRECTOR ─── */
+  #director { background: var(--off-white); border-top: 1px solid var(--gold-pale); }
+  .director-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .director-photo-wrap {
+    position: sticky;
+    top: 100px;
+  }
+  .director-photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gold-pale);
+  }
+  .director-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: grayscale(20%) sepia(10%) brightness(0.9);
+    display: block;
+    transition: filter 0.8s ease, transform 0.8s ease;
+  }
+  .director-photo:hover img {
+    filter: grayscale(0%) sepia(5%) brightness(0.95);
+    transform: scale(1.02);
+  }
+  .director-photo-caption {
+    margin-top: 1rem;
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    text-align: center;
+  }
+  .director-info .section-label { margin-bottom: 0.6rem; }
+  .director-info .section-title { margin-bottom: 0.5rem; }
+  .director-name-sub {
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--gray-mid);
+    margin-bottom: 2rem;
+  }
+  .director-bio p {
+    font-family: var(--serif-title);
+    font-size: 1.02rem;
+    line-height: 1.95;
+    color: var(--gray-mid);
+    margin-bottom: 1.4rem;
+  }
+  .director-bio p strong { color: var(--black); font-weight: 600; }
+  .director-milestones {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--gold-pale);
+  }
+  .milestone {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--gold-pale);
+    align-items: baseline;
+  }
+  .milestone-year {
+    font-family: var(--serif-sc);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+  }
+  .milestone-desc {
+    font-family: var(--serif-title);
+    font-size: 0.92rem;
+    color: var(--gray-mid);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .director-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .director-photo-wrap { position: static; max-width: 320px; margin: 0 auto; }
+  }
+
+  /* ─── VÍDEOS EN NOSOTROS ─── */
+  .nosotros-video-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 0;
+  }
+  .nosotros-video-row .video-frame {
+    border-color: var(--gold-pale);
+    background: var(--off-white);
+  }
+  @media (max-width: 900px) {
+    .nosotros-video-row { grid-template-columns: 1fr; }
+  }
+
+  /* ─── VÍDEOS ─── */
+  #videos {
+    background: var(--black);
+    border-top: 1px solid rgba(184,148,31,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.2);
+    padding: 7rem 3rem;
+  }
+  #videos .section-label { color: var(--gold); }
+  #videos .section-title { color: var(--white); }
+  #videos .ornament-line::before,
+  #videos .ornament-line::after {
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.45), transparent);
+  }
+  #videos .ornament-line span { color: var(--gold); }
+
+  .video-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .video-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid rgba(184,148,31,0.2);
+    overflow: hidden;
+  }
+  .video-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.95);
+    transition: filter 0.4s ease;
+  }
+  .video-frame:hover video { filter: brightness(1); }
+
+  /* Thin gold top border on hover */
+  .video-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.45s ease;
+    z-index: 2;
+  }
+  .video-frame:hover::before { transform: scaleX(1); }
+
+  /* Sync badge */
+  .video-sync-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(184,148,31,0.4);
+    color: var(--gold-pale);
+    font-family: var(--serif-sc);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    padding: 0.25rem 0.55rem;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .video-frame:hover .video-sync-badge { opacity: 1; }
+
+  .video-caption {
+    text-align: center;
+  }
+  .video-caption h4 {
+    font-family: var(--serif-title);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+  .video-caption p {
+    font-family: var(--serif-title);
+    font-size: 0.82rem;
+    color: var(--gray-mid);
+    font-style: italic;
+  }
+
+  /* Play/Pause global control */
+  .video-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.8rem;
+    margin-top: 2.5rem;
+  }
+  .video-btn {
+    background: transparent;
+    border: 1px solid rgba(184,148,31,0.45);
+    color: var(--gold-pale);
+    font-family: var(--serif-sc);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    padding: 0.65rem 2rem;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .video-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(184,148,31,0.08);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+    z-index: 0;
+  }
+  .video-btn span { position: relative; z-index: 1; }
+  .video-btn:hover::after { transform: scaleX(1); }
+  .video-btn:hover { border-color: var(--gold); color: var(--white); }
+
+  .video-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    max-width: 320px;
+  }
+  .video-progress-bar {
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    cursor: pointer;
+  }
+  .video-progress-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: linear-gradient(to right, var(--gold), var(--gold-pale));
+    width: 0%;
+    transition: width 0.25s linear;
+    pointer-events: none;
+  }
+  .video-time {
+    font-family: var(--serif-sc);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    white-space: nowrap;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .video-row { grid-template-columns: 1fr; gap: 2rem; }
+    .video-control { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+<script src="scroll-animations.js" defer></script>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="navbar">
+  <span class="nav-container">
+    <a href="#inicio" class="nav-container" aria-label="Inicio, Coro Saudade">
+    <img src="imagenes/logo_redondo.png" alt="Logo Coro Saudade" class="nav-logo-img">
+    <span class="nav-logo">Coro Saudade</span>
+  </a>
+  </span>
+  <ul class="nav-links">
+    <li><a href="#nosotros">El Coro</a></li>
+    <li><a href="#director">Director</a></li>
+    <li><a href="#eventos">Conciertos</a></li>
+    <!-- <li><a href="#repertorio">Repertorio</a></li> -->
+    <li><a href="#galeria">Galería</a></li>
+    <!-- <li><a href="#videos">Vídeos</a></li> -->
+     <li><a href="#unete" class="nav-cta">Únete</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div class="nav-social">
+    <!-- Mail -->
+    <a href="mailto:corosaudadepamplona@gmail.com" aria-label="Correo electrónico" title="Escríbenos">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+      </svg>
+    </a>
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@corosaudade" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+      </svg>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/corosaudade" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+      </svg>
+    </a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#nosotros" onclick="closeMobile()">El Coro</a>
+  <a href="#director" onclick="closeMobile()">Director</a>
+  <a href="#eventos" onclick="closeMobile()">Conciertos</a>
+  <!-- <a href="#repertorio" onclick="closeMobile()">Repertorio</a> -->
+  <a href="#galeria" onclick="closeMobile()">Galería</a>
+  <!-- <a href="#videos" onclick="closeMobile()">Vídeos</a> -->
+  <a href="#unete" onclick="closeMobile()">Únete al coro</a>
+  <a href="#contacto" onclick="closeMobile()">Contacto</a>
+</div>
+
+<!-- ─── HERO ─── -->
+<section id="inicio">
+
+  <!-- Full-width banner image -->
+  <div class="hero-banner" aria-hidden="true">
+    <img
+      src="imagenes/inicio.JPG"
+      alt="Coro Saudade de Pamplona"
+      loading="eager"
+    >
+  </div>
+
+  <div class="hero-content">
+    <!-- Logo -->
+    <img
+      src="imagenes/logo.png"
+      alt="Logotipo Coro Saudade"
+      class="hero-logo-img"
+    >
+    <!-- Localización y año -->
+    <p class="hero-eyebrow">Pamplona, Navarra. Desde 2018.</p>
+    <!-- Botones -->
+    <div class="hero-actions">
+      <a href="#eventos" class="btn-primary">Conciertos</a>
+      <a href="#unete" class="btn-secondary">Únete al Coro</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- ─── NOSOTROS ─── -->
+<section id="nosotros">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p class="section-label">♦ Quiénes somos</p>
+        <h2 class="section-title">Una voz hecha<br>de <em>muchas</em></h2>
+        <div class="ornament-line"><span>✦</span></div>
+        <p>
+          Somos una <strong>formación integrada por personas con experiencia en el mundo coral</strong> que aborda diferentes géneros y estilos participando en proyectos muy diversos.
+        </p>
+        <p>
+          Bajo el nombre del coro subyace la idea de la importancia que han tenido determinadas personas y momentos en nuestras vidas. Afrontamos la interpretación desde un punto de vista <strong>exigente y dinámico</strong>, con el fin de disfrutar y de hacer disfrutar.
+        </p>
+        <p>
+          Nuestro repertorio abarca distintas épocas de la historia de la música con obras religiosas y profanas, así como procedentes de folklores de todo el mundo. Actuamos en Pamplona y su entorno, en otras localidades de Navarra y fuera de nuestra comunidad.
+        </p>
+      </div>
+      <div class="about-stats fade-in">
+        <div class="stat-card">
+          <span class="stat-number">2018</span>
+          <span class="stat-label">Desde</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">Voces en el coro</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">Varios</span>
+          <span class="stat-label">Conciertos al año</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">Múltiples</span>
+          <span class="stat-label">Cuerdas vocales</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vídeos del coro en fila -->
+  <div class="section-inner" style="margin-top:4rem;">
+    <div class="ornament-line"><span>✦</span></div>
+    <div class="nosotros-video-row" id="nosotrosVideoRow">
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+          <video id="nvid1" src="videos/video1.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Concierto El Desván</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Colaboración · Rock</p>
+        </div>
+      </div>
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+          <video id="nvid2" src="videos/video2.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Premios MAX</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coro mixto</p>
+        </div>
+      </div>
+      <div class="video-item fade-in">
+        <div class="video-frame">
+          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+          <video id="nvid3" src="videos/video3.mp4" preload="metadata" playsinline loop muted></video>
+        </div>
+        <div class="video-caption" style="text-align:center;">
+          <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Nuevo Casino Principal</h4>
+          <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coro Saudade · Variado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DIRECTOR ─── -->
+<section id="director">
+  <div class="section-inner">
+    <div class="director-grid">
+
+      <div class="director-photo-wrap fade-in">
+        <div class="director-photo">
+          <img
+            src="imagenes/juan.jpeg"
+            alt="Juan Gainza, director del Coro Saudade"
+          >
+        </div>
+        <p class="director-photo-caption">Juan Gainza · Director</p>
+      </div>
+
+      <div class="director-info fade-in">
+        <p class="section-label">♦ Al frente del coro</p>
+        <h2 class="section-title">Juan <em>Gainza</em></h2>
+        <p class="director-name-sub">Miembro fundador y director · Coro Saudade de Pamplona</p>
+        <div class="ornament-line"><span>✦</span></div>
+
+        <div class="director-bio">
+          <p>
+            Realiza sus estudios musicales en el <strong>Conservatorio Superior de Música Pablo Sarasate de Pamplona</strong>, donde obtiene los títulos de Profesor Superior de Violonchelo y Profesor Superior de Música de Cámara. Es Licenciado en Derecho por la Universidad de Navarra.
+          </p>
+          <p>
+            Realiza cursos de Dirección Coral con profesores como <strong>Johan Duijck, Néstor Andrenacci, Josep Prats, Juan Esteban, Judit Faller, Juan Luis Martínez, Javier Busto, Basilio Astúlez o Elisenda Carrasco</strong>, entre otros.
+          </p>
+          <p>
+            Recibe clases de técnica vocal con Izaskun Arruabarrena y participa en numerosos cursos con diversos profesores como Ricardo Visus, Carme Baulenas, Paloma Pérez Íñigo, Mercé Baiget, entre otros.
+          </p>
+          <p>
+            Trabaja como director de la <strong>Escolanía y del Coro Juvenil del Orfeón Pamplonés</strong> desde 2004 y 2007 respectivamente, así como de profesor de Lenguaje Musical en su Escuela Coral y para adultos. Ha sido cantante y jefe de cuerda de tenores del Orfeón Pamplonés durante <strong>veinte años</strong>.
+          </p>
+          <p>
+            Imparte talleres corales para diferentes federaciones de coros y es requerido como jurado en diversos certámenes.
+          </p>
+          <p>
+            Es miembro fundador y director del Coro Saudade.
+          </p>
+        </div>
+
+        <div class="director-milestones">
+          <div class="milestone">
+            <span class="milestone-year">2004</span>
+            <span class="milestone-desc">Director de la Escolanía del Orfeón Pamplonés</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">2007</span>
+            <span class="milestone-desc">Director del Coro Juvenil del Orfeón Pamplonés</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">20 años</span>
+            <span class="milestone-desc">Cantante y jefe de cuerda de tenores del Orfeón Pamplonés</span>
+          </div>
+          <div class="milestone">
+            <span class="milestone-year">Hoy</span>
+            <span class="milestone-desc">Miembro fundador y director del Coro Saudade</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── EVENTOS ─── -->
+<section id="eventos">
+  <div class="section-inner">
+    <p class="section-label">♦ Agenda 2026</p>
+    <h2 class="section-title"><em>Conciertos destacados</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
+    <div class="events-list">
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">22</span>
+          <span class="event-month">Feb 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Ciclo Coral — Nuevo Casino de Pamplona</h3>
+          <p>Nuevo Casino · Pamplona · 12:00 h · Federación de Coros de Navarra</p>
+        </div>
+        <span class="event-badge featured">Destacado</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">17</span>
+          <span class="event-month">May 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Músicas del mundo</h3>
+          <p>Iglesia de la Natividad · Garísoain · 12:00 h</p>
+        </div>
+        <span class="event-badge featured">Destacado</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">22</span>
+          <span class="event-month">May 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Concierto El Desván</h3>
+          <p>Sala Indara · Pamplona · 21:00 h · El Desván</p>
+        </div>
+        <span class="event-badge featured">Colaboración</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">3</span>
+          <span class="event-month">Oct 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>REYNO de Artajona</h3>
+          <p>Artajona · Sigue nuestras redes para más información</p>
+        </div>
+        <span class="event-badge">Próximo</span>
+      </div>
+    </div>
+    <div style="margin-top:3rem; text-align:center;">
+      <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary">
+        Ver toda la agenda en Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALERÍA ─── -->
+<section id="galeria">
+  <div class="section-inner">
+    <p class="section-label">♦ Momentos</p>
+    <h2 class="section-title">Nuestra historia<br>en <em>imágenes</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
+  </div>
+
+  <div class="carousel-wrapper" id="carouselWrapper">
+    <div class="carousel-progress" id="carouselProgress"></div>
+    <div class="carousel-track" id="carouselTrack">
+      <div class="carousel-slide">
+        <img src="imagenes/image1.jpeg" alt="Foto 1" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image2.jpeg" alt="Foto 2" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image3.jpeg" alt="Foto 3" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image4.jpeg" alt="Foto 4" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image5.jpeg" alt="Foto 5" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image6.jpeg" alt="Foto 6" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image7.jpeg" alt="Foto 7" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="imagenes/image8.jpeg" alt="Foto 8" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="carousel-caption"><span>Coro Saudade</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="prevBtn" aria-label="Anterior"><span>&#8592;</span></button>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <span class="carousel-counter" id="carouselCounter">1 / 8</span>
+    <button class="carousel-btn" id="nextBtn" aria-label="Siguiente"><span>&#8594;</span></button>
+  </div>
+
+  <div class="section-inner" style="margin-top:2.5rem;text-align:center;">
+    <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary">
+      Más fotos en @corosaudade
+    </a>
+  </div>
+</section>
+
+<!-- ─── VÍDEOS ─── -->
+<section id="videos">
+  <div class="section-inner">
+    <p class="section-label">♦ En vivo</p>
+    <h2 class="section-title">Escúchanos <em>cantar</em></h2>
+    <div class="ornament-line"><span>✦</span></div>
+  </div>
+
+  <div class="carousel-wrapper" id="videoCarouselWrapper">
+    <div class="carousel-progress" id="videoCarouselProgress"></div>
+    <div class="carousel-track" id="videoCarouselTrack">
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video1.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Vídeo 1</span></div>
+      </div>
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video2.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Vídeo 2</span></div>
+      </div>
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video3.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Vídeo 3</span></div>
+      </div>
+      <div class="carousel-slide vc-slide">
+        <video src="videos/video4.mp4" preload="metadata" playsinline loop muted class="vc-video"></video>
+        <div class="vc-overlay">
+          <button class="vc-play-btn" aria-label="Reproducir">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-caption"><span>Vídeo 4</span></div>
+      </div>
+    </div>
+  </div><!-- /.carousel-wrapper -->
+
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="vcPrevBtn" aria-label="Anterior"><span>&#8592;</span></button>
+    <div class="carousel-dots" id="vcDots"></div>
+    <span class="carousel-counter" id="vcCounter">1 / 4</span>
+    <button class="carousel-btn" id="vcNextBtn" aria-label="Siguiente"><span>&#8594;</span></button>
+  </div>
+
+</section>
+
+<style>
+  /* ─── CARRUSEL DE VÍDEOS ─── */
+  #videos {
+    background: var(--black);
+    border-top: 1px solid rgba(184,148,31,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.2);
+    padding: 7rem 0;
+  }
+  #videos .section-inner { padding: 0 3rem; }
+  #videos .section-label { color: rgba(184,148,31,0.7); }
+  #videos .section-title { color: var(--white); }
+  #videos .ornament-line::before,
+  #videos .ornament-line::after {
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.45), transparent);
+  }
+  #videos .ornament-line span { color: rgba(184,148,31,0.6); }
+  #videos .carousel-wrapper {
+    background: #000;
+    border-top: 1px solid rgba(184,148,31,0.2);
+    border-bottom: 1px solid rgba(184,148,31,0.2);
+  }
+  #videos .carousel-slide {
+    background: #000;
+    border-right-color: rgba(184,148,31,0.15);
+    height: 520px;
+  }
+  .vc-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.4s ease;
+    filter: brightness(0.7);
+  }
+  .carousel-slide.active .vc-video { filter: brightness(0.85); }
+  .vc-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .vc-play-btn {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid rgba(184,148,31,0.6);
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    opacity: 0;
+  }
+  .carousel-slide.active .vc-play-btn { opacity: 1; }
+  .vc-play-btn:hover {
+    background: rgba(184,148,31,0.25);
+    border-color: rgba(184,148,31,1);
+    transform: scale(1.08);
+  }
+  .vc-play-btn.playing {
+    opacity: 1;
+    border-color: rgba(184,148,31,0.4);
+    background: rgba(0,0,0,0.3);
+  }
+  .vc-play-btn svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--white);
+    margin-left: 3px; /* compensa el triángulo de play */
+    transition: none;
+  }
+  .vc-play-btn.playing svg { margin-left: 0; }
+  #videos .carousel-btn {
+    background: transparent;
+    border-color: rgba(184,148,31,0.4);
+    color: rgba(248,246,241,0.7);
+  }
+  #videos .carousel-btn::after { background: rgba(184,148,31,0.15); }
+  #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.8); }
+  #videos .carousel-btn:hover span { color: var(--white); }
+  #videos .carousel-dot { background: rgba(248,246,241,0.2); }
+  #videos .carousel-dot.active { background: rgba(184,148,31,0.8); }
+  #videos .carousel-counter { color: rgba(248,246,241,0.4); }
+  #videos .carousel-progress {
+    background: linear-gradient(to right, rgba(184,148,31,0.7), rgba(184,148,31,0.4));
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  const wrapper  = document.getElementById('videoCarouselWrapper');
+  const track    = document.getElementById('videoCarouselTrack');
+  const dotsEl   = document.getElementById('vcDots');
+  const counter  = document.getElementById('vcCounter');
+  const prevBtn  = document.getElementById('vcPrevBtn');
+  const nextBtn  = document.getElementById('vcNextBtn');
+  const progress = document.getElementById('videoCarouselProgress');
+  const slides   = Array.from(track.querySelectorAll('.vc-slide'));
+  const total    = slides.length;
+
+  let currentPage = 0;
+  let autoTimer;
+  let isDragging = false, dragStartX = 0, dragStartTranslate = 0, dragCurrentX = 0;
+
+  // ── Helpers
+  function slideWidth()   { return wrapper.offsetWidth; }
+  function totalPages()   { return total; }
+  function translateFor(p){ return -(p * slideWidth()); }
+
+  function applyTranslate(x, animate) {
+    track.classList.toggle('animating', animate);
+    track.style.transform = `translateX(${x}px)`;
+  }
+
+  function updateSlideWidths() {
+    slides.forEach(s => { s.style.flex = '0 0 100%'; });
+  }
+
+  function pauseAllVideos() {
+    slides.forEach(s => {
+      const v = s.querySelector('.vc-video');
+      const btn = s.querySelector('.vc-play-btn');
+      if (v && !v.paused) {
+        v.pause();
+        btn.classList.remove('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      }
+    });
+  }
+
+  function updateActiveSlides() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === currentPage));
+  }
+
+  function updateDots() {
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentPage);
+    });
+  }
+
+  function updateCounter() {
+    counter.textContent = `${currentPage + 1} / ${totalPages()}`;
+  }
+
+  function updateProgress() {
+    progress.style.width = `${((currentPage + 1) / totalPages()) * 100}%`;
+  }
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < totalPages(); i++) {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === currentPage ? ' active' : '');
+      d.addEventListener('click', () => { goTo(i); resetAuto(); });
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function goTo(page, animate = true) {
+    pauseAllVideos();
+    currentPage = Math.max(0, Math.min(page, totalPages() - 1));
+    applyTranslate(translateFor(currentPage), animate);
+    updateActiveSlides();
+    updateDots();
+    updateCounter();
+    updateProgress();
+  }
+
+  function next() { goTo((currentPage + 1) % totalPages()); }
+  function prev() { goTo((currentPage - 1 + totalPages()) % totalPages()); }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 6000);
+  }
+
+  // ── Play/Pausa individual al clicar el botón
+  slides.forEach(slide => {
+    const btn = slide.querySelector('.vc-play-btn');
+    const vid = slide.querySelector('.vc-video');
+    if (!btn || !vid) return;
+
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (vid.paused) {
+        vid.muted = false;
+        vid.play();
+        btn.classList.add('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        clearInterval(autoTimer); // no avanzar mientras hay vídeo sonando
+      } else {
+        vid.pause();
+        btn.classList.remove('playing');
+        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        resetAuto();
+      }
+    });
+
+    // Al terminar el vídeo, volver al estado de pausa
+    vid.addEventListener('ended', () => {
+      btn.classList.remove('playing');
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      resetAuto();
+    });
+  });
+
+  // ── Drag (ratón)
+  wrapper.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartTranslate = translateFor(currentPage);
+    wrapper.classList.add('dragging');
+    track.classList.remove('animating');
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    dragCurrentX = e.clientX;
+    const delta = dragCurrentX - dragStartX;
+    const newX = dragStartTranslate + delta;
+    const minX = translateFor(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  });
+  window.addEventListener('mouseup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrapper.classList.remove('dragging');
+    const delta = e.clientX - dragStartX;
+    const threshold = slideWidth() * 0.2;
+    if (delta < -threshold) next();
+    else if (delta > threshold) prev();
+    else goTo(currentPage);
+    resetAuto();
+  });
+
+  // ── Touch
+  let touchStartX = 0;
+  wrapper.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    dragStartTranslate = translateFor(currentPage);
+    track.classList.remove('animating');
+  }, { passive: true });
+  wrapper.addEventListener('touchmove', e => {
+    const delta = e.touches[0].clientX - touchStartX;
+    const newX = dragStartTranslate + delta;
+    const minX = translateFor(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  }, { passive: true });
+  wrapper.addEventListener('touchend', e => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (delta < -slideWidth() * 0.18) next();
+    else if (delta > slideWidth() * 0.18) prev();
+    else goTo(currentPage);
+    resetAuto();
+  });
+
+  prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
+  nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+
+  wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+  wrapper.addEventListener('mouseleave', () => resetAuto());
+
+  window.addEventListener('resize', () => {
+    updateSlideWidths();
+    buildDots();
+    goTo(Math.min(currentPage, totalPages() - 1), false);
+  });
+
+  // Init
+  updateSlideWidths();
+  buildDots();
+  goTo(0, false);
+  resetAuto();
+})();
+</script>
+
+<!-- ─── REPERTORIO ─── -->
+<!-- <section id="repertorio">
+  <div class="section-inner">
+    <p class="section-label">♦ Nuestro repertorio</p>
+    <h2 class="section-title">Música sin <em>fronteras</em></h2>
+    <div class="ornament-line" style="--gold-light:#b8941f;"><span style="color:var(--gold);">✦</span></div>
+    <div class="repertoire-grid">
+      <div class="rep-card fade-in">
+        <span class="rep-num">01</span>
+        <h3>Polifonía Clásica</h3>
+        <p>Obras del Renacimiento y Barroco. Victoria, Palestrina, Bach. La arquitectura de la voz humana en su forma más pura.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">02</span>
+        <h3>Música Sacra</h3>
+        <p>Misas, motetes y piezas litúrgicas que marcan el calendario del coro y sus actuaciones en espacios religiosos de Navarra.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">03</span>
+        <h3>Folklore Navarro y Vasco</h3>
+        <p>Canciones tradicionales del territorio arregladas para coro mixto. Identidad y raíz en cada interpretación.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">04</span>
+        <h3>Contemporáneo</h3>
+        <p>Obras de compositores actuales. El coro apuesta por la música viva y el repertorio del siglo XXI.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">05</span>
+        <h3>Música Popular y Gospel</h3>
+        <p>Arreglos corales de géneros populares, spiritual y gospel que conectan con públicos de todas las edades.</p>
+      </div>
+      <div class="rep-card fade-in">
+        <span class="rep-num">06</span>
+        <h3>Música Solidaria</h3>
+        <p>Proyectos especiales como Voces por la Paz, donde la música se convierte en acto de compromiso social.</p>
+      </div>
+    </div>
+  </div>
+</section>
+-->
+<!-- ─── ÚNETE ─── -->
+<section id="unete">
+  <div class="section-inner">
+    <div class="join-info-only fade-in">
+      <p class="section-label">♦ Audiciones abiertas</p>
+      <h2 class="section-title">Canta con<br><em>nosotros</em></h2>
+      <div class="ornament-line"><span>✦</span></div>
+      <h3 style="font-family:var(--serif-title);font-size:1.6rem;font-weight:500;margin-bottom:1.2rem;">¿Te animas?</h3>
+      <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:var(--gray-mid);margin-bottom:1.8rem;">
+        El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
+      </p>
+      <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:var(--gray-mid);margin-bottom:1.8rem;">
+        No se requiere experiencia profesional, sí amor por la música. Si estás interesado, acércate a uno de nuestros ensayos o escríbenos.
+      </p>
+      <ul class="requirements-list">
+        <li>Afinación y sentido rítmico básico</li>
+        <li>Disponibilidad para los ensayos semanales</li>
+        <li>Compromiso con los conciertos del calendario</li>
+        <li>Actitud positiva y trabajo en equipo</li>
+      </ul>
+      <div style="margin-top:2rem;padding:2rem 2.5rem;border:1px solid var(--gold-pale);background:var(--white);">
+        <p style="font-family:var(--serif-sc);font-size:0.65rem;letter-spacing:0.3em;color:var(--gray-mid);margin-bottom:1.2rem;">📅 Ensayos</p>
+        <p style="font-family:var(--serif-title);font-size:1.15rem;color:var(--black);line-height:1.7;margin-bottom:0.4rem;">
+          <strong>Martes y jueves</strong>, de 19:45 a 21:15 h
+        </p>
+        <p style="font-family:var(--serif-title);font-size:1rem;color:var(--gray-mid);font-style:italic;line-height:1.6;">
+          Iglesia de San Antonio Capuchinos · Pamplona · Centro
+        </p>
+      </div>
+      <div style="margin-top:2rem;">
+        <a href="#contacto" class="btn-primary">Escríbenos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACTO ─── -->
+<section id="contacto" style="background:var(--white);padding:0;">
+  <div class="contact-split">
+    <!-- Columna izquierda: info con fondo azulado -->
+    <div class="contact-split-left fade-in">
+      <div class="contact-split-left-inner">
+        <p class="section-label" style="color:rgba(248,246,241,0.5);">♦ Ponte en contacto</p>
+        <h2 class="section-title" style="color:var(--white);margin-bottom:2rem;"><em>Hablemos</em></h2>
+        <div class="ornament-line" style="margin-bottom:2.5rem;">
+          <span style="color:rgba(184,148,31,0.6);">✦</span>
+        </div>
+        <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:rgba(248,246,241,0.65);margin-bottom:2.5rem;">
+          Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente. También puedes encontrarnos en nuestras redes.
+        </p>
+        <div class="contact-info-list">
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Correo electrónico</h4>
+            <a href="mailto:corosaudadepamplona@gmail.com" style="color:var(--white);">corosaudadepamplona@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Ensayos</h4>
+            <p style="color:rgba(248,246,241,0.8);">Martes y jueves · 19:45 – 21:15 h<br>Iglesia de San Antonio Capuchinos · Pamplona</p>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Director</h4>
+            <p style="color:rgba(248,246,241,0.8);">Juan Gainza</p>
+          </div>
+          <div class="contact-item">
+            <h4 style="color:rgba(248,246,241,0.4);">Redes sociales</h4>
+            <div class="contact-social-links">
+              <a href="mailto:corosaudadepamplona@gmail.com" class="contact-social-link" title="Email">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span>Email</span>
+              </a>
+              <a href="https://www.tiktok.com/@corosaudade" target="_blank" class="contact-social-link" title="TikTok">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+                <span>TikTok</span>
+              </a>
+              <a href="https://www.instagram.com/corosaudade/" target="_blank" class="contact-social-link" title="Instagram">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                <span>Instagram</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: formulario -->
+    <div class="contact-split-right fade-in">
+      <div class="join-form" style="height:100%;min-height:600px;">
+        <div id="formContent">
+          <h3 class="form-title">Formulario de Contacto</h3>
+          <p class="form-subtitle">Todos los datos se guardan de forma segura</p>
+          <form id="joinForm" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+              </div>
+              <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000" required>
+            </div>
+            <div class="form-group">
+              <label for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" rows="3" placeholder="Cuéntanos"></textarea>
+            </div>
+            <button type="button" id="submitBtn" class="form-submit" onclick="handleSubmit()">Enviar mensaje</button>
+            <p class="form-note">
+              Tu mensaje se enviará al correo del coro. Nos pondremos en contacto contigo lo antes posible. Muchas gracias.
+            </p>
+          </form>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <span class="check">♩</span>
+          <h3>¡Mensaje enviado!</h3>
+          <p>Gracias por contactar con el Coro Saudade.<br>Te responderemos en breve.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <img src="imagenes/logo_redondo_negativo.png" alt="Logo Coro Saudade" class="footer-logo">
+  <div class="footer-bottom">
+    <p>© 2025 Coro Saudade de Pamplona. Todos los derechos reservados.</p>
+    <div class="footer-gold-rule"></div>
+  </div>
+</footer>
+
+<div class="notification" id="notification"></div>
+
+<script>
+// Autoplay vídeos de la sección coro al entrar en viewport
+(function() {
+  const nvideos = ['nvid1','nvid2','nvid3'].map(id => document.getElementById(id)).filter(Boolean);
+  nvideos.forEach(v => { v.muted = true; });
+  const nobs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        nvideos.forEach(v => v.play().catch(()=>{}));
+      } else {
+        nvideos.forEach(v => v.pause());
+      }
+    });
+  }, { threshold: 0.3 });
+  const nrow = document.getElementById('nosotrosVideoRow');
+  if (nrow) nobs.observe(nrow);
+})();
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ─── HAMBURGER
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => mob.classList.toggle('open'));
+function closeMobile() { mob.classList.remove('open'); }
+
+// ─── FADE IN OBSERVER
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 120);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ─── CAROUSEL
+(function() {
+  const wrapper  = document.getElementById('carouselWrapper');
+  const track    = document.getElementById('carouselTrack');
+  const slides   = Array.from(track.querySelectorAll('.carousel-slide'));
+  const dotsEl   = document.getElementById('carouselDots');
+  const counter  = document.getElementById('carouselCounter');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
+  const progress = document.getElementById('carouselProgress');
+
+  const total = slides.length;
+  let currentPage = 0;
+  let autoTimer;
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragCurrentX = 0;
+  let dragStartTranslate = 0;
+
+  function slidesVisible() {
+    return 1;
+  }
+
+  function totalPages() {
+    return Math.ceil(total / slidesVisible());
+  }
+
+  function slideWidth() {
+    return wrapper.offsetWidth / slidesVisible();
+  }
+
+  function getTranslateForPage(page) {
+    return -(page * slidesVisible() * slideWidth());
+  }
+
+  function applyTranslate(x, animate) {
+    track.classList.toggle('animating', animate);
+    track.style.transform = `translateX(${x}px)`;
+  }
+
+  function updateSlideWidths() {
+    const sv = slidesVisible();
+    slides.forEach(s => { s.style.flex = `0 0 ${100 / sv}%`; });
+  }
+
+  function updateActiveSlides() {
+    const sv = slidesVisible();
+    const start = currentPage * sv;
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i >= start && i < start + sv);
+    });
+  }
+
+  function updateDots() {
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentPage);
+    });
+  }
+
+  function updateCounter() {
+    counter.textContent = `${currentPage + 1} / ${totalPages()}`;
+  }
+
+  function updateProgress() {
+    const pct = ((currentPage + 1) / totalPages()) * 100;
+    progress.style.width = `${pct}%`;
+  }
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < totalPages(); i++) {
+      const d = document.createElement('div');
+      d.className = 'carousel-dot' + (i === currentPage ? ' active' : '');
+      d.addEventListener('click', () => { goTo(i); resetAuto(); });
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function goTo(page, animate = true) {
+    currentPage = Math.max(0, Math.min(page, totalPages() - 1));
+    applyTranslate(getTranslateForPage(currentPage), animate);
+    updateActiveSlides();
+    updateDots();
+    updateCounter();
+    updateProgress();
+  }
+
+  function next() { goTo((currentPage + 1) % totalPages()); }
+  function prev() { goTo((currentPage - 1 + totalPages()) % totalPages()); }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(next, 5500);
+  }
+
+  // ── Mouse drag
+  wrapper.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartTranslate = getTranslateForPage(currentPage);
+    wrapper.classList.add('dragging');
+    track.classList.remove('animating');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    dragCurrentX = e.clientX;
+    const delta = dragCurrentX - dragStartX;
+    // Rubber-band resistance at edges
+    const newX = dragStartTranslate + delta;
+    const minX = getTranslateForPage(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  });
+
+  window.addEventListener('mouseup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrapper.classList.remove('dragging');
+    const delta = e.clientX - dragStartX;
+    const threshold = slideWidth() * 0.2;
+    if (delta < -threshold) next();
+    else if (delta > threshold) prev();
+    else goTo(currentPage); // snap back
+    resetAuto();
+  });
+
+  // ── Touch drag
+  let touchStartX = 0;
+  wrapper.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    dragStartTranslate = getTranslateForPage(currentPage);
+    track.classList.remove('animating');
+  }, { passive: true });
+
+  wrapper.addEventListener('touchmove', e => {
+    const delta = e.touches[0].clientX - touchStartX;
+    const newX = dragStartTranslate + delta;
+    const minX = getTranslateForPage(totalPages() - 1);
+    const maxX = 0;
+    let bounded = newX;
+    if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
+    if (newX < minX) bounded = minX + (newX - minX) * 0.25;
+    track.style.transform = `translateX(${bounded}px)`;
+  }, { passive: true });
+
+  wrapper.addEventListener('touchend', e => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    const threshold = slideWidth() * 0.18;
+    if (delta < -threshold) next();
+    else if (delta > threshold) prev();
+    else goTo(currentPage);
+    resetAuto();
+  });
+
+  prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
+  nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+
+  // Pause on hover
+  wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+  wrapper.addEventListener('mouseleave', () => resetAuto());
+
+  // Keyboard navigation when focused
+  document.addEventListener('keydown', e => {
+    const galleryVisible = wrapper.getBoundingClientRect().top < window.innerHeight && wrapper.getBoundingClientRect().bottom > 0;
+    if (!galleryVisible) return;
+    if (e.key === 'ArrowRight') { next(); resetAuto(); }
+    if (e.key === 'ArrowLeft')  { prev(); resetAuto(); }
+  });
+
+  window.addEventListener('resize', () => {
+    updateSlideWidths();
+    buildDots();
+    goTo(Math.min(currentPage, totalPages() - 1), false);
+  });
+
+  // Init
+  updateSlideWidths();
+  buildDots();
+  goTo(0, false);
+  resetAuto();
+})();
+
+// ─── FORM BACKEND CONFIG
+const FORMSPREE_URL  = 'https://formspree.io/f/xojrlgdl';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q/exec';
+
+async function handleSubmit() {
+  const form = document.getElementById('joinForm');
+  const btn  = document.getElementById('submitBtn');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  btn.textContent = 'Enviando…';
+  btn.disabled = true;
+  const data = {
+    nombre: form.nombre.value.trim(),
+    apellidos: form.apellidos.value.trim(),
+    email: form.email.value.trim(),
+    telefono: form.telefono.value.trim() || '—',
+    mensaje: form.mensaje.value.trim() || '—',
+    fecha: new Date().toLocaleDateString('es-ES'),
+    hora: new Date().toLocaleTimeString('es-ES'),
+  };
+  const results = await Promise.allSettled([
+    enviarFormspree(data),
+    enviarGoogleSheets(data),
+  ]);
+  const formspreeOk = results[0].status === 'fulfilled' && results[0].value;
+  const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('formSuccess').style.display  = 'block';
+  if (formspreeOk || sheetsOk) {
+    const detalle = [formspreeOk ? '✔ Email enviado al coro' : null, sheetsOk ? '✔ Guardado en Google Sheets' : null].filter(Boolean).join(' · ');
+    showNotification(detalle);
+  } else {
+    showNotification('Solicitud recibida. Contactaremos contigo en breve.');
+  }
+}
+async function enviarFormspree(data) {
+  if (FORMSPREE_URL.includes('TU_ID_AQUI')) return false;
+  const res = await fetch(FORMSPREE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: `Nueva solicitud de ingreso — ${data.nombre} ${data.apellidos}`,
+      nombre: `${data.nombre} ${data.apellidos}`,
+      email: data.email, telefono: data.telefono,
+      cuerda: data.cuerda, experiencia: data.experiencia,
+      mensaje: data.mensaje, fecha: `${data.fecha} ${data.hora}`,
+    }),
+  });
+  return res.ok;
+}
+async function enviarGoogleSheets(data) {
+  if (APPS_SCRIPT_URL.includes('TU_SCRIPT_AQUI')) return false;
+  await fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return true;
+}
+function showNotification(msg) {
+  const n = document.getElementById('notification');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', () => mob.classList.remove('open'));
+});
+// ─── CUSTOM SELECTS
+document.querySelectorAll('.custom-select').forEach(cs => {
+  const trigger = cs.querySelector('.custom-select-trigger');
+  const options = cs.querySelectorAll('.custom-option');
+  const nativeSelect = document.getElementById(cs.dataset.for);
+
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.custom-select.open').forEach(o => {
+      if (o !== cs) o.classList.remove('open');
+    });
+    cs.classList.toggle('open');
+  });
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      const val = opt.dataset.value;
+      const label = opt.textContent.trim();
+      trigger.querySelector('span:first-child').textContent = label;
+      trigger.classList.remove('placeholder-active');
+      options.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      nativeSelect.value = val;
+      cs.classList.remove('open');
+    });
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.custom-select.open').forEach(cs => cs.classList.remove('open'));
+});
+</script>
+</body>
+</html>
