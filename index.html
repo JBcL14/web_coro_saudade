@@ -32,8 +32,8 @@
     font-family: var(--serif-title);
     background: var(--white);
     color: var(--black);
-    font-size: 18px;
-    line-height: 1.7;
+    font-size: 19px;
+    line-height: 1.75;
     overflow-x: hidden;
   }
 
@@ -72,11 +72,11 @@
     z-index: 100;
     background: var(--white);
     border-bottom: 1px solid var(--gold-pale);
-    padding: 0 3rem;
+    padding: 0 2.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 72px;
+    height: 76px;
     transition: var(--transition);
   }
   nav.scrolled {
@@ -123,14 +123,26 @@
   }
   .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 2rem;
     list-style: none;
     align-items: center;
   }
+  /* ─── SVG DIAMOND ORNAMENT (iOS-safe) ─── */
+  .ornament-diamond {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    fill: currentColor;
+    vertical-align: middle;
+    margin-right: 0.3em;
+    margin-top: -0.1em;
+    flex-shrink: 0;
+  }
+
   .nav-links a {
     font-family: var(--serif-sc);
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
+    font-size: 0.92rem;
+    letter-spacing: 0.15em;
     text-decoration: none;
     color: var(--black);
     transition: color 0.3s;
@@ -217,7 +229,7 @@
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 72px;
+    padding-top: 76px;
     background: var(--white);
     min-height: 100vh;
   }
@@ -350,8 +362,8 @@
   .section-inner { max-width: 1100px; margin: 0 auto; }
   .section-label {
     font-family: var(--serif-sc);
-    font-size: 0.68rem;
-    letter-spacing: 0.45em;
+    font-size: 0.78rem;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: var(--gray-mid);
     margin-bottom: 0.6rem;
@@ -1021,7 +1033,7 @@ footer {
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 72px; left: 0; right: 0;
+    top: 76px; left: 0; right: 0;
     background: var(--white);
     border-top: 1px solid var(--gold-pale);
     border-bottom: 1px solid var(--gold-pale);
@@ -1087,7 +1099,7 @@ footer {
     .carousel-slide { flex: 0 0 100%; }
     .hero-banner { height: clamp(180px, 45vw, 320px); }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
-    #inicio { padding-top: 72px; }
+    #inicio { padding-top: 76px; }
   }
 
   /* ─── CUSTOM SELECT ─── */
@@ -1300,8 +1312,50 @@ footer {
     border-color: var(--gold-pale);
     background: var(--off-white);
   }
+  /* Link wrapper for nosotros videos */
+  .nosotros-video-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  /* Hint overlay that appears on hover */
+  .nosotros-video-hint {
+    position: absolute;
+    inset: 0;
+    background: rgba(25,35,56,0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 2;
+    cursor: pointer;
+  }
+  .nosotros-video-hint svg {
+    width: 44px;
+    height: 44px;
+    fill: var(--white);
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+  }
+  .nosotros-video-hint span {
+    font-family: var(--serif-sc);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .nosotros-video-link:hover .nosotros-video-hint { opacity: 1; }
+  .nosotros-video-link:hover .video-frame {
+    border-color: var(--black);
+  }
   @media (max-width: 900px) {
     .nosotros-video-row { grid-template-columns: 1fr; }
+    /* On mobile, hide hint so it doesn't interfere with tap */
+    .nosotros-video-hint { display: none; }
   }
 
   /* ─── VÍDEOS ─── */
@@ -1567,35 +1621,44 @@ footer {
   <div class="section-inner">
     <div class="about-grid">
       <div class="about-text fade-in">
-        <p class="section-label">♦ Quiénes somos</p>
+        <p class="section-label"><svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg> Quiénes somos</p>
         <h2 class="section-title">Una voz hecha<br>de <em>muchas</em></h2>
-        <div class="ornament-line"><span>✦</span></div>
+        <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
         <p>
-          Somos una <strong>formación integrada por personas con experiencia en el mundo coral</strong> que aborda diferentes géneros y estilos participando en proyectos muy diversos.
+          Somos una <strong>formación integrada por personas con amplia experiencia en el mundo coral</strong>, que aborda distintos géneros y estilos a través de proyectos muy diversos.
         </p>
         <p>
-          Bajo el nombre del coro subyace la idea de la importancia que han tenido determinadas personas y momentos en nuestras vidas. Afrontamos la interpretación desde un punto de vista <strong>exigente y dinámico</strong>, con el fin de disfrutar y de hacer disfrutar.
+          Bajo el nombre del coro subyace la idea de la importancia que han tenido determinadas personas y momentos en nuestras vidas. Afrontamos la interpretación desde un punto de vista <strong>exigente y dinámico</strong>, con el objetivo de disfrutar de la música y hacer disfrutar al público.
         </p>
         <p>
-          Nuestro repertorio abarca distintas épocas de la historia de la música con obras religiosas y profanas, así como procedentes de folklores de todo el mundo. Actuamos en Pamplona y su entorno, en otras localidades de Navarra y fuera de nuestra comunidad.
+          Nuestro repertorio abarca distintas épocas de la historia de la música e incluye obras religiosas y profanas, así como piezas procedentes de los folklores de todo el mundo.
+        </p>
+        <p>
+          Actuamos en Pamplona y su entorno, así como en otras localidades de la geografía navarra (Roncesvalles, Zubiri, Aibar, Tafalla, Leyre, entre otras). También hemos realizado actuaciones fuera de nuestra comunidad, destacando el <em>"Festival de Canto Coral Ciudad de Soria"</em>, el <em>"Ciclo Coral Ciudad de Manzanares"</em> o el ciclo <em>"Navarra canta — Nafarroa kantari"</em> en el Hogar Navarro de Logroño.
+        </p>
+        <p>
+          Además, colaboramos y participamos en diversos <strong>proyectos solidarios</strong> con instituciones como ADANO, Club Rotary, Grupo Solera Asistencial o Nuevo Futuro, entre otras.
+        </p>
+        <p>
+          Entre los proyectos destacados del año 2025, el coro ha participado en la “Gala de los Premios Max” celebrada en el Teatro Gayarre, así como en el espectáculo “Navarra suena de cine”, también en el Teatro Gayarre, junto a La Pamplonesa, interpretando obras de la compositora Paula Olaz.
         </p>
       </div>
       <div class="about-stats fade-in">
         <div class="stat-card">
           <span class="stat-number">2018</span>
-          <span class="stat-label">Desde</span>
+          <span class="stat-label">Año de fundación</span>
         </div>
         <div class="stat-card">
           <span class="stat-number">20+</span>
           <span class="stat-label">Voces en el coro</span>
         </div>
         <div class="stat-card">
-          <span class="stat-number">Varios</span>
-          <span class="stat-label">Conciertos al año</span>
+          <span class="stat-number">Navarra</span>
+          <span class="stat-label">y más allá</span>
         </div>
         <div class="stat-card">
-          <span class="stat-number">Múltiples</span>
-          <span class="stat-label">Cuerdas vocales</span>
+          <span class="stat-number">Gayarre</span>
+          <span class="stat-label">Premios Max · 2025</span>
         </div>
       </div>
     </div>
@@ -1603,38 +1666,50 @@ footer {
 
   <!-- Vídeos del coro en fila -->
   <div class="section-inner" style="margin-top:4rem;">
-    <div class="ornament-line"><span>✦</span></div>
+    <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
     <div class="nosotros-video-row" id="nosotrosVideoRow">
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+      <a href="#videos" class="video-item fade-in nosotros-video-link" aria-label="Ver vídeos del coro">
+        <div class="video-frame nosotros-video-clickable">
           <video id="nvid1" src="videos/video1.mp4" preload="metadata" playsinline loop muted></video>
+          <div class="nosotros-video-hint">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            <span>Ver vídeos</span>
+          </div>
         </div>
         <div class="video-caption" style="text-align:center;">
           <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Concierto El Desván</h4>
           <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Colaboración · Rock</p>
         </div>
-      </div>
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+      </a>
+      <a href="#videos" class="video-item fade-in nosotros-video-link" aria-label="Ver vídeos del coro">
+        <div class="video-frame nosotros-video-clickable">
           <video id="nvid2" src="videos/video2.mp4" preload="metadata" playsinline loop muted></video>
+          <div class="nosotros-video-hint">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            <span>Ver vídeos</span>
+          </div>
         </div>
         <div class="video-caption" style="text-align:center;">
           <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Premios MAX</h4>
           <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coro mixto</p>
         </div>
-      </div>
-      <div class="video-item fade-in">
-        <div class="video-frame">
-          <!-- <span class="video-sync-badge">Sincronizado</span> -->
+      </a>
+      <a href="#videos" class="video-item fade-in nosotros-video-link" aria-label="Ver vídeos del coro">
+        <div class="video-frame nosotros-video-clickable">
           <video id="nvid3" src="videos/video3.mp4" preload="metadata" playsinline loop muted></video>
+          <div class="nosotros-video-hint">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+            <span>Ver vídeos</span>
+          </div>
         </div>
         <div class="video-caption" style="text-align:center;">
           <h4 style="font-family:var(--serif-title);font-size:0.95rem;font-weight:500;color:var(--black);margin-bottom:0.2rem;">Nuevo Casino Principal</h4>
           <p style="font-family:var(--serif-title);font-size:0.8rem;color:var(--gray-mid);font-style:italic;">Coro Saudade · Variado</p>
         </div>
-      </div>
+      </a>
+    </div>
+    <div style="margin-top:2rem;text-align:center;">
+      <a href="#videos" class="btn-secondary">Ver todos los vídeos</a>
     </div>
   </div>
 </section>
@@ -1655,26 +1730,25 @@ footer {
       </div>
 
       <div class="director-info fade-in">
-        <p class="section-label">♦ Al frente del coro</p>
+        <p class="section-label"><svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg> Al frente del coro</p>
         <h2 class="section-title">Juan <em>Gainza</em></h2>
         <p class="director-name-sub">Miembro fundador y director · Coro Saudade de Pamplona</p>
-        <div class="ornament-line"><span>✦</span></div>
+        <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
 
         <div class="director-bio">
+          <h3 style="font-family:var(--serif-sc);font-size:0.75rem;letter-spacing:0.3em;color:var(--gray-mid);margin-bottom:1rem;margin-top:0.5rem;font-weight:500;">Formación</h3>
           <p>
-            Realiza sus estudios musicales en el <strong>Conservatorio Superior de Música Pablo Sarasate de Pamplona</strong>, donde obtiene los títulos de Profesor Superior de Violonchelo y Profesor Superior de Música de Cámara. Es Licenciado en Derecho por la Universidad de Navarra.
+            Realiza sus estudios musicales en el <strong>Conservatorio Superior de Música Pablo Sarasate</strong>, donde obtiene los títulos de Profesor Superior de Violonchelo y Profesor Superior de Música de Cámara. Es Licenciado en Derecho por la Universidad de Navarra.
+          </p>
+          <h3 style="font-family:var(--serif-sc);font-size:0.75rem;letter-spacing:0.3em;color:var(--gray-mid);margin-bottom:1rem;margin-top:1.8rem;font-weight:500;">Experiencia</h3>
+          <p>
+            Desde 2004 trabaja como director de la Escolanía y, desde 2007, como director del Coro Joven del <strong>Orfeón Pamplonés</strong>, además de ejercer como profesor de Lenguaje Musical en su Escuela Coral y en programas de formación para personas adultas.
           </p>
           <p>
-            Realiza cursos de Dirección Coral con profesores como <strong>Johan Duijck, Néstor Andrenacci, Josep Prats, Juan Esteban, Judit Faller, Juan Luis Martínez, Javier Busto, Basilio Astúlez o Elisenda Carrasco</strong>, entre otros.
+            Ha sido cantante y jefe de cuerda de tenores del Orfeón Pamplonés durante <strong>veinte años</strong>. Imparte habitualmente talleres corales para diferentes federaciones de coros y es requerido como jurado en diversos certámenes corales.
           </p>
           <p>
-            Recibe clases de técnica vocal con Izaskun Arruabarrena y participa en numerosos cursos con diversos profesores como Ricardo Visus, Carme Baulenas, Paloma Pérez Íñigo, Mercé Baiget, entre otros.
-          </p>
-          <p>
-            Trabaja como director de la <strong>Escolanía y del Coro Juvenil del Orfeón Pamplonés</strong> desde 2004 y 2007 respectivamente, así como de profesor de Lenguaje Musical en su Escuela Coral y para adultos. Ha sido cantante y jefe de cuerda de tenores del Orfeón Pamplonés durante <strong>veinte años</strong>.
-          </p>
-          <p>
-            Imparte talleres corales para diferentes federaciones de coros y es requerido como jurado en diversos certámenes.
+            Ha realizado cursos de Dirección Coral con profesores como <strong>Johan Duijck, Néstor Andrenacci, Josep Prats, Juan Esteban, Judit Faller, Juan Luis Martínez, Javier Busto, Basilio Astúlez o Elisenda Carrasco</strong>, entre otros. Asimismo, ha recibido formación en técnica vocal con Izaskun Arruabarrena y ha participado en numerosos cursos con docentes como Ricardo Visus, Carme Baulenas, Paloma Pérez Íñigo o Mercé Baiget.
           </p>
           <p>
             Es miembro fundador y director del Coro Saudade.
@@ -1708,20 +1782,31 @@ footer {
 <!-- ─── EVENTOS ─── -->
 <section id="eventos">
   <div class="section-inner">
-    <p class="section-label">♦ Agenda 2026</p>
+    <p class="section-label"><svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg> Agenda 2026</p>
     <h2 class="section-title"><em>Conciertos destacados</em></h2>
-    <div class="ornament-line"><span>✦</span></div>
+    <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
     <div class="events-list">
       <div class="event-item fade-in">
         <div class="event-date">
-          <span class="event-day">22</span>
-          <span class="event-month">Feb 2026</span>
+          <span class="event-day">3</span>
+          <span class="event-month">Oct 2026</span>
         </div>
         <div class="event-info">
-          <h3>Ciclo Coral — Nuevo Casino de Pamplona</h3>
-          <p>Nuevo Casino · Pamplona · 12:00 h · Federación de Coros de Navarra</p>
+          <h3>REYNO de Artajona</h3>
+          <p>Artajona · Sigue nuestras redes para más información</p>
         </div>
-        <span class="event-badge featured">Destacado</span>
+        <span class="event-badge">Próximo</span>
+      </div>
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">22</span>
+          <span class="event-month">May 2026</span>
+        </div>
+        <div class="event-info">
+          <h3>Concierto El Desván</h3>
+          <p>Sala Indara · Pamplona · 21:00 h · El Desván</p>
+        </div>
+        <span class="event-badge featured">Colaboración</span>
       </div>
       <div class="event-item fade-in">
         <div class="event-date">
@@ -1737,29 +1822,18 @@ footer {
       <div class="event-item fade-in">
         <div class="event-date">
           <span class="event-day">22</span>
-          <span class="event-month">May 2026</span>
+          <span class="event-month">Feb 2026</span>
         </div>
         <div class="event-info">
-          <h3>Concierto El Desván</h3>
-          <p>Sala Indara · Pamplona · 21:00 h · El Desván</p>
+          <h3>Ciclo Coral — Nuevo Casino de Pamplona</h3>
+          <p>Nuevo Casino · Pamplona · 12:00 h · Federación de Coros de Navarra</p>
         </div>
-        <span class="event-badge featured">Colaboración</span>
-      </div>
-      <div class="event-item fade-in">
-        <div class="event-date">
-          <span class="event-day">3</span>
-          <span class="event-month">Oct 2026</span>
-        </div>
-        <div class="event-info">
-          <h3>REYNO de Artajona</h3>
-          <p>Artajona · Sigue nuestras redes para más información</p>
-        </div>
-        <span class="event-badge">Próximo</span>
+        <span class="event-badge featured">Destacado</span>
       </div>
     </div>
     <div style="margin-top:3rem; text-align:center;">
       <a href="https://www.instagram.com/corosaudade/" target="_blank" class="btn-secondary">
-        Ver toda la agenda en Instagram
+        Más información de los conciertos en nuestro Instagram
       </a>
     </div>
   </div>
@@ -1768,9 +1842,9 @@ footer {
 <!-- ─── GALERÍA ─── -->
 <section id="galeria">
   <div class="section-inner">
-    <p class="section-label">♦ Momentos</p>
+    <p class="section-label"><svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg> Momentos</p>
     <h2 class="section-title">Nuestra historia<br>en <em>imágenes</em></h2>
-    <div class="ornament-line"><span>✦</span></div>
+    <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
   </div>
 
   <div class="carousel-wrapper" id="carouselWrapper">
@@ -1828,9 +1902,9 @@ footer {
 <!-- ─── VÍDEOS ─── -->
 <section id="videos">
   <div class="section-inner">
-    <p class="section-label">♦ En vivo</p>
+    <p class="section-label"><svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg> En vivo</p>
     <h2 class="section-title">Escúchanos <em>cantar</em></h2>
-    <div class="ornament-line"><span>✦</span></div>
+    <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
   </div>
 
   <div class="carousel-wrapper" id="videoCarouselWrapper">
@@ -2223,7 +2297,7 @@ footer {
     <div class="join-info-only fade-in">
       <p class="section-label">♦ Audiciones abiertas</p>
       <h2 class="section-title">Canta con<br><em>nosotros</em></h2>
-      <div class="ornament-line"><span>✦</span></div>
+      <div class="ornament-line"><svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:currentColor;display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg></div>
       <h3 style="font-family:var(--serif-title);font-size:1.6rem;font-weight:500;margin-bottom:1.2rem;">¿Te animas?</h3>
       <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:var(--gray-mid);margin-bottom:1.8rem;">
         El Coro Saudade recibe nuevos integrantes que quieran compartir la pasión por el canto coral. Buscamos voces comprometidas, con ganas de aprender y disfrutar de la música en grupo.
@@ -2262,7 +2336,7 @@ footer {
         <p class="section-label" style="color:rgba(248,246,241,0.5);">♦ Ponte en contacto</p>
         <h2 class="section-title" style="color:var(--white);margin-bottom:2rem;"><em>Hablemos</em></h2>
         <div class="ornament-line" style="margin-bottom:2.5rem;">
-          <span style="color:rgba(184,148,31,0.6);">✦</span>
+          <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:0.9em;height:0.9em;fill:rgba(184,148,31,0.6);display:inline-block;vertical-align:middle;"><polygon points="7,0 8.5,5.5 14,7 8.5,8.5 7,14 5.5,8.5 0,7 5.5,5.5"/></svg>
         </div>
         <p style="font-family:var(--serif-title);font-size:1rem;line-height:1.9;color:rgba(248,246,241,0.65);margin-bottom:2.5rem;">
           Para contrataciones, solicitudes de conciertos o cualquier consulta, escríbenos directamente. También puedes encontrarnos en nuestras redes.
@@ -2648,7 +2722,17 @@ function showNotification(msg) {
   setTimeout(() => n.classList.remove('show'), 4000);
 }
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', () => mob.classList.remove('open'));
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    mob.classList.remove('open');
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', window.location.pathname);
+    }
+  });
 });
 // ─── CUSTOM SELECTS
 document.querySelectorAll('.custom-select').forEach(cs => {
