@@ -26,7 +26,11 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 
   body {
     font-family: var(--serif-title);
@@ -34,7 +38,6 @@
     color: var(--black);
     font-size: 19px;
     line-height: 1.75;
-    overflow-x: hidden;
   }
 
   /* ─── ORNAMENT ─── */
@@ -232,6 +235,7 @@
     padding-top: 76px;
     background: var(--white);
     min-height: 100vh;
+    min-height: -webkit-fill-available; /* iOS Safari: evita que la barra de URL recorte el hero */
   }
 
   /* Full-width banner image */
@@ -527,6 +531,7 @@
     border-top: 1px solid var(--gold-pale);
     border-bottom: 1px solid var(--gold-pale);
     cursor: grab;
+    -webkit-user-select: none;
     user-select: none;
   }
   .carousel-wrapper.dragging { cursor: grabbing; }
@@ -643,7 +648,8 @@
   .carousel-btn::after {
     content: '';
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
+    inset: 0; /* shorthand - no soportado en Safari<14.1 */
     background: var(--black);
     transform: scaleX(0);
     transform-origin: left;
@@ -1112,6 +1118,7 @@ footer {
   .custom-select {
     position: relative;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
   }
   .custom-select-trigger {
@@ -1164,7 +1171,7 @@ footer {
   .custom-select.open .custom-select-options {
     max-height: 260px;
     opacity: 1;
-    pointer-events: all;
+    pointer-events: auto; /* 'all' es inválido en CSS — corregido a 'auto' */
     border-top: 1px solid rgba(184,148,31,0.25);
     overflow-y: auto;
   }
@@ -1223,11 +1230,16 @@ footer {
   }
   .director-photo {
     width: 100%;
+    /* Fallback para navegadores sin soporte de aspect-ratio */
+    padding-top: 133.333%;
     aspect-ratio: 3 / 4;
     background: var(--black);
     position: relative;
     overflow: hidden;
     border: 1px solid var(--gold-pale);
+  }
+  @supports (aspect-ratio: 1) {
+    .director-photo { padding-top: 0; }
   }
   .director-photo img {
     width: 100%;
@@ -1323,7 +1335,8 @@ footer {
   /* Hint overlay that appears on hover */
   .nosotros-video-hint {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
+    inset: 0; /* shorthand - no soportado en Safari<14.1 */
     background: rgba(25,35,56,0.55);
     display: flex;
     flex-direction: column;
@@ -1387,10 +1400,15 @@ footer {
   .video-frame {
     position: relative;
     width: 100%;
+    /* Fallback para navegadores sin soporte de aspect-ratio (Safari<15, Chrome<88) */
+    padding-top: 56.25%;
     aspect-ratio: 16 / 9;
     background: #000;
     border: 1px solid rgba(184,148,31,0.2);
     overflow: hidden;
+  }
+  @supports (aspect-ratio: 1) {
+    .video-frame { padding-top: 0; }
   }
   .video-frame video {
     width: 100%;
@@ -1474,7 +1492,8 @@ footer {
   .video-btn::after {
     content: '';
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
+    inset: 0; /* shorthand - no soportado en Safari<14.1 */
     background: rgba(184,148,31,0.08);
     transform: scaleX(0);
     transform-origin: left;
@@ -1522,10 +1541,12 @@ footer {
     .video-control { flex-wrap: wrap; }
   }
 </style>
-</head>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+<!-- Polyfill IntersectionObserver para Safari < 12.1 y navegadores sin soporte -->
+<script>if(!('IntersectionObserver'in window)){document.write('<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.12.2/intersection-observer.js"><\/script>');}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js" defer></script>
 <script src="scroll-animations.js" defer></script>
+</head>
 <body>
 
 <!-- ─── NAV ─── -->
@@ -1986,7 +2007,8 @@ footer {
   }
   .vc-video {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
+    inset: 0; /* shorthand - no soportado en Safari<14.1 */
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1997,7 +2019,8 @@ footer {
   .carousel-slide.active .vc-video { filter: brightness(0.85); }
   .vc-overlay {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
+    inset: 0; /* shorthand - no soportado en Safari<14.1 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2160,8 +2183,12 @@ footer {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       if (vid.paused) {
-        vid.muted = false;
-        vid.play();
+        // En Safari iOS hay que iniciar el play() antes de quitar el mute
+        vid.play().then(function() {
+          vid.muted = false;
+        }).catch(function() {
+          // Safari puede bloquear el audio; el vídeo sigue en muted
+        });
         btn.classList.add('playing');
         btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         clearInterval(autoTimer); // no avanzar mientras hay vídeo sonando
@@ -2459,7 +2486,7 @@ footer {
 })();
 
 window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  document.getElementById('navbar').classList.toggle('scrolled', (window.scrollY || window.pageYOffset) > 50);
 });
 
 // ─── HAMBURGER
@@ -2666,6 +2693,18 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   resetAuto();
 })();
 
+// Polyfill Promise.allSettled para Safari < 13
+if (!Promise.allSettled) {
+  Promise.allSettled = function(promises) {
+    return Promise.all(promises.map(function(p) {
+      return Promise.resolve(p).then(
+        function(v) { return { status: 'fulfilled', value: v }; },
+        function(e) { return { status: 'rejected', reason: e }; }
+      );
+    }));
+  };
+}
+
 // ─── FORM BACKEND CONFIG
 const FORMSPREE_URL  = 'https://formspree.io/f/xojrlgdl';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdd9Q1gctl-0tXDyU0IGILLSBBh6GRBDoVsuZM8QVMiXlAoHBgABBhJQX-ADUSng-44Q/exec';
@@ -2738,7 +2777,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     mob.classList.remove('open');
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Fallback para Safari < 15.4 que no soporta scroll suave en scrollIntoView
+      if ('scrollBehavior' in document.documentElement.style) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        var top = target.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
       history.replaceState(null, '', window.location.pathname);
     }
   });
