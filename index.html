@@ -2217,17 +2217,20 @@ footer {
   // ─────────────────────────────────────────────────────────────────
   //  REPRODUCTOR DE VÍDEO
   //
-  //  Flujo:
-  //    PARADO   → botón play visible y fijo
-  //    tap      → arranca; botón desaparece tras 2 s  (.vc-ui se quita)
-  //    PLAYING  → tap en cualquier zona → muestra botón pausa 2 s
-  //    PLAYING  → tap sobre botón pausa (mientras .vc-ui activo) → pausa
-  //    PAUSA    → botón play visible y fijo (sin auto-ocultar)
+  //  ESCRITORIO (hover: hover):
+  //    · Click en cualquier zona → play/pausa directo
+  //    · Hover → muestra botón mientras el ratón esté encima
   //
-  //  Solución al doble disparo iOS/Android:
-  //    Un único listener 'click' en el overlay.
-  //    No hay listeners touch adicionales → no hay preventDefault()
-  //    → no hay click sintético fantasma.
+  //  MÓVIL (touch):
+  //    PARADO   → botón play visible y fijo
+  //               toque sobre botón → play; botón se oculta tras 2 s
+  //    PLAYING  → botón oculto
+  //               toque en cualquier zona → muestra botón pausa 2 s
+  //               toque sobre botón (mientras visible) → pausa
+  //    PAUSA    → botón play visible y fijo
+  //
+  //  Los listeners touch usan preventDefault() para suprimir el click
+  //  sintético de iOS y evitar dobles disparos.
   // ─────────────────────────────────────────────────────────────────
 
   function showUI(slide) {
@@ -2239,7 +2242,6 @@ footer {
   }
 
   function enterPaused(slide) {
-    // Estado: parado → botón play fijo, sin auto-ocultar
     clearTimeout(uiTimer);
     slide.classList.remove('vc-playing');
     slide.classList.remove('vc-ui');
@@ -2247,45 +2249,52 @@ footer {
   }
 
   function enterPlaying(slide) {
-    // Estado: reproduciendo → ocultar botón tras 2 s
     slide.classList.remove('vc-paused');
     slide.classList.add('vc-playing');
-    showUI(slide);              // muestra el botón de pausa brevemente
+    showUI(slide);
+  }
+
+  function doPlay(slide, vid) {
+    var p = vid.play();
+    if (p && p.then) {
+      p.then(function() { vid.muted = false; })
+       .catch(function() { enterPaused(slide); });
+    } else {
+      vid.muted = false;
+    }
+    clearInterval(autoTimer);
+    enterPlaying(slide);
+  }
+
+  function doPause(slide, vid) {
+    vid.pause();
+    clearTimeout(uiTimer);
+    enterPaused(slide);
+    resetAuto();
   }
 
   slides.forEach(function(slide) {
     var overlay = slide.querySelector('.vc-overlay');
+    var btn     = slide.querySelector('.vc-play-btn');
     var vid     = slide.querySelector('.vc-video');
     if (!overlay || !vid) return;
 
-    // Estado inicial
     enterPaused(slide);
 
-    overlay.addEventListener('click', function() {
+    // ── ESCRITORIO: click directo play/pausa en todo el overlay ──────
+    overlay.addEventListener('click', function(e) {
+      // En móvil los clicks sintéticos llegan aquí también;
+      // los ignoramos porque touch ya habrá actuado.
+      if (e.sourceCapabilities && !e.sourceCapabilities.firesTouchEvents === false) return;
       if (!slide.classList.contains('active')) return;
-
       if (vid.paused) {
-        // ── PARADO → REPRODUCIR ──────────────────────
-        var p = vid.play();
-        if (p && p.then) {
-          p.then(function() { vid.muted = false; })
-           .catch(function() { enterPaused(slide); });
-        } else {
-          vid.muted = false;
-        }
-        clearInterval(autoTimer);
-        enterPlaying(slide);
-
+        doPlay(slide, vid);
       } else {
-        // ── REPRODUCIENDO → PAUSAR (siempre, con un solo clic/toque) ──
-        vid.pause();
-        clearTimeout(uiTimer);
-        enterPaused(slide);
-        resetAuto();
+        doPause(slide, vid);
       }
     });
 
-    // Escritorio: mostrar/ocultar botón de pausa al pasar el ratón
+    // Mostrar/ocultar botón al pasar el ratón (solo escritorio)
     overlay.addEventListener('mouseenter', function() {
       if (!vid.paused) showUI(slide);
     });
@@ -2296,7 +2305,58 @@ footer {
       }
     });
 
-    // Fin natural del vídeo → volver a parado
+    // ── MÓVIL: lógica touch independiente ────────────────────────────
+    var touchStartXT = 0;
+    var touchStartYT = 0;
+
+    overlay.addEventListener('touchstart', function(e) {
+      touchStartXT = e.touches[0].clientX;
+      touchStartYT = e.touches[0].clientY;
+    }, { passive: true });
+
+    overlay.addEventListener('touchend', function(e) {
+      if (!slide.classList.contains('active')) return;
+
+      // Ignorar si fue un swipe (el carrusel lo gestiona)
+      var dx = Math.abs(e.changedTouches[0].clientX - touchStartXT);
+      var dy = Math.abs(e.changedTouches[0].clientY - touchStartYT);
+      if (dx > 10 || dy > 10) return;
+
+      // Suprimir el click sintético de iOS
+      e.preventDefault();
+
+      var touchedBtn = false;
+      if (btn) {
+        var br = btn.getBoundingClientRect();
+        var tx = e.changedTouches[0].clientX;
+        var ty = e.changedTouches[0].clientY;
+        // Zona de toque ampliada 12px alrededor del botón para facilitar el tap
+        touchedBtn = tx >= br.left - 12 && tx <= br.right + 12 &&
+                     ty >= br.top  - 12 && ty <= br.bottom + 12;
+      }
+
+      if (vid.paused) {
+        // PARADO: solo el botón arranca
+        if (touchedBtn) doPlay(slide, vid);
+        // toque fuera del botón no hace nada cuando está parado
+
+      } else if (slide.classList.contains('vc-ui')) {
+        // REPRODUCIENDO + botón visible:
+        //   · toque sobre botón → pausa
+        //   · toque fuera → reinicia el temporizador de ocultación
+        if (touchedBtn) {
+          doPause(slide, vid);
+        } else {
+          showUI(slide); // reinicia los 2 s
+        }
+
+      } else {
+        // REPRODUCIENDO + botón oculto: cualquier toque muestra el botón
+        showUI(slide);
+      }
+    }, { passive: false }); // passive:false para poder llamar preventDefault
+
+    // Fin natural del vídeo
     vid.addEventListener('ended', function() {
       enterPaused(slide);
       resetAuto();
@@ -2363,6 +2423,12 @@ footer {
     track.style.transform = `translateX(${bounded}px)`;
   }, { passive: true });
   wrapper.addEventListener('touchend', e => {
+    // Si el toque terminó sobre el overlay del vídeo y no fue un swipe,
+    // dejarlo al listener touch del overlay — no llamar goTo aquí.
+    if (e.target.closest('.vc-overlay')) {
+      const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+      if (dx <= 10) return;
+    }
     const delta = e.changedTouches[0].clientX - touchStartX;
     if (delta < -slideWidth() * 0.18) next();
     else if (delta > slideWidth() * 0.18) prev();
