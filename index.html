@@ -2008,7 +2008,7 @@ footer {
   .vc-video {
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    inset: 0; /* shorthand - no soportado en Safari<14.1 */
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -2017,18 +2017,24 @@ footer {
     filter: brightness(0.7);
   }
   .carousel-slide.active .vc-video { filter: brightness(0.85); }
+
+  /* ── Overlay: capa táctil que cubre todo el slide ── */
   .vc-overlay {
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    inset: 0; /* shorthand - no soportado en Safari<14.1 */
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
+    /* En móvil el área de toque es todo el slide, no solo el botón */
+    cursor: pointer;
   }
+
+  /* ── Botón play/pausa ── */
   .vc-play-btn {
-    width: 62px;
-    height: 62px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     background: rgba(0,0,0,0.55);
     border: 1.5px solid rgba(184,148,31,0.6);
@@ -2037,28 +2043,47 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    /* Transición suave de opacidad y escala */
+    transition: opacity 0.25s ease, transform 0.25s ease,
+                background 0.25s ease, border-color 0.25s ease;
+    opacity: 0;
+    pointer-events: none; /* el toque lo gestiona .vc-overlay */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Slide activo en pausa: muestra el botón de play */
+  .carousel-slide.active .vc-play-btn {
+    opacity: 1;
+  }
+
+  /* Slide activo reproduciendo: oculta el botón completamente */
+  .carousel-slide.active.vc-playing .vc-play-btn {
     opacity: 0;
   }
-  .carousel-slide.active .vc-play-btn { opacity: 1; }
-  .vc-play-btn:hover {
-    background: rgba(184,148,31,0.25);
-    border-color: rgba(184,148,31,1);
-    transform: scale(1.08);
+
+  /* Hover en escritorio */
+  @media (hover: hover) {
+    .vc-overlay:hover .vc-play-btn {
+      background: rgba(184,148,31,0.25);
+      border-color: rgba(184,148,31,1);
+      transform: scale(1.08);
+    }
+    /* En reproducción, mostrar pausa al pasar el ratón */
+    .carousel-slide.active.vc-playing .vc-overlay:hover .vc-play-btn {
+      opacity: 1;
+    }
   }
-  .vc-play-btn.playing {
-    opacity: 1;
-    border-color: rgba(184,148,31,0.4);
-    background: rgba(0,0,0,0.3);
-  }
+
   .vc-play-btn svg {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     fill: var(--white);
-    margin-left: 3px; /* compensa el triángulo de play */
+    margin-left: 3px; /* compensa óptica del triángulo play */
     transition: none;
   }
-  .vc-play-btn.playing svg { margin-left: 0; }
+  .vc-play-btn.is-pause svg { margin-left: 0; }
+
+  /* Botones nav del carrusel de vídeos */
   #videos .carousel-btn {
     background: transparent;
     border-color: rgba(184,148,31,0.4);
@@ -2073,81 +2098,135 @@ footer {
   #videos .carousel-progress {
     background: linear-gradient(to right, rgba(184,148,31,0.7), rgba(184,148,31,0.4));
   }
+
+  /* Altura reducida en móvil para que el vídeo quepa bien */
+  @media (max-width: 600px) {
+    #videos .carousel-slide { height: 260px; }
+    .vc-play-btn { width: 56px; height: 56px; }
+    .vc-play-btn svg { width: 24px; height: 24px; }
+  }
 </style>
 
 <script>
 (function () {
   'use strict';
 
-  const wrapper  = document.getElementById('videoCarouselWrapper');
-  const track    = document.getElementById('videoCarouselTrack');
-  const dotsEl   = document.getElementById('vcDots');
-  const counter  = document.getElementById('vcCounter');
-  const prevBtn  = document.getElementById('vcPrevBtn');
-  const nextBtn  = document.getElementById('vcNextBtn');
-  const progress = document.getElementById('videoCarouselProgress');
-  const slides   = Array.from(track.querySelectorAll('.vc-slide'));
-  const total    = slides.length;
+  var wrapper  = document.getElementById('videoCarouselWrapper');
+  var track    = document.getElementById('videoCarouselTrack');
+  var dotsEl   = document.getElementById('vcDots');
+  var counter  = document.getElementById('vcCounter');
+  var prevBtn  = document.getElementById('vcPrevBtn');
+  var nextBtn  = document.getElementById('vcNextBtn');
+  var progress = document.getElementById('videoCarouselProgress');
+  var slides   = Array.from(track.querySelectorAll('.vc-slide'));
+  var total    = slides.length;
 
-  let currentPage = 0;
-  let autoTimer;
-  let isDragging = false, dragStartX = 0, dragStartTranslate = 0, dragCurrentX = 0;
+  var currentPage = 0;
+  var autoTimer;
 
-  // ── Helpers
-  function slideWidth()   { return wrapper.offsetWidth; }
-  function totalPages()   { return total; }
-  function translateFor(p){ return -(p * slideWidth()); }
+  // ── Estado de arrastre separado para mouse y touch
+  var mouse = { dragging: false, startX: 0, startT: 0, moved: false };
+  var touch = { active: false, startX: 0, startY: 0, startT: 0, moved: false };
+
+  // ── Helpers de geometría
+  function slideWidth()    { return wrapper.offsetWidth; }
+  function totalPages()    { return total; }
+  function translateFor(p) { return -(p * slideWidth()); }
 
   function applyTranslate(x, animate) {
     track.classList.toggle('animating', animate);
-    track.style.transform = `translateX(${x}px)`;
+    track.style.transform = 'translateX(' + x + 'px)';
   }
 
   function updateSlideWidths() {
-    slides.forEach(s => { s.style.flex = '0 0 100%'; });
+    slides.forEach(function(s) { s.style.flex = '0 0 100%'; });
   }
 
+  // ── Estado visual del botón según si el vídeo está en play o pausa
+  var SVG_PLAY  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  var SVG_PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+  function setPlayingState(slide, playing) {
+    var btn = slide.querySelector('.vc-play-btn');
+    if (!btn) return;
+    if (playing) {
+      slide.classList.add('vc-playing');
+      btn.classList.add('is-pause');
+      btn.innerHTML = SVG_PAUSE;
+      btn.setAttribute('aria-label', 'Pausar');
+    } else {
+      slide.classList.remove('vc-playing');
+      btn.classList.remove('is-pause');
+      btn.innerHTML = SVG_PLAY;
+      btn.setAttribute('aria-label', 'Reproducir');
+    }
+  }
+
+  // ── Parar todos los vídeos y resetear su UI
   function pauseAllVideos() {
-    slides.forEach(s => {
-      const v = s.querySelector('.vc-video');
-      const btn = s.querySelector('.vc-play-btn');
-      if (v && !v.paused) {
-        v.pause();
-        btn.classList.remove('playing');
-        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-      }
+    slides.forEach(function(s) {
+      var v = s.querySelector('.vc-video');
+      if (v && !v.paused) { v.pause(); }
+      setPlayingState(s, false);
     });
   }
 
+  // ── Reproducir/pausar el vídeo del slide activo
+  function toggleVideo(slide) {
+    var vid = slide.querySelector('.vc-video');
+    if (!vid) return;
+
+    if (vid.paused) {
+      // Iniciar play; quitar mute después (necesario en Safari iOS)
+      vid.play().then(function() {
+        vid.muted = false;
+      }).catch(function() {
+        // Safari puede rechazar el unmute; el vídeo sigue en silencio
+      });
+      setPlayingState(slide, true);
+      clearInterval(autoTimer);
+    } else {
+      vid.pause();
+      setPlayingState(slide, false);
+      resetAuto();
+    }
+  }
+
+  // ── Actualizar UI del carrusel
   function updateActiveSlides() {
-    slides.forEach((s, i) => s.classList.toggle('active', i === currentPage));
+    slides.forEach(function(s, i) {
+      s.classList.toggle('active', i === currentPage);
+    });
   }
 
   function updateDots() {
-    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
+    dotsEl.querySelectorAll('.carousel-dot').forEach(function(d, i) {
       d.classList.toggle('active', i === currentPage);
     });
   }
 
   function updateCounter() {
-    counter.textContent = `${currentPage + 1} / ${totalPages()}`;
+    counter.textContent = (currentPage + 1) + ' / ' + totalPages();
   }
 
   function updateProgress() {
-    progress.style.width = `${((currentPage + 1) / totalPages()) * 100}%`;
+    progress.style.width = (((currentPage + 1) / totalPages()) * 100) + '%';
   }
 
   function buildDots() {
     dotsEl.innerHTML = '';
-    for (let i = 0; i < totalPages(); i++) {
-      const d = document.createElement('div');
-      d.className = 'carousel-dot' + (i === currentPage ? ' active' : '');
-      d.addEventListener('click', () => { goTo(i); resetAuto(); });
-      dotsEl.appendChild(d);
+    for (var i = 0; i < totalPages(); i++) {
+      (function(idx) {
+        var d = document.createElement('div');
+        d.className = 'carousel-dot' + (idx === currentPage ? ' active' : '');
+        d.addEventListener('click', function() { goTo(idx); resetAuto(); });
+        dotsEl.appendChild(d);
+      })(i);
     }
   }
 
-  function goTo(page, animate = true) {
+  function goTo(page, animate) {
+    if (animate === undefined) animate = true;
     pauseAllVideos();
     currentPage = Math.max(0, Math.min(page, totalPages() - 1));
     applyTranslate(translateFor(currentPage), animate);
@@ -2161,8 +2240,8 @@ footer {
   function prev() { goTo((currentPage - 1 + totalPages()) % totalPages()); }
 
   function isAnyVideoPlaying() {
-    return slides.some(s => {
-      const v = s.querySelector('.vc-video');
+    return slides.some(function(s) {
+      var v = s.querySelector('.vc-video');
       return v && !v.paused;
     });
   }
@@ -2174,111 +2253,164 @@ footer {
     }
   }
 
-  // ── Play/Pausa individual al clicar el botón
-  slides.forEach(slide => {
-    const btn = slide.querySelector('.vc-play-btn');
-    const vid = slide.querySelector('.vc-video');
-    if (!btn || !vid) return;
+  // ────────────────────────────────────────────────
+  // INTERACCIÓN: el overlay cubre todo el slide.
+  // Separamos touch y click para evitar el doble disparo
+  // que genera iOS (touchend → click sintético 300ms después).
+  // ────────────────────────────────────────────────
 
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      if (vid.paused) {
-        // En Safari iOS hay que iniciar el play() antes de quitar el mute
-        vid.play().then(function() {
-          vid.muted = false;
-        }).catch(function() {
-          // Safari puede bloquear el audio; el vídeo sigue en muted
-        });
-        btn.classList.add('playing');
-        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-        clearInterval(autoTimer); // no avanzar mientras hay vídeo sonando
-      } else {
-        vid.pause();
-        btn.classList.remove('playing');
-        btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        resetAuto();
+  slides.forEach(function(slide) {
+    var overlay = slide.querySelector('.vc-overlay');
+    var vid     = slide.querySelector('.vc-video');
+    if (!overlay || !vid) return;
+
+    // ── Touch: gestión completa en touchstart/touchend
+    overlay.addEventListener('touchstart', function(e) {
+      touch.active = true;
+      touch.startX = e.touches[0].clientX;
+      touch.startY = e.touches[0].clientY;
+      touch.startT = Date.now();
+      touch.moved  = false;
+    }, { passive: true });
+
+    overlay.addEventListener('touchmove', function(e) {
+      if (!touch.active) return;
+      var dx = Math.abs(e.touches[0].clientX - touch.startX);
+      var dy = Math.abs(e.touches[0].clientY - touch.startY);
+      if (dx > 8 || dy > 8) touch.moved = true;
+    }, { passive: true });
+
+    overlay.addEventListener('touchend', function(e) {
+      if (!touch.active) return;
+      touch.active = false;
+      var elapsed = Date.now() - touch.startT;
+      if (!touch.moved && elapsed < 400) {
+        e.preventDefault(); // cancela el click sintético posterior
+        if (!slide.classList.contains('active')) return;
+        toggleVideo(slide);
       }
     });
 
-    // Al terminar el vídeo, volver al estado de pausa
-    vid.addEventListener('ended', () => {
-      btn.classList.remove('playing');
-      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    // ── Click: solo para ratón (en touch ya se llama preventDefault)
+    overlay.addEventListener('click', function(e) {
+      // En touch el click sintético llega con isTrusted=true pero después del touchend.
+      // Comprobamos que no sea una interacción táctil reciente.
+      if (touch.moved) return;
+      if (!slide.classList.contains('active')) return;
+      toggleVideo(slide);
+    });
+
+    // ── Al terminar el vídeo naturalmente
+    vid.addEventListener('ended', function() {
+      setPlayingState(slide, false);
       resetAuto();
     });
   });
 
-  // ── Drag (ratón)
-  wrapper.addEventListener('mousedown', e => {
-    isDragging = true;
-    dragStartX = e.clientX;
-    dragStartTranslate = translateFor(currentPage);
+  // ────────────────────────────────────────────────
+  // DRAG del carrusel — ratón
+  // ────────────────────────────────────────────────
+  wrapper.addEventListener('mousedown', function(e) {
+    mouse.dragging = true;
+    mouse.startX   = e.clientX;
+    mouse.startT   = Date.now();
+    mouse.moved    = false;
+    mouse.startTranslate = translateFor(currentPage);
     wrapper.classList.add('dragging');
     track.classList.remove('animating');
     e.preventDefault();
   });
-  window.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    dragCurrentX = e.clientX;
-    const delta = dragCurrentX - dragStartX;
-    const newX = dragStartTranslate + delta;
-    const minX = translateFor(totalPages() - 1);
-    const maxX = 0;
-    let bounded = newX;
+
+  window.addEventListener('mousemove', function(e) {
+    if (!mouse.dragging) return;
+    var delta = e.clientX - mouse.startX;
+    if (Math.abs(delta) > 4) mouse.moved = true;
+    var newX  = mouse.startTranslate + delta;
+    var minX  = translateFor(totalPages() - 1);
+    var maxX  = 0;
+    var bounded = newX;
     if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
     if (newX < minX) bounded = minX + (newX - minX) * 0.25;
-    track.style.transform = `translateX(${bounded}px)`;
+    track.style.transform = 'translateX(' + bounded + 'px)';
   });
-  window.addEventListener('mouseup', e => {
-    if (!isDragging) return;
-    isDragging = false;
+
+  window.addEventListener('mouseup', function(e) {
+    if (!mouse.dragging) return;
+    mouse.dragging = false;
     wrapper.classList.remove('dragging');
-    const delta = e.clientX - dragStartX;
-    const threshold = slideWidth() * 0.2;
-    if (delta < -threshold) next();
+    var delta = e.clientX - mouse.startX;
+    var threshold = slideWidth() * 0.2;
+    if (delta < -threshold)     next();
     else if (delta > threshold) prev();
-    else goTo(currentPage);
+    else                        goTo(currentPage);
     resetAuto();
   });
 
-  // ── Touch
-  let touchStartX = 0;
-  wrapper.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-    dragStartTranslate = translateFor(currentPage);
+  // ────────────────────────────────────────────────
+  // DRAG del carrusel — touch (swipe)
+  // Nota: estos listeners están en el wrapper, no en el overlay,
+  // para que el swipe funcione en toda la superficie del slide.
+  // ────────────────────────────────────────────────
+  var swipe = { startX: 0, startY: 0, startTranslate: 0, moved: false, scrolling: false };
+
+  wrapper.addEventListener('touchstart', function(e) {
+    swipe.startX       = e.touches[0].clientX;
+    swipe.startY       = e.touches[0].clientY;
+    swipe.startTranslate = translateFor(currentPage);
+    swipe.moved        = false;
+    swipe.scrolling    = false;
     track.classList.remove('animating');
   }, { passive: true });
-  wrapper.addEventListener('touchmove', e => {
-    const delta = e.touches[0].clientX - touchStartX;
-    const newX = dragStartTranslate + delta;
-    const minX = translateFor(totalPages() - 1);
-    const maxX = 0;
-    let bounded = newX;
+
+  wrapper.addEventListener('touchmove', function(e) {
+    var dx = e.touches[0].clientX - swipe.startX;
+    var dy = e.touches[0].clientY - swipe.startY;
+
+    // Determinar al primer movimiento si es scroll vertical o swipe horizontal
+    if (!swipe.moved && !swipe.scrolling) {
+      if (Math.abs(dy) > Math.abs(dx)) {
+        swipe.scrolling = true; // dejar pasar el scroll de página
+        return;
+      }
+    }
+    if (swipe.scrolling) return;
+    swipe.moved = true;
+
+    var newX    = swipe.startTranslate + dx;
+    var minX    = translateFor(totalPages() - 1);
+    var maxX    = 0;
+    var bounded = newX;
     if (newX > maxX) bounded = maxX + (newX - maxX) * 0.25;
     if (newX < minX) bounded = minX + (newX - minX) * 0.25;
-    track.style.transform = `translateX(${bounded}px)`;
+    track.style.transform = 'translateX(' + bounded + 'px)';
   }, { passive: true });
-  wrapper.addEventListener('touchend', e => {
-    const delta = e.changedTouches[0].clientX - touchStartX;
-    if (delta < -slideWidth() * 0.18) next();
-    else if (delta > slideWidth() * 0.18) prev();
-    else goTo(currentPage);
+
+  wrapper.addEventListener('touchend', function(e) {
+    if (swipe.scrolling) return;
+    var delta = e.changedTouches[0].clientX - swipe.startX;
+    var threshold = slideWidth() * 0.18;
+    if (delta < -threshold)     next();
+    else if (delta > threshold) prev();
+    else                        goTo(currentPage);
     resetAuto();
   });
 
-  prevBtn.addEventListener('click', () => { prev(); resetAuto(); });
-  nextBtn.addEventListener('click', () => { next(); resetAuto(); });
+  // ── Botones prev/next
+  prevBtn.addEventListener('click', function() { prev(); resetAuto(); });
+  nextBtn.addEventListener('click', function() { next(); resetAuto(); });
 
-  wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
-  wrapper.addEventListener('mouseleave', () => { if (!isAnyVideoPlaying()) resetAuto(); });
+  // ── Pausa automática al entrar/salir con ratón
+  wrapper.addEventListener('mouseenter', function() { clearInterval(autoTimer); });
+  wrapper.addEventListener('mouseleave', function() { if (!isAnyVideoPlaying()) resetAuto(); });
 
-  window.addEventListener('resize', () => {
+  // ── Resize
+  window.addEventListener('resize', function() {
     updateSlideWidths();
     buildDots();
     goTo(Math.min(currentPage, totalPages() - 1), false);
   });
 
-  // Init
+  // ── Init
   updateSlideWidths();
   buildDots();
   goTo(0, false);
