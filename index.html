@@ -2076,9 +2076,14 @@ footer {
    *   .vc-playing        → botón OCULTO (vídeo a pantalla limpia)
    *   .vc-playing.vc-ui  → botón pausa VISIBLE (2 s, luego desaparece)
    */
-  .vc-slide.vc-paused  .vc-play-btn            { opacity: 1; transform: scale(1); }
+  .vc-slide.vc-paused  .vc-play-btn            { opacity: 0; transform: scale(0.9); }
   .vc-slide.vc-playing .vc-play-btn            { opacity: 0; transform: scale(0.85); }
   .vc-slide.vc-playing.vc-ui .vc-play-btn      { opacity: 1; transform: scale(1); }
+  /* Escritorio: botón visible solo al hacer hover */
+  @media (hover: hover) {
+    .vc-overlay:hover .vc-play-btn             { opacity: 1; transform: scale(1); }
+    .vc-overlay:hover .vc-play-btn:hover       { transform: scale(1.08); }
+  }
 
   /* Icono correcto según estado */
   .vc-slide.vc-paused  .vc-play-btn .icon-play  { display: block; }
@@ -2086,12 +2091,7 @@ footer {
   .vc-slide.vc-playing .vc-play-btn .icon-play  { display: none;  }
   .vc-slide.vc-playing .vc-play-btn .icon-pause { display: block; }
 
-  /* Hover escritorio: solo mostrar el botón play cuando está pausado.
-     Cuando reproduce, el botón de pausa lo gestiona el JS (mouseenter/leave),
-     así el clic siempre llega a la rama correcta. */
-  @media (hover: hover) {
-    .vc-slide.vc-paused .vc-overlay:hover .vc-play-btn { opacity: 1; transform: scale(1.06); }
-  }
+
 
   @media (max-width: 600px) {
     #videos .carousel-slide { height: 260px; }
@@ -2217,40 +2217,34 @@ footer {
   // ─────────────────────────────────────────────────────────────────
   //  REPRODUCTOR DE VÍDEO
   //
-  //  Estrategia cross-browser (funciona en Chrome, Firefox, Safari,
-  //  Brave y cualquier navegador con escudo anti-fingerprint):
+  //  ESCRITORIO (hover: hover):
+  //    · Click en cualquier zona → play/pausa directo
+  //    · Hover → muestra botón mientras el ratón esté encima
   //
-  //  · Touch y click se gestionan por separado.
-  //  · lastTouchEnd guarda el timestamp del último touchend procesado.
-  //    Si el click llega menos de 500 ms después, es el click sintético
-  //    de iOS/Android y se ignora. Sin depender de pointerType,
-  //    sourceCapabilities ni ninguna API que Brave pueda bloquear.
+  //  MÓVIL (touch):
+  //    PARADO   → botón play visible y fijo
+  //               toque sobre botón → play; botón se oculta tras 2 s
+  //    PLAYING  → botón oculto
+  //               toque en cualquier zona → muestra botón pausa 2 s
+  //               toque sobre botón (mientras visible) → pausa
+  //    PAUSA    → botón play visible y fijo
   //
-  //  ESCRITORIO:
-  //    Click en overlay → play/pausa directo.
-  //    Hover → muestra botón mientras el ratón está encima.
-  //
-  //  MÓVIL:
-  //    PARADO          → botón fijo. Tap botón → play, se oculta 2 s.
-  //                      Tap fuera del botón → nada.
-  //    PLAYING+oculto  → cualquier tap → muestra botón 2 s.
-  //    PLAYING+visible → tap botón → pausa. Tap fuera → reinicia 2 s.
-  //
-  //  vcTouchHandled: flag para que touchend del carrusel no llame
-  //  goTo() cuando el overlay ya procesó el tap.
+  //  Los listeners touch usan preventDefault() para suprimir el click
+  //  sintético de iOS y evitar dobles disparos.
   // ─────────────────────────────────────────────────────────────────
-
-  var vcTouchHandled = false; // compartida con touchend del carrusel
 
   function showUI(slide) {
     clearTimeout(uiTimer);
     slide.classList.add('vc-ui');
-    uiTimer = setTimeout(function() { slide.classList.remove('vc-ui'); }, 2000);
+    uiTimer = setTimeout(function() {
+      slide.classList.remove('vc-ui');
+    }, 2000);
   }
 
   function enterPaused(slide) {
     clearTimeout(uiTimer);
-    slide.classList.remove('vc-playing', 'vc-ui');
+    slide.classList.remove('vc-playing');
+    slide.classList.remove('vc-ui');
     slide.classList.add('vc-paused');
   }
 
@@ -2265,7 +2259,9 @@ footer {
     if (p && p.then) {
       p.then(function() { vid.muted = false; })
        .catch(function() { enterPaused(slide); });
-    } else { vid.muted = false; }
+    } else {
+      vid.muted = false;
+    }
     clearInterval(autoTimer);
     enterPlaying(slide);
   }
@@ -2278,72 +2274,83 @@ footer {
   }
 
   slides.forEach(function(slide) {
-    var overlay      = slide.querySelector('.vc-overlay');
-    var btn          = slide.querySelector('.vc-play-btn');
-    var vid          = slide.querySelector('.vc-video');
+    var overlay = slide.querySelector('.vc-overlay');
+    var btn     = slide.querySelector('.vc-play-btn');
+    var vid     = slide.querySelector('.vc-video');
     if (!overlay || !vid) return;
 
     enterPaused(slide);
 
-    var lastTouchEnd = 0; // timestamp del último touchend procesado en este overlay
-    var txStart = 0, tyStart = 0;
+    // ── ESCRITORIO: click directo play/pausa en todo el overlay ──────
+    overlay.addEventListener('click', function(e) {
+      // En móvil los clicks sintéticos llegan aquí también;
+      // los ignoramos porque touch ya habrá actuado.
+      if (e.sourceCapabilities && !e.sourceCapabilities.firesTouchEvents === false) return;
+      if (!slide.classList.contains('active')) return;
+      if (vid.paused) {
+        doPlay(slide, vid);
+      } else {
+        doPause(slide, vid);
+      }
+    });
 
-    // ── MÓVIL ─────────────────────────────────────────────────────
+
+    // ── MÓVIL: lógica touch independiente ────────────────────────────
+    var touchStartXT = 0;
+    var touchStartYT = 0;
+
     overlay.addEventListener('touchstart', function(e) {
-      txStart = e.touches[0].clientX;
-      tyStart = e.touches[0].clientY;
+      touchStartXT = e.touches[0].clientX;
+      touchStartYT = e.touches[0].clientY;
     }, { passive: true });
 
     overlay.addEventListener('touchend', function(e) {
       if (!slide.classList.contains('active')) return;
 
-      // Ignorar si fue un swipe
-      var dx = Math.abs(e.changedTouches[0].clientX - txStart);
-      var dy = Math.abs(e.changedTouches[0].clientY - tyStart);
-      if (dx > 12 || dy > 12) return;
+      // Ignorar si fue un swipe (el carrusel lo gestiona)
+      var dx = Math.abs(e.changedTouches[0].clientX - touchStartXT);
+      var dy = Math.abs(e.changedTouches[0].clientY - touchStartYT);
+      if (dx > 10 || dy > 10) return;
 
-      e.preventDefault();           // suprime el click sintético posterior
-      lastTouchEnd = Date.now();    // marca tiempo para el listener click
-      vcTouchHandled = true;        // avisa al touchend del carrusel
+      // Suprimir el click sintético de iOS
+      e.preventDefault();
 
-      // Detectar tap sobre botón por coordenadas (btn tiene pointer-events:none)
-      var onBtn = false;
+      var touchedBtn = false;
       if (btn) {
-        var r  = btn.getBoundingClientRect();
+        var br = btn.getBoundingClientRect();
         var tx = e.changedTouches[0].clientX;
         var ty = e.changedTouches[0].clientY;
-        onBtn = tx >= r.left - 16 && tx <= r.right  + 16 &&
-                ty >= r.top  - 16 && ty <= r.bottom + 16;
+        // Zona de toque ampliada 12px alrededor del botón para facilitar el tap
+        touchedBtn = tx >= br.left - 12 && tx <= br.right + 12 &&
+                     ty >= br.top  - 12 && ty <= br.bottom + 12;
       }
 
       if (vid.paused) {
-        if (onBtn) doPlay(slide, vid);
-        // tap fuera cuando parado → nada
+        // PARADO: solo el botón arranca
+        if (touchedBtn) doPlay(slide, vid);
+        // toque fuera del botón no hace nada cuando está parado
+
       } else if (slide.classList.contains('vc-ui')) {
-        onBtn ? doPause(slide, vid) : showUI(slide);
+        // REPRODUCIENDO + botón visible:
+        //   · toque sobre botón → pausa
+        //   · toque fuera → reinicia el temporizador de ocultación
+        if (touchedBtn) {
+          doPause(slide, vid);
+        } else {
+          showUI(slide); // reinicia los 2 s
+        }
+
       } else {
-        showUI(slide); // botón oculto → cualquier tap lo muestra
+        // REPRODUCIENDO + botón oculto: cualquier toque muestra el botón
+        showUI(slide);
       }
-    }, { passive: false });
-
-    // ── ESCRITORIO ────────────────────────────────────────────────
-    // El guard de 500 ms descarta el click sintético de iOS/Android
-    // sin depender de pointerType ni sourceCapabilities (no fiables en Brave).
-    overlay.addEventListener('click', function() {
-      if (Date.now() - lastTouchEnd < 500) return; // click sintético → ignorar
-      if (!slide.classList.contains('active')) return;
-      vid.paused ? doPlay(slide, vid) : doPause(slide, vid);
-    });
-
-    overlay.addEventListener('mouseenter', function() {
-      if (!vid.paused) showUI(slide);
-    });
-    overlay.addEventListener('mouseleave', function() {
-      if (!vid.paused) { clearTimeout(uiTimer); slide.classList.remove('vc-ui'); }
-    });
+    }, { passive: false }); // passive:false para poder llamar preventDefault
 
     // Fin natural del vídeo
-    vid.addEventListener('ended', function() { enterPaused(slide); resetAuto(); });
+    vid.addEventListener('ended', function() {
+      enterPaused(slide);
+      resetAuto();
+    });
   });
 
   // ── Drag (ratón)
@@ -2406,8 +2413,12 @@ footer {
     track.style.transform = `translateX(${bounded}px)`;
   }, { passive: true });
   wrapper.addEventListener('touchend', e => {
-    // Si el overlay del vídeo ya procesó este tap, no actuar aquí.
-    if (vcTouchHandled) { vcTouchHandled = false; return; }
+    // Si el toque terminó sobre el overlay del vídeo y no fue un swipe,
+    // dejarlo al listener touch del overlay — no llamar goTo aquí.
+    if (e.target.closest('.vc-overlay')) {
+      const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+      if (dx <= 10) return;
+    }
     const delta = e.changedTouches[0].clientX - touchStartX;
     if (delta < -slideWidth() * 0.18) next();
     else if (delta > slideWidth() * 0.18) prev();
