@@ -2086,9 +2086,11 @@ footer {
   .vc-slide.vc-playing .vc-play-btn .icon-play  { display: none;  }
   .vc-slide.vc-playing .vc-play-btn .icon-pause { display: block; }
 
-  /* Hover escritorio: mostrar botón al pasar el ratón */
+  /* Hover escritorio: solo mostrar el botón play cuando está pausado.
+     Cuando reproduce, el botón de pausa lo gestiona el JS (mouseenter/leave),
+     así el clic siempre llega a la rama correcta. */
   @media (hover: hover) {
-    .vc-overlay:hover .vc-play-btn { opacity: 1; transform: scale(1.06); }
+    .vc-slide.vc-paused .vc-overlay:hover .vc-play-btn { opacity: 1; transform: scale(1.06); }
   }
 
   @media (max-width: 600px) {
@@ -2267,23 +2269,30 @@ footer {
         var p = vid.play();
         if (p && p.then) {
           p.then(function() { vid.muted = false; })
-           .catch(function() { enterPaused(slide); }); // bloqueado por autoplay policy
+           .catch(function() { enterPaused(slide); });
         } else {
           vid.muted = false;
         }
         clearInterval(autoTimer);
         enterPlaying(slide);
 
-      } else if (slide.classList.contains('vc-ui')) {
-        // ── REPRODUCIENDO + botón pausa visible → PAUSAR ──
+      } else {
+        // ── REPRODUCIENDO → PAUSAR (siempre, con un solo clic/toque) ──
         vid.pause();
         clearTimeout(uiTimer);
         enterPaused(slide);
         resetAuto();
+      }
+    });
 
-      } else {
-        // ── REPRODUCIENDO, botón oculto → mostrar botón pausa 2 s ──
-        showUI(slide);
+    // Escritorio: mostrar/ocultar botón de pausa al pasar el ratón
+    overlay.addEventListener('mouseenter', function() {
+      if (!vid.paused) showUI(slide);
+    });
+    overlay.addEventListener('mouseleave', function() {
+      if (!vid.paused) {
+        clearTimeout(uiTimer);
+        slide.classList.remove('vc-ui');
       }
     });
 
@@ -2295,11 +2304,14 @@ footer {
   });
 
   // ── Drag (ratón)
+  let dragMoved = false;
   wrapper.addEventListener('mousedown', e => {
+    // No interceptar clics sobre el overlay del vídeo
+    if (e.target.closest('.vc-overlay')) return;
     isDragging = true;
+    dragMoved  = false;
     dragStartX = e.clientX;
     dragStartTranslate = translateFor(currentPage);
-    wrapper.classList.add('dragging');
     track.classList.remove('animating');
     e.preventDefault();
   });
@@ -2307,6 +2319,10 @@ footer {
     if (!isDragging) return;
     dragCurrentX = e.clientX;
     const delta = dragCurrentX - dragStartX;
+    if (Math.abs(delta) > 4) {
+      dragMoved = true;
+      wrapper.classList.add('dragging');
+    }
     const newX = dragStartTranslate + delta;
     const minX = translateFor(totalPages() - 1);
     const maxX = 0;
@@ -2319,12 +2335,14 @@ footer {
     if (!isDragging) return;
     isDragging = false;
     wrapper.classList.remove('dragging');
-    const delta = e.clientX - dragStartX;
-    const threshold = slideWidth() * 0.2;
-    if (delta < -threshold) next();
-    else if (delta > threshold) prev();
-    else goTo(currentPage);
-    resetAuto();
+    if (dragMoved) {
+      const delta = e.clientX - dragStartX;
+      const threshold = slideWidth() * 0.2;
+      if (delta < -threshold) next();
+      else if (delta > threshold) prev();
+      else goTo(currentPage);
+      resetAuto();
+    }
   });
 
   // ── Touch
