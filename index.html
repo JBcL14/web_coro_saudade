@@ -2274,14 +2274,16 @@ footer {
   // que genera iOS (touchend → click sintético 300ms después).
   // ────────────────────────────────────────────────
 
+  // Timestamp del último touchend — blinda el click sintético de iOS durante 500ms
+  var lastTouchEnd = 0;
+
   slides.forEach(function(slide) {
     var overlay = slide.querySelector('.vc-overlay');
     var vid     = slide.querySelector('.vc-video');
     if (!overlay || !vid) return;
 
-    // ── Touch: gestión completa en touchstart/touchend
+    // ── Touch: touchstart guarda posición inicial
     overlay.addEventListener('touchstart', function(e) {
-      touch.active = true;
       touch.startX = e.touches[0].clientX;
       touch.startY = e.touches[0].clientY;
       touch.startT = Date.now();
@@ -2289,25 +2291,22 @@ footer {
     }, { passive: true });
 
     overlay.addEventListener('touchmove', function(e) {
-      if (!touch.active) return;
       var dx = Math.abs(e.touches[0].clientX - touch.startX);
       var dy = Math.abs(e.touches[0].clientY - touch.startY);
       if (dx > 8 || dy > 8) touch.moved = true;
     }, { passive: true });
 
     overlay.addEventListener('touchend', function(e) {
-      if (!touch.active) return;
-      touch.active = false;
-      var elapsed = Date.now() - touch.startT;
+      lastTouchEnd = Date.now(); // registrar momento del touch
+      var elapsed = lastTouchEnd - touch.startT;
 
-      // Solo actuar si fue un tap (sin arrastre, duración < 400ms)
+      // Solo actuar si fue un tap limpio (sin arrastre, < 400ms)
       if (!touch.moved && elapsed < 400) {
-        e.preventDefault(); // cancela el click sintético posterior
-        if (!slide.classList.contains('active')) return; // ignorar slides inactivos
+        e.preventDefault(); // cancela el click sintético de iOS
+        if (!slide.classList.contains('active')) return;
 
-        var playing = !vid.paused;
-        if (playing) {
-          // Si ya reproduce, mostrar controles brevemente; segundo tap pausa
+        if (!vid.paused) {
+          // Reproduciendo: primer tap muestra controles, segundo tap pausa
           if (slide.classList.contains('vc-show-controls')) {
             toggleVideo(slide);
             slide.classList.remove('vc-show-controls');
@@ -2320,11 +2319,10 @@ footer {
       }
     });
 
-    // ── Click: solo para ratón (en touch ya se llama preventDefault)
+    // ── Click: solo para ratón de escritorio.
+    // Se ignora si vino de touch (lastTouchEnd reciente, < 500ms)
     overlay.addEventListener('click', function(e) {
-      // En touch el click sintético llega con isTrusted=true pero después del touchend.
-      // Comprobamos que no sea una interacción táctil reciente.
-      if (touch.moved) return;
+      if (Date.now() - lastTouchEnd < 500) return; // click sintético de iOS — ignorar
       if (!slide.classList.contains('active')) return;
       toggleVideo(slide);
     });
@@ -2340,6 +2338,8 @@ footer {
   // DRAG del carrusel — ratón
   // ────────────────────────────────────────────────
   wrapper.addEventListener('mousedown', function(e) {
+    // Solo iniciar drag si el click es sobre el wrapper, no sobre un botón de nav
+    if (e.target.closest('.carousel-btn') || e.target.closest('.vc-play-btn')) return;
     mouse.dragging = true;
     mouse.startX   = e.clientX;
     mouse.startT   = Date.now();
@@ -2347,7 +2347,7 @@ footer {
     mouse.startTranslate = translateFor(currentPage);
     wrapper.classList.add('dragging');
     track.classList.remove('animating');
-    e.preventDefault();
+    // No llamamos preventDefault() aquí para no cancelar el click posterior
   });
 
   window.addEventListener('mousemove', function(e) {
@@ -2371,7 +2371,8 @@ footer {
     var threshold = slideWidth() * 0.2;
     if (delta < -threshold)     next();
     else if (delta > threshold) prev();
-    else                        goTo(currentPage);
+    else if (mouse.moved)       goTo(currentPage); // solo resetear si realmente se arrastró
+    // Si no hubo movimiento, dejar que el click del overlay gestione la acción
     resetAuto();
   });
 
