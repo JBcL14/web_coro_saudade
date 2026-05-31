@@ -2137,9 +2137,18 @@ footer {
   function next() { goTo((currentPage + 1) % totalPages()); }
   function prev() { goTo((currentPage - 1 + totalPages()) % totalPages()); }
 
+  function isAnyVideoPlaying() {
+    return slides.some(s => {
+      const v = s.querySelector('.vc-video');
+      return v && !v.paused;
+    });
+  }
+
   function resetAuto() {
     clearInterval(autoTimer);
-    autoTimer = setInterval(next, 6000);
+    if (!isAnyVideoPlaying()) {
+      autoTimer = setInterval(next, 6000);
+    }
   }
 
   // ── Play/Pausa individual al clicar el botón
@@ -2234,7 +2243,7 @@ footer {
   nextBtn.addEventListener('click', () => { next(); resetAuto(); });
 
   wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
-  wrapper.addEventListener('mouseleave', () => resetAuto());
+  wrapper.addEventListener('mouseleave', () => { if (!isAnyVideoPlaying()) resetAuto(); });
 
   window.addEventListener('resize', () => {
     updateSlideWidths();
