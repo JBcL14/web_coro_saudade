@@ -2076,9 +2076,14 @@ footer {
    *   .vc-playing        → botón OCULTO (vídeo a pantalla limpia)
    *   .vc-playing.vc-ui  → botón pausa VISIBLE (2 s, luego desaparece)
    */
-  .vc-slide.vc-paused  .vc-play-btn            { opacity: 1; transform: scale(1); }
+  .vc-slide.vc-paused  .vc-play-btn            { opacity: 0; transform: scale(0.9); }
   .vc-slide.vc-playing .vc-play-btn            { opacity: 0; transform: scale(0.85); }
   .vc-slide.vc-playing.vc-ui .vc-play-btn      { opacity: 1; transform: scale(1); }
+  /* Escritorio: botón visible solo al hacer hover */
+  @media (hover: hover) {
+    .vc-overlay:hover .vc-play-btn             { opacity: 1; transform: scale(1); }
+    .vc-overlay:hover .vc-play-btn:hover       { transform: scale(1.08); }
+  }
 
   /* Icono correcto según estado */
   .vc-slide.vc-paused  .vc-play-btn .icon-play  { display: block; }
@@ -2086,12 +2091,7 @@ footer {
   .vc-slide.vc-playing .vc-play-btn .icon-play  { display: none;  }
   .vc-slide.vc-playing .vc-play-btn .icon-pause { display: block; }
 
-  /* Hover escritorio: solo mostrar el botón play cuando está pausado.
-     Cuando reproduce, el botón de pausa lo gestiona el JS (mouseenter/leave),
-     así el clic siempre llega a la rama correcta. */
-  @media (hover: hover) {
-    .vc-slide.vc-paused .vc-overlay:hover .vc-play-btn { opacity: 1; transform: scale(1.06); }
-  }
+
 
   @media (max-width: 600px) {
     #videos .carousel-slide { height: 260px; }
@@ -2294,16 +2294,6 @@ footer {
       }
     });
 
-    // Mostrar/ocultar botón al pasar el ratón (solo escritorio)
-    overlay.addEventListener('mouseenter', function() {
-      if (!vid.paused) showUI(slide);
-    });
-    overlay.addEventListener('mouseleave', function() {
-      if (!vid.paused) {
-        clearTimeout(uiTimer);
-        slide.classList.remove('vc-ui');
-      }
-    });
 
     // ── MÓVIL: lógica touch independiente ────────────────────────────
     var touchStartXT = 0;
