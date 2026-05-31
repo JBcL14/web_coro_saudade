@@ -26,7 +26,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
 
   body {
     font-family: var(--serif-title);
@@ -34,7 +34,6 @@
     color: var(--black);
     font-size: 19px;
     line-height: 1.75;
-    overflow-x: hidden;
   }
 
   /* ─── ORNAMENT ─── */
@@ -232,6 +231,7 @@
     padding-top: 76px;
     background: var(--white);
     min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 
   /* Full-width banner image */
@@ -2160,8 +2160,11 @@ footer {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       if (vid.paused) {
-        vid.muted = false;
-        vid.play();
+        vid.play().then(() => {
+          vid.muted = false;
+        }).catch(() => {
+          // iOS puede bloquear unmute; dejamos el vídeo en muted
+        });
         btn.classList.add('playing');
         btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         clearInterval(autoTimer); // no avanzar mientras hay vídeo sonando
@@ -2738,7 +2741,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     mob.classList.remove('open');
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Fallback para Safari iOS < 15.4 que no soporta smooth en scrollIntoView
+      if ('scrollBehavior' in document.documentElement.style) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        target.scrollIntoView(true);
+      }
       history.replaceState(null, '', window.location.pathname);
     }
   });
