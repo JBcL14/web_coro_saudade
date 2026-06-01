@@ -73,7 +73,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 76px;
+    height: 92px;
     transition: var(--transition);
   }
   nav.scrolled {
@@ -107,7 +107,7 @@
     text-decoration: none; /* Elimina subrayados indeseados en el texto */
   }
   .nav-logo-img {
-    height: 44px;
+    height:150px;
     width: auto;
     border-radius: 0;
     object-fit: contain;
@@ -226,7 +226,7 @@
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding-top: 76px;
+    padding-top: 92px;
     background: var(--white);
     min-height: 100vh;
     min-height: -webkit-fill-available; /* iOS Safari: evita que la barra de URL recorte el hero */
@@ -785,21 +785,21 @@
 
   /* ─── FORM (unchanged styling) ─── */
   .join-form {
-    background: var(--black);
+    background: var(--white);
     padding: 3.5rem;
-    color: var(--white);
+    color: var(--black);
   }
   .form-title {
     font-family: var(--serif-title);
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--white);
+    color: var(--black);
     margin-bottom: 0.5rem;
   }
   .form-subtitle {
     font-family: var(--serif-title);
     font-size: 0.85rem;
-    color: rgba(248,246,241,0.4);
+    color: var(--gray-mid);
     font-style: italic;
     margin-bottom: 2.5rem;
     letter-spacing: 0.05em;
@@ -810,7 +810,7 @@
     font-family: var(--serif-sc);
     font-size: 0.65rem;
     letter-spacing: 0.22em;
-    color: rgba(248,246,241,0.5);
+    color: var(--gray-mid);
     margin-bottom: 0.6rem;
   }
   .form-group input,
@@ -819,11 +819,11 @@
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(184,148,31,0.3);
+    border-bottom: 1px solid rgba(184,148,31,0.35);
     padding: 0.7rem 0;
     font-family: var(--serif-title);
     font-size: 1rem;
-    color: var(--white);
+    color: var(--black);
     outline: none;
     transition: border-color 0.3s ease;
     appearance: none;
@@ -832,18 +832,18 @@
   }
   .form-group input::placeholder,
   .form-group textarea::placeholder {
-    color: rgba(248,246,241,0.2);
+    color: rgba(0,0,0,0.25);
     font-style: italic;
   }
   .form-group input:focus,
   .form-group select:focus,
-  .form-group textarea:focus { border-bottom-color: rgba(248,246,241,0.7); }
-  .form-group select option { background: var(--black); color: var(--white); }
+  .form-group textarea:focus { border-bottom-color: var(--gold); }
+  .form-group select option { background: var(--white); color: var(--black); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .form-submit {
     width: 100%;
-    background: var(--white);
-    color: var(--black);
+    background: var(--black);
+    color: var(--white);
     border: none;
     padding: 1rem;
     font-family: var(--serif-sc);
@@ -853,11 +853,11 @@
     transition: var(--transition);
     margin-top: 1rem;
   }
-  .form-submit:hover { background: var(--off-white); }
+  .form-submit:hover { background: var(--gray-mid); }
   .form-note {
     font-family: var(--serif-title);
     font-size: 0.75rem;
-    color: rgba(248,246,241,0.25);
+    color: rgba(0,0,0,0.35);
     font-style: italic;
     margin-top: 1rem;
     line-height: 1.6;
@@ -871,18 +871,18 @@
     font-size: 3rem;
     margin-bottom: 1rem;
     display: block;
-    color: var(--white);
+    color: var(--gold);
   }
   .form-success h3 {
     font-family: var(--serif-title);
     font-size: 1.5rem;
-    color: var(--white);
+    color: var(--black);
     margin-bottom: 0.8rem;
   }
   .form-success p {
     font-family: var(--serif-title);
     font-size: 0.95rem;
-    color: rgba(248,246,241,0.55);
+    color: var(--gray-mid);
     font-style: italic;
   }
 
@@ -1101,7 +1101,7 @@ footer {
     .carousel-slide { flex: 0 0 100%; }
     .hero-banner { height: clamp(180px, 45vw, 320px); }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
-    #inicio { padding-top: 76px; }
+    #inicio { padding-top: 92px; }
   }
 
   /* ─── CUSTOM SELECT ─── */
