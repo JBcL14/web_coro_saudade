@@ -107,10 +107,10 @@
     text-decoration: none; /* Elimina subrayados indeseados en el texto */
   }
   .nav-logo-img {
-    height: 42px;
-    width: 42px;
-    border-radius: 50%;
-    object-fit: cover;
+    height: 44px;
+    width: auto;
+    border-radius: 0;
+    object-fit: contain;
     display: block;
     opacity: 0.92;
     transition: opacity 0.3s ease;
@@ -894,7 +894,8 @@
     min-height: 700px;
   }
   .contact-split-left {
-    background: var(--black);
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
     padding: 7rem 4rem;
     display: flex;
     flex-direction: column;
@@ -904,7 +905,8 @@
     max-width: 480px;
   }
   .contact-split-right {
-    background: var(--black);
+    background: var(--white);
+    border-top: 1px solid var(--gold-pale);
     padding: 0;
   }
   .contact-split-right .join-form {
@@ -920,20 +922,20 @@
     font-family: var(--serif-sc);
     font-size: 0.62rem;
     letter-spacing: 0.3em;
-    color: rgba(248,246,241,0.4);
+    color: var(--gray-mid);
     margin-bottom: 0.4rem;
   }
   .contact-split .contact-item p,
   .contact-split .contact-item a {
     font-family: var(--serif-title);
     font-size: 0.98rem;
-    color: rgba(248,246,241,0.8);
+    color: var(--black);
     text-decoration: none;
     transition: var(--transition);
     display: block;
     line-height: 1.6;
   }
-  .contact-split .contact-item a:hover { color: var(--white); }
+  .contact-split .contact-item a:hover { color: var(--gold); }
   .contact-split .ornament-line::before,
   .contact-split .ornament-line::after {
     background: linear-gradient(to right, transparent, rgba(184,148,31,0.35), transparent);
@@ -949,17 +951,17 @@
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: rgba(248,246,241,0.6);
+    color: var(--gray-mid);
     font-family: var(--serif-sc);
     font-size: 0.65rem;
     letter-spacing: 0.18em;
-    border-bottom: 1px solid rgba(248,246,241,0.2);
+    border-bottom: 1px solid var(--gold-pale);
     padding-bottom: 2px;
     transition: color 0.3s ease, border-color 0.3s ease;
   }
   .contact-social-link:hover {
-    color: var(--white);
-    border-color: rgba(184,148,31,0.6);
+    color: var(--gold);
+    border-color: var(--gold);
   }
   .contact-social-link svg {
     width: 14px;
@@ -1367,13 +1369,13 @@ footer {
 
   /* ─── VÍDEOS ─── */
   #videos {
-    background: var(--black);
-    border-top: 1px solid rgba(184,148,31,0.2);
-    border-bottom: 1px solid rgba(184,148,31,0.2);
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
     padding: 7rem 3rem;
   }
   #videos .section-label { color: var(--gold); }
-  #videos .section-title { color: var(--white); }
+  #videos .section-title { color: var(--black); }
   #videos .ornament-line::before,
   #videos .ornament-line::after {
     background: linear-gradient(to right, transparent, rgba(184,148,31,0.45), transparent);
@@ -1543,23 +1545,23 @@ footer {
 
   /* ─── CARRUSEL DE VÍDEOS ─── */
   #videos {
-    background: var(--black);
-    border-top: 1px solid rgba(184,148,31,0.2);
-    border-bottom: 1px solid rgba(184,148,31,0.2);
+    background: var(--off-white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
     padding: 7rem 0;
   }
   #videos .section-inner { padding: 0 3rem; }
-  #videos .section-label { color: rgba(184,148,31,0.7); }
-  #videos .section-title { color: var(--white); }
+  #videos .section-label { color: var(--gold); }
+  #videos .section-title { color: var(--black); }
   #videos .ornament-line::before,
   #videos .ornament-line::after {
     background: linear-gradient(to right, transparent, rgba(184,148,31,0.45), transparent);
   }
   #videos .ornament-line span { color: rgba(184,148,31,0.6); }
   #videos .carousel-wrapper {
-    background: #000;
-    border-top: 1px solid rgba(184,148,31,0.2);
-    border-bottom: 1px solid rgba(184,148,31,0.2);
+    background: var(--white);
+    border-top: 1px solid var(--gold-pale);
+    border-bottom: 1px solid var(--gold-pale);
   }
   #videos .carousel-slide {
     background: #000;
@@ -1657,15 +1659,15 @@ footer {
   }
   #videos .carousel-btn {
     background: transparent;
-    border-color: rgba(184,148,31,0.4);
-    color: rgba(248,246,241,0.7);
+    border-color: rgba(184,148,31,0.5);
+    color: var(--black);
   }
-  #videos .carousel-btn::after { background: rgba(184,148,31,0.15); }
-  #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.8); }
-  #videos .carousel-btn:hover span { color: var(--white); }
-  #videos .carousel-dot { background: rgba(248,246,241,0.2); }
-  #videos .carousel-dot.active { background: rgba(184,148,31,0.8); }
-  #videos .carousel-counter { color: rgba(248,246,241,0.4); }
+  #videos .carousel-btn::after { background: rgba(184,148,31,0.12); }
+  #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.9); }
+  #videos .carousel-btn:hover span { color: var(--black); }
+  #videos .carousel-dot { background: rgba(0,0,0,0.15); }
+  #videos .carousel-dot.active { background: rgba(184,148,31,0.85); }
+  #videos .carousel-counter { color: rgba(0,0,0,0.4); }
   #videos .carousel-progress {
     background: linear-gradient(to right, rgba(184,148,31,0.7), rgba(184,148,31,0.4));
   }
