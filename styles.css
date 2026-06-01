@@ -107,7 +107,7 @@
     text-decoration: none; /* Elimina subrayados indeseados en el texto */
   }
   .nav-logo-img {
-    height: 58px;
+    height:150px;
     width: auto;
     border-radius: 0;
     object-fit: contain;
