@@ -1633,7 +1633,7 @@ footer {
    *   .vc-playing        → botón OCULTO (vídeo a pantalla limpia)
    *   .vc-playing.vc-ui  → botón pausa VISIBLE (2 s, luego desaparece)
    */
-  .vc-slide.vc-paused  .vc-play-btn            { opacity: 0; transform: scale(0.9); }
+  .vc-slide.vc-paused  .vc-play-btn            { opacity: 1; transform: scale(1); }
   .vc-slide.vc-playing .vc-play-btn            { opacity: 0; transform: scale(0.85); }
   .vc-slide.vc-playing.vc-ui .vc-play-btn      { opacity: 1; transform: scale(1); }
   /* Escritorio: botón visible solo al hacer hover */
