@@ -107,8 +107,8 @@
     text-decoration: none; /* Elimina subrayados indeseados en el texto */
   }
   .nav-logo-img {
-    height: 48px;
-    width: 48px;
+    height: 42px;
+    width: 42px;
     border-radius: 50%;
     object-fit: cover;
     display: block;
