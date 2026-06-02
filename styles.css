@@ -49,6 +49,8 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2.5rem;
+    color: rgba(184,148,31,0.6) !important;
+    fill: rgba(184,148,31,0.6) !important;
   }
   .ornament-line::before,
   .ornament-line::after {
