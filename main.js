@@ -99,6 +99,14 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
+    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos)
+    const activeDot = dotsEl.querySelector('.carousel-dot.active');
+    if (activeDot) {
+      const dotLeft   = activeDot.offsetLeft;
+      const dotWidth  = activeDot.offsetWidth;
+      const container = dotsEl.offsetWidth;
+      dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+    }
   }
 
   function updateCounter() {

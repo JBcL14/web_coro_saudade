@@ -624,26 +624,36 @@
     padding: 0 3rem;
   }
   .carousel-btn {
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--gray-light);
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--black);
     background: var(--white);
     color: var(--black);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
     transition: var(--transition);
     font-family: var(--serif-title);
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
+  }
+  .carousel-btn-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    display: block;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    transition: color 0.3s ease;
   }
   .carousel-btn::after {
     content: '';
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    inset: 0; /* shorthand - no soportado en Safari<14.1 */
+    inset: 0;
     background: var(--black);
     transform: scaleX(0);
     transform-origin: left;
@@ -653,12 +663,20 @@
   .carousel-btn:hover::after { transform: scaleX(1); }
   .carousel-btn span { position: relative; z-index: 1; transition: color 0.3s ease; }
   .carousel-btn:hover span { color: var(--white); }
+  .carousel-btn:hover .carousel-btn-icon { color: var(--white); }
   .carousel-btn:hover { border-color: var(--black); }
   .carousel-dots {
     display: flex;
     gap: 0.6rem;
     align-items: center;
+    overflow-x: auto;
+    max-width: 160px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 4px 0;
+    scroll-behavior: smooth;
   }
+  .carousel-dots::-webkit-scrollbar { display: none; }
   .carousel-dot {
     width: 6px;
     height: 6px;
@@ -666,6 +684,7 @@
     cursor: pointer;
     transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-radius: 0;
+    flex-shrink: 0;
   }
   .carousel-dot.active {
     background: var(--black);
@@ -1102,6 +1121,27 @@ footer {
     .hero-banner { height: clamp(180px, 45vw, 320px); }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
     #inicio { padding-top: 92px; }
+
+    /* ── Botones del carrusel en móvil: más grandes y bien visibles ── */
+    .carousel-btn {
+      width: 52px;
+      height: 52px;
+      border-width: 1.5px;
+      border-color: var(--black);
+      background: rgba(240, 236, 227, 0.95);
+      box-shadow: 0 2px 12px rgba(25, 35, 56, 0.15);
+    }
+    .carousel-btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .carousel-nav {
+      padding: 0 1.5rem;
+      gap: 1rem;
+    }
+    .carousel-dots {
+      max-width: 120px;
+    }
   }
 
   /* ─── CUSTOM SELECT ─── */
