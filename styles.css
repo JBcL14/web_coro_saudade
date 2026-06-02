@@ -808,7 +808,7 @@
   .form-group label {
     display: block;
     font-family: var(--serif-sc);
-    font-size: 0.78rem;
+    font-size: 1rem;
     letter-spacing: 0.22em;
     color: var(--gray-mid);
     margin-bottom: 0.6rem;
