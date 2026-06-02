@@ -1671,3 +1671,228 @@ footer {
   #videos .carousel-progress {
     background: linear-gradient(to right, rgba(184,148,31,0.7), rgba(184,148,31,0.4));
   }
+
+/* ═══════════════════════════════════════════════════════
+   ESTILOS EXTRAÍDOS DE INLINE — Coro Saudade
+   Clases que reemplazan atributos style="" del HTML.
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Ornamento SVG estrella (recurrente en ornament-line) ─── */
+.ornament-star-svg {
+  width: 0.9em;
+  height: 0.9em;
+  fill: rgba(184,148,31,0.6);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ─── Sección vídeos en Nosotros ─── */
+.nosotros-videos-inner {
+  margin-top: 4rem;
+}
+
+/* ─── Video captions en Nosotros ─── */
+.video-caption--centered {
+  text-align: center;
+}
+.nosotros-vid-title {
+  font-family: var(--serif-title);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--black);
+  margin-bottom: 0.2rem;
+}
+.nosotros-vid-sub {
+  font-family: var(--serif-title);
+  font-size: 0.8rem;
+  color: var(--gray-mid);
+  font-style: italic;
+}
+
+/* ─── CTA centrado genérico ─── */
+.section-cta-center {
+  margin-top: 2rem;
+  text-align: center;
+}
+.section-cta-center--mt3 {
+  margin-top: 3rem;
+}
+
+/* ─── Director bio subheadings ─── */
+.bio-subheading {
+  font-family: var(--serif-sc);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--gray-mid);
+  margin-bottom: 1rem;
+  margin-top: 1.8rem;
+  font-weight: 500;
+}
+.bio-subheading--first {
+  margin-top: 0.5rem;
+}
+
+/* ─── Imágenes del carrusel de galería ─── */
+.carousel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ─── Galería: section-inner CTA ─── */
+.section-inner--gallery-cta {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+/* ─── Únete: textos ─── */
+.join-heading {
+  font-family: var(--serif-title);
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+.join-desc {
+  font-family: var(--serif-title);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--gray-mid);
+  margin-bottom: 1.8rem;
+}
+.join-cta {
+  margin-top: 2rem;
+}
+
+/* ─── Ensayos box ─── */
+.ensayos-box {
+  margin-top: 2rem;
+  padding: 2rem 2.5rem;
+  border: 1px solid var(--gold-pale);
+  background: var(--white);
+}
+.ensayos-label {
+  font-family: var(--serif-sc);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gray-mid);
+  margin-bottom: 1.2rem;
+}
+.ensayos-schedule {
+  font-family: var(--serif-title);
+  font-size: 1.15rem;
+  color: var(--black);
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+.ensayos-location {
+  font-family: var(--serif-title);
+  font-size: 1rem;
+  color: var(--gray-mid);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ─── Contacto ─── */
+.contacto-title {
+  margin-bottom: 2rem;
+}
+.ornament-line--mb {
+  margin-bottom: 2.5rem;
+}
+.contacto-desc {
+  font-family: var(--serif-title);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--gray-mid);
+  margin-bottom: 2.5rem;
+}
+
+/* ─── Join form full height ─── */
+.join-form--full {
+  height: 100%;
+  min-height: 600px;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   TABLA (about-stats) — RESPONSIVE MÓVIL
+   En pantallas pequeñas se reduce el tamaño de fuente
+   para que las 4 celdas sean legibles sin desbordarse.
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+  .about-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+  }
+  .stat-card {
+    padding: 1.4rem 0.8rem;
+  }
+  .stat-number {
+    font-size: 1.7rem;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (max-width: 380px) {
+  .stat-card {
+    padding: 1.1rem 0.5rem;
+  }
+  .stat-number {
+    font-size: 1.4rem;
+  }
+  .stat-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   CARRUSEL DE FOTOS — MÓVIL: foto completa sin recorte
+   En móvil se usa object-fit: contain para que la imagen
+   completa sea visible, igual que el carrusel de vídeos.
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  /* En móvil el slide ocupa el 100% del wrapper (ya definido arriba),
+     reducimos la altura para que quepa la foto vertical si es necesario */
+  #galeria .carousel-slide {
+    height: auto;
+    min-height: 260px;
+    max-height: 75vw;       /* evita que fotos horizontales sean enormes */
+    background: var(--off-white);
+  }
+  /* La imagen se muestra completa, sin recorte, con fondo crema */
+  #galeria .carousel-slide .carousel-img {
+    object-fit: contain;
+    background: var(--off-white);
+    /* Forzamos que ocupe toda la celda aunque sea más pequeña que el slide */
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+  /* El slide necesita posicionamiento relativo para el absolute de la imagen */
+  #galeria .carousel-slide {
+    position: relative;
+  }
+  /* Altura fija para que el absolute funcione correctamente */
+  #galeria .carousel-wrapper {
+    /* La altura del wrapper se determina por el slide */
+  }
+}
+
+/* Ajuste de altura del slide de galería para móvil con relación de aspecto */
+@media (max-width: 900px) {
+  #galeria .carousel-slide {
+    height: 0;
+    padding-bottom: 70%;  /* ratio aproximado para fotos de grupo: más anchas que altas */
+    max-height: none;
+  }
+}
