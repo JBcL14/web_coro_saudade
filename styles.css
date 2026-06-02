@@ -55,7 +55,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+    background: linear-gradient(to right, transparent, rgba(184,148,31,0.6), transparent);
   }
   .ornament-line span {
     color: var(--gold);
