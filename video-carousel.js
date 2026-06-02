@@ -339,4 +339,18 @@
   buildDots();
   goTo(0, false);
   resetAuto();
+
+ // ── Primer fotograma en iOS/Safari
+  // Safari ignora preload="metadata" hasta que se llama a load() por JS.
+  // Poner currentTime = 0.001 fuerza el decode del primer frame sin iniciar reproducción.
+  slides.forEach(function(slide) {
+    var vid = slide.querySelector('.vc-video');
+    if (!vid) return;
+    vid.load();
+    var onCanPlay = function() {
+      vid.currentTime = 0.001;
+      vid.removeEventListener('loadedmetadata', onCanPlay);
+    };
+    vid.addEventListener('loadedmetadata', onCanPlay);
+  });
 })();
