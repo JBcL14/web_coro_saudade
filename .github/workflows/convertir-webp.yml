@@ -42,7 +42,7 @@ jobs:
       # de escaping de regex cuando bash procesa un heredoc.
       - name: Escribir script Node
         run: |
-          cat > /tmp/actualizar.js << 'JSEOF'
+          cat > ./actualizar.js << 'JSEOF'
           const sharp = require('sharp');
           const fs    = require('fs');
           const path  = require('path');
@@ -136,7 +136,9 @@ jobs:
           JSEOF
 
       - name: Ejecutar script
-        run: node /tmp/actualizar.js
+        run: |
+          node ./actualizar.js
+          rm ./actualizar.js
 
       - name: Commit y push
         run: |
