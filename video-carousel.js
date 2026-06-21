@@ -3,11 +3,13 @@
    Lógica del carrusel de vídeos con reproductor integrado.
    ═══════════════════════════════════════════════════════ */
 
-(function () {
+// initVideoCarousel() es llamado por carrusel-loader.js tras inyectar los slides.
+function initVideoCarousel() {
   'use strict';
 
   const wrapper  = document.getElementById('videoCarouselWrapper');
   const track    = document.getElementById('videoCarouselTrack');
+  if (!wrapper || !track) return;
   const dotsEl   = document.getElementById('vcDots');
   const counter  = document.getElementById('vcCounter');
   const prevBtn  = document.getElementById('vcPrevBtn');
@@ -362,4 +364,4 @@
     };
     vid.addEventListener('loadedmetadata', onCanPlay);
   });
-})();
+}
