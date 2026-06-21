@@ -95,17 +95,26 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     });
   }
 
-  function updateDots() {
+  function updateDots(forceLayout) {
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
-    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos)
-    const activeDot = dotsEl.querySelector('.carousel-dot.active');
-    if (activeDot) {
-      const dotLeft   = activeDot.offsetLeft;
-      const dotWidth  = activeDot.offsetWidth;
-      const container = dotsEl.offsetWidth;
-      dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos).
+    // En la llamada inicial (forceLayout=true) esperamos al siguiente frame para que
+    // el navegador haya calculado offsetLeft / offsetWidth antes de leer.
+    function scrollToDot() {
+      const activeDot = dotsEl.querySelector('.carousel-dot.active');
+      if (activeDot) {
+        const dotLeft   = activeDot.offsetLeft;
+        const dotWidth  = activeDot.offsetWidth;
+        const container = dotsEl.offsetWidth;
+        dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+      }
+    }
+    if (forceLayout) {
+      requestAnimationFrame(scrollToDot);
+    } else {
+      scrollToDot();
     }
   }
 
@@ -128,11 +137,11 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
   }
 
-  function goTo(page, animate = true) {
+  function goTo(page, animate = true, forceLayout = false) {
     currentPage = Math.max(0, Math.min(page, totalPages() - 1));
     applyTranslate(getTranslateForPage(currentPage), animate);
     updateActiveSlides();
-    updateDots();
+    updateDots(forceLayout);
     updateCounter();
     updateProgress();
   }
@@ -233,7 +242,7 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   // Init
   updateSlideWidths();
   buildDots();
-  goTo(0, false);
+  goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
   resetAuto();
 })();
 
