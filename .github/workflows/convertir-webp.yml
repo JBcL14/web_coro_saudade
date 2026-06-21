@@ -1,151 +1,161 @@
 # ═══════════════════════════════════════════════════════════════════════════
-#  .github/workflows/convertir-webp.yml
-#  Coro Saudade de Pamplona — Conversión automática de imágenes a WebP
+#  .github/workflows/convertir-webp.yml — Coro Saudade de Pamplona
 #
-#  Se activa cuando Apps Script sube fotos a assets/images/staging/.
-#  Este workflow:
-#    1. Convierte cada imagen de staging/ a WebP (calidad 82, sharp)
-#    2. Guarda el .webp en assets/images/carrusel/
-#    3. Borra el original de staging/
-#    4. Actualiza assets/carrusel.json con los arrays de fotos y vídeos
-#    5. Hace commit y push de todo
+#  Se activa cuando Apps Script sube:
+#    · Fotos  → assets/images/staging/**   (se convierten a WebP)
+#    · Vídeos → assets/videos/carrusel/**  (se indexan directamente)
 #
-#  Tiempo estimado de ejecución: 20-40 segundos por imagen.
-#  Coste: 0 € (GitHub Actions gratuito para repositorios públicos y privados
-#          hasta 2.000 minutos/mes — este workflow usa ~1 min por lote).
+#  En ambos casos reconstruye assets/carrusel.json completo
+#  leyendo las dos carpetas del disco, no solo los archivos nuevos.
 # ═══════════════════════════════════════════════════════════════════════════
 
-name: Convertir imágenes a WebP y actualizar carrusel.json
+name: Actualizar carrusel (WebP + JSON)
 
 on:
   push:
     paths:
-      - 'assets/images/staging/**'   # se activa solo cuando Apps Script sube fotos
-  workflow_dispatch:                  # permite lanzarlo manualmente desde GitHub o Apps Script
+      - 'assets/images/staging/**'
+      - 'assets/videos/carrusel/**'
+  workflow_dispatch:
 
 jobs:
-  convertir:
+  actualizar:
     runs-on: ubuntu-latest
     permissions:
-      contents: write                 # necesario para hacer commit y push
+      contents: write
 
     steps:
-
-      # ── 1. Descargar el repositorio completo
-      - name: Checkout del repositorio
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0              # historial completo para evitar conflictos de merge
+          fetch-depth: 0
 
-      # ── 2. Instalar Node.js y sharp (conversor WebP nativo, muy rápido)
-      - name: Configurar Node.js
+      - name: Configurar Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Instalar sharp
-        run: npm install sharp        # ~3 segundos; no necesita package.json previo
+        run: npm install sharp
 
-      # ── 3. Convertir, mover y actualizar JSON en un solo script Node.js
-      - name: Convertir imágenes y actualizar carrusel.json
+      # Escribimos el script en un .js separado para evitar problemas
+      # de escaping de regex cuando bash procesa un heredoc.
+      - name: Escribir script Node
         run: |
-          node << 'NODESCRIPT'
+          cat > /tmp/actualizar.js << 'JSEOF'
           const sharp = require('sharp');
           const fs    = require('fs');
           const path  = require('path');
 
-          // ── Rutas (deben coincidir con CONFIG del Apps Script)
+          // ── Rutas (deben coincidir con CONFIG en CarruselSaudade.gs)
           const STAGING  = 'assets/images/staging';
           const CARRUSEL = 'assets/images/carrusel';
           const VIDEOS   = 'assets/videos/carrusel';
           const JSON_OUT = 'assets/carrusel.json';
           const QUALITY  = 82;
 
-          // ── Extensiones de imagen que convertimos
           const EXT_IMG = /\.(jpe?g|png|tiff?|bmp|gif|avif)$/i;
           const EXT_VID = /\.(mp4|mov|avi|webm|mkv|m4v)$/i;
+          const SKIP    = /^\.gitkeep$/i;
 
-          // ── Crear carpetas si no existen
+          // Crear carpetas si no existen (primera ejecución)
           [STAGING, CARRUSEL, VIDEOS].forEach(d => fs.mkdirSync(d, { recursive: true }));
 
-          // ── Leer archivos en staging
-          const archivosStaging = fs.existsSync(STAGING)
-            ? fs.readdirSync(STAGING).filter(f => EXT_IMG.test(f))
-            : [];
+          async function main() {
 
-          console.log('Archivos en staging:', archivosStaging.length);
+            // ── 1. Convertir imágenes del staging a WebP ─────────────────
+            const enStaging = fs.existsSync(STAGING)
+              ? fs.readdirSync(STAGING).filter(f => EXT_IMG.test(f) && !SKIP.test(f))
+              : [];
 
-          // ── Convertir cada imagen
-          async function convertirTodos() {
-            for (const archivo of archivosStaging) {
+            console.log('=== FOTOS en staging: ' + enStaging.length);
+
+            for (const archivo of enStaging) {
               const entrada = path.join(STAGING, archivo);
               const nombre  = path.basename(archivo, path.extname(archivo));
               const salida  = path.join(CARRUSEL, nombre + '.webp');
 
               try {
-                await sharp(entrada)
-                  .webp({ quality: QUALITY })
-                  .toFile(salida);
-
-                const statOrig = fs.statSync(entrada);
-                const statWebP = fs.statSync(salida);
-                const ahorro   = Math.round((1 - statWebP.size / statOrig.size) * 100);
-                console.log('OK ' + archivo + ' -> ' + nombre + '.webp (' + ahorro + '% mas ligero)');
-
-                // Borrar el original del staging
-                fs.unlinkSync(entrada);
-
+                await sharp(entrada).webp({ quality: QUALITY }).toFile(salida);
+                const pct = Math.round(
+                  (1 - fs.statSync(salida).size / fs.statSync(entrada).size) * 100
+                );
+                console.log('  OK  ' + archivo + '  ->  ' + nombre + '.webp  (' + pct + '% mas ligero)');
+                fs.unlinkSync(entrada); // borrar original del staging
               } catch (err) {
-                console.error('ERROR convirtiendo ' + archivo + ':', err.message);
+                console.error('  ERR ' + archivo + ': ' + err.message);
               }
             }
 
-            // ── Reconstruir carrusel.json con todos los archivos actuales
-            const fotos  = fs.existsSync(CARRUSEL)
-              ? fs.readdirSync(CARRUSEL).filter(f => /\.webp$/i.test(f)).sort()
+            // ── 2. Leer estado actual de disco (fuente de verdad) ─────────
+            const fotos = fs.existsSync(CARRUSEL)
+              ? fs.readdirSync(CARRUSEL)
+                  .filter(f => /\.webp$/i.test(f) && !SKIP.test(f))
+                  .sort()
               : [];
+
             const videos = fs.existsSync(VIDEOS)
-              ? fs.readdirSync(VIDEOS).filter(f => EXT_VID.test(f)).sort()
+              ? fs.readdirSync(VIDEOS)
+                  .filter(f => EXT_VID.test(f) && !SKIP.test(f))
+                  .sort()
               : [];
 
-            // Preservar orden del JSON actual si existe (no reordenar lo que ya estaba)
-            let jsonActual = { images: [], videos: [] };
+            console.log('=== ESTADO DISCO: ' + fotos.length + ' fotos WebP, ' + videos.length + ' videos');
+
+            // ── 3. Reconstruir carrusel.json preservando el orden existente
+            //       pero añadiendo los nuevos y eliminando los borrados.
+            let json = { images: [], videos: [] };
             if (fs.existsSync(JSON_OUT)) {
-              try { jsonActual = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8')); } catch (_) {}
+              try {
+                const raw = fs.readFileSync(JSON_OUT, 'utf8');
+                json = JSON.parse(raw);
+              } catch (_) {
+                console.warn('  AVISO: carrusel.json existente no era JSON valido. Se recrea.');
+              }
             }
+            if (!Array.isArray(json.images)) json.images = [];
+            if (!Array.isArray(json.videos)) json.videos = [];
 
-            // Añadir las nuevas sin duplicar, respetando el orden existente
-            fotos.forEach(f => {
-              if (!jsonActual.images.includes(f)) jsonActual.images.push(f);
-            });
-            videos.forEach(v => {
-              if (!jsonActual.videos.includes(v)) jsonActual.videos.push(v);
-            });
+            // Añadir los que estén en disco pero no en el JSON (sin duplicar)
+            fotos.forEach(f  => { if (!json.images.includes(f)) json.images.push(f); });
+            videos.forEach(v => { if (!json.videos.includes(v)) json.videos.push(v); });
 
-            // Eliminar entradas que ya no existen en disco
-            jsonActual.images = jsonActual.images.filter(f => fotos.includes(f));
-            jsonActual.videos = jsonActual.videos.filter(v => videos.includes(v));
+            // Eliminar los que ya no estén en disco
+            json.images = json.images.filter(f => fotos.includes(f));
+            json.videos = json.videos.filter(v => videos.includes(v));
 
-            fs.writeFileSync(JSON_OUT, JSON.stringify(jsonActual, null, 2));
-            console.log('carrusel.json actualizado: ' + jsonActual.images.length +
-                        ' fotos, ' + jsonActual.videos.length + ' videos');
+            const jsonStr = JSON.stringify(json, null, 2);
+            fs.writeFileSync(JSON_OUT, jsonStr);
+
+            console.log('=== carrusel.json actualizado:');
+            console.log('    images: [' + json.images.join(', ') + ']');
+            console.log('    videos: [' + json.videos.join(', ') + ']');
           }
 
-          convertirTodos().catch(err => { console.error(err); process.exit(1); });
-          NODESCRIPT
+          main().catch(err => { console.error(err); process.exit(1); });
+          JSEOF
 
-      # ── 4. Hacer commit y push si hay cambios
+      - name: Ejecutar script
+        run: node /tmp/actualizar.js
+
       - name: Commit y push
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/images/carrusel/ assets/images/staging/ assets/carrusel.json
-          # Solo hacer commit si hay cambios reales
+
+          # Añadir todo lo que puede haber cambiado
+          git add assets/images/carrusel/ \
+                  assets/images/staging/ \
+                  assets/videos/carrusel/ \
+                  assets/carrusel.json
+
           if git diff --cached --quiet; then
-            echo "Sin cambios — nada que commitear."
+            echo "Sin cambios que commitear."
           else
-            NFOTOS=$(git diff --cached --name-only | grep "carrusel/.*\.webp" | wc -l)
-            git commit -m "[auto] $NFOTOS foto(s) convertidas a WebP + carrusel.json"
+            # Contar fotos y vídeos nuevos para el mensaje del commit
+            NFOTOS=$(git diff --cached --name-only | grep -c "images/carrusel/.*\.webp" || true)
+            NVIDS=$(git diff --cached --name-only  | grep -c "videos/carrusel/"         || true)
+            git commit -m "[auto] +${NFOTOS} foto(s) WebP, +${NVIDS} video(s) — carrusel.json ok"
             git push
             echo "Push completado."
           fi
