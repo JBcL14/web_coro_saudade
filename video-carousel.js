@@ -51,17 +51,26 @@
     slides.forEach((s, i) => s.classList.toggle('active', i === currentPage));
   }
 
-  function updateDots() {
+  function updateDots(forceLayout) {
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
-    // Scroll automático para que el dot activo quede centrado (útil con muchos vídeos)
-    const activeDot = dotsEl.querySelector('.carousel-dot.active');
-    if (activeDot) {
-      const dotLeft   = activeDot.offsetLeft;
-      const dotWidth  = activeDot.offsetWidth;
-      const container = dotsEl.offsetWidth;
-      dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+    // Scroll automático para que el dot activo quede centrado (útil con muchos vídeos).
+    // En la llamada inicial (forceLayout=true) esperamos al siguiente frame para que
+    // el navegador haya calculado offsetLeft / offsetWidth antes de leer.
+    function scrollToDot() {
+      const activeDot = dotsEl.querySelector('.carousel-dot.active');
+      if (activeDot) {
+        const dotLeft   = activeDot.offsetLeft;
+        const dotWidth  = activeDot.offsetWidth;
+        const container = dotsEl.offsetWidth;
+        dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+      }
+    }
+    if (forceLayout) {
+      requestAnimationFrame(scrollToDot);
+    } else {
+      scrollToDot();
     }
   }
 
@@ -83,12 +92,12 @@
     }
   }
 
-  function goTo(page, animate = true) {
+  function goTo(page, animate = true, forceLayout = false) {
     pauseAllVideos();
     currentPage = Math.max(0, Math.min(page, totalPages() - 1));
     applyTranslate(translateFor(currentPage), animate);
     updateActiveSlides();
-    updateDots();
+    updateDots(forceLayout);
     updateCounter();
     updateProgress();
   }
@@ -337,7 +346,7 @@
   // Init
   updateSlideWidths();
   buildDots();
-  goTo(0, false);
+  goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
   resetAuto();
 
  // ── Primer fotograma en iOS/Safari
