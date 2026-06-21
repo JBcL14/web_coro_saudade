@@ -43,10 +43,14 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 // ─── CAROUSEL
-(function() {
+// initCarousel() es llamado por carrusel-loader.js una vez inyectados los slides.
+// Si no hay carrusel-loader (uso sin JSON), se llama desde DOMContentLoaded.
+function initCarousel() {
   const wrapper  = document.getElementById('carouselWrapper');
   const track    = document.getElementById('carouselTrack');
+  if (!wrapper || !track) return;
   const slides   = Array.from(track.querySelectorAll('.carousel-slide'));
+  if (slides.length === 0) return; // nada que inicializar
   const dotsEl   = document.getElementById('carouselDots');
   const counter  = document.getElementById('carouselCounter');
   const prevBtn  = document.getElementById('prevBtn');
@@ -244,7 +248,7 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   buildDots();
   goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
   resetAuto();
-})();
+}
 
 // Polyfill Promise.allSettled para Safari < 13
 if (!Promise.allSettled) {
