@@ -1111,7 +1111,7 @@ footer {
     bottom: 2rem;
     right: 2rem;
     background: var(--black);
-    color: var(--gold-pale);
+    color: #d4a82a;
     padding: 1rem 1.5rem;
     font-family: var(--serif-title);
     font-size: 0.85rem;
