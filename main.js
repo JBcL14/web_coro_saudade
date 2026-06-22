@@ -43,10 +43,14 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 // ─── CAROUSEL
-(function() {
+// initCarousel() es llamado por carrusel-loader.js una vez inyectados los slides.
+// Si no hay carrusel-loader (uso sin JSON), se llama desde DOMContentLoaded.
+function initCarousel() {
   const wrapper  = document.getElementById('carouselWrapper');
   const track    = document.getElementById('carouselTrack');
+  if (!wrapper || !track) return;
   const slides   = Array.from(track.querySelectorAll('.carousel-slide'));
+  if (slides.length === 0) return; // nada que inicializar
   const dotsEl   = document.getElementById('carouselDots');
   const counter  = document.getElementById('carouselCounter');
   const prevBtn  = document.getElementById('prevBtn');
@@ -95,17 +99,26 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     });
   }
 
-  function updateDots() {
+  function updateDots(forceLayout) {
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
-    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos)
-    const activeDot = dotsEl.querySelector('.carousel-dot.active');
-    if (activeDot) {
-      const dotLeft   = activeDot.offsetLeft;
-      const dotWidth  = activeDot.offsetWidth;
-      const container = dotsEl.offsetWidth;
-      dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos).
+    // En la llamada inicial (forceLayout=true) esperamos al siguiente frame para que
+    // el navegador haya calculado offsetLeft / offsetWidth antes de leer.
+    function scrollToDot() {
+      const activeDot = dotsEl.querySelector('.carousel-dot.active');
+      if (activeDot) {
+        const dotLeft   = activeDot.offsetLeft;
+        const dotWidth  = activeDot.offsetWidth;
+        const container = dotsEl.offsetWidth;
+        dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
+      }
+    }
+    if (forceLayout) {
+      requestAnimationFrame(scrollToDot);
+    } else {
+      scrollToDot();
     }
   }
 
@@ -128,11 +141,11 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
   }
 
-  function goTo(page, animate = true) {
+  function goTo(page, animate = true, forceLayout = false) {
     currentPage = Math.max(0, Math.min(page, totalPages() - 1));
     applyTranslate(getTranslateForPage(currentPage), animate);
     updateActiveSlides();
-    updateDots();
+    updateDots(forceLayout);
     updateCounter();
     updateProgress();
   }
@@ -233,9 +246,9 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   // Init
   updateSlideWidths();
   buildDots();
-  goTo(0, false);
+  goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
   resetAuto();
-})();
+}
 
 // Polyfill Promise.allSettled para Safari < 13
 if (!Promise.allSettled) {
