@@ -30,7 +30,7 @@
   function slideImagen(nombre) {
     const alt = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '').trim();
     return '<div class="carousel-slide">'
-      + '<img src="' + IMG_BASE + nombre + 'ASE" alt="' + alt + '" class="carousel-img" loading="lazy">'
+      + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="lazy">'
       + '<div class="carousel-caption"><span>' + alt + '</span></div>'
       + '</div>';
   }
