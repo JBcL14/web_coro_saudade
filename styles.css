@@ -7,10 +7,10 @@
     --black:       #192338;
     --white:       #f0ece3;   /* crema medio, no tan claro */
     --off-white:   #e6e0d4;   /* crema más oscuro para secciones alternas */
-    --gold:        #b8941f;   /* dorado más sobrio */
-    --gold-light:  #d4a82a;
-    --gold-pale:   #e8d48a;
-    --gold-faint:  rgba(184,148,31,0.12); /* casi transparente, solo toque */
+    --gold:        #192338;   /* dorado más sobrio */
+    --gold-light:  #192338;
+    --gold-pale:   #192338;
+    --gold-faint:  #192338; /* casi transparente, solo toque */
     --gray-mid:    #5c5549;   /* gris cálido más oscuro */
     --gray-light:  #9e9385;
     --serif-title: 'Cormorant Infant', Georgia, serif;
