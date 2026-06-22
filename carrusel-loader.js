@@ -19,7 +19,7 @@
   // ── Ajusta estas rutas si tu repo está en un subdirectorio ───────────────
   // GitHub Pages con dominio propio → '/'   (raíz del dominio)
   // GitHub Pages sin dominio → '/nombre-del-repo/'
-  const BASE      = '/';
+  const BASE      = 'web_coro_saudade/';
   const JSON_URL  = BASE + 'assets/carrusel.json';
   const IMG_BASE  = BASE + 'assets/images/carrusel/';
   const VID_BASE  = BASE + 'assets/videos/carrusel/';
