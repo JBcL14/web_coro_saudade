@@ -100,26 +100,10 @@ function initCarousel() {
   }
 
   function updateDots(forceLayout) {
+    // Barra segmentada: solo toggle de clase, no hace falta scroll
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
-    // Scroll automático para que el dot activo quede centrado (útil con muchas fotos).
-    // En la llamada inicial (forceLayout=true) esperamos al siguiente frame para que
-    // el navegador haya calculado offsetLeft / offsetWidth antes de leer.
-    function scrollToDot() {
-      const activeDot = dotsEl.querySelector('.carousel-dot.active');
-      if (activeDot) {
-        const dotLeft   = activeDot.offsetLeft;
-        const dotWidth  = activeDot.offsetWidth;
-        const container = dotsEl.offsetWidth;
-        dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
-      }
-    }
-    if (forceLayout) {
-      requestAnimationFrame(scrollToDot);
-    } else {
-      scrollToDot();
-    }
   }
 
   function updateCounter() {
@@ -243,10 +227,56 @@ function initCarousel() {
     goTo(Math.min(currentPage, totalPages() - 1), false);
   });
 
+  // ── Precarga de imágenes ─────────────────────────────────────────────────
+  // Estrategia: carga eagerly las primeras 3 imágenes (visibles de inmediato),
+  // y el resto con un IntersectionObserver en el wrapper que adelanta la carga
+  // antes de que el usuario llegue a ellas (rootMargin generoso).
+  function precargarImagenes() {
+    slides.forEach((slide, idx) => {
+      const img = slide.querySelector('img.carousel-img');
+      if (!img) return;
+
+      if (idx < 3) {
+        // Primeras 3: carga inmediata
+        img.removeAttribute('loading');
+        img.decoding = 'async';
+        if (img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; }
+      } else {
+        // Resto: quitar lazy y observar con margen amplio para cargar antes de tiempo
+        img.loading = 'eager';
+        img.decoding = 'async';
+        if (img.dataset.src) {
+          const lazyObs = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+              if (en.isIntersecting) {
+                en.target.src = en.target.dataset.src;
+                delete en.target.dataset.src;
+                obs.unobserve(en.target);
+              }
+            });
+          }, { rootMargin: '0px 600px 0px 600px' }); // 600px de antelación a cada lado
+          lazyObs.observe(img);
+        }
+      }
+    });
+  }
+
+  // ── Indicador de carga por slide (skeleton mientras llega la imagen) ───────
+  slides.forEach(slide => {
+    const img = slide.querySelector('img.carousel-img');
+    if (!img) return;
+    if (!img.complete || img.naturalWidth === 0) {
+      slide.classList.add('img-loading');
+      img.addEventListener('load',  () => slide.classList.remove('img-loading'), { once: true });
+      img.addEventListener('error', () => slide.classList.remove('img-loading'), { once: true });
+    }
+  });
+
   // Init
   updateSlideWidths();
   buildDots();
-  goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
+  precargarImagenes();
+  goTo(0, false, true);
   resetAuto();
 }
 
@@ -289,9 +319,10 @@ async function handleSubmit() {
   const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
   document.getElementById('formContent').style.display = 'none';
   document.getElementById('formSuccess').style.display  = 'block';
+   
   if (formspreeOk || sheetsOk) {
-    const detalle = [formspreeOk ? '✔ Email enviado al coro' : null, sheetsOk ? '✔ Guardado en Google Sheets' : null].filter(Boolean).join(' · ');
-    showNotification(detalle);
+    // Texto elegante sin emojis brillantes que rompan la estética dorada/oscura
+    showNotification('Mensaje enviado con éxito. Nos pondremos en contacto contigo lo antes posible.');
   } else {
     showNotification('Solicitud recibida. Contactaremos contigo en breve.');
   }

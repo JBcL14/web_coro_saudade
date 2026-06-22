@@ -27,10 +27,16 @@
   const VID_BASE  = BASE + 'assets/videos/carrusel/';
 
   // ── Plantilla para cada slide de foto ────────────────────────────────────
-  function slideImagen(nombre) {
-    const alt = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '').trim();
+  // Las primeras 4 imágenes se cargan de forma inmediata (eager + fetchpriority high).
+  // El resto usan eager también pero sin alta prioridad, para que el navegador
+  // las descargue en paralelo en segundo plano sin bloquear el render inicial.
+  // No usamos lazy porque el carrusel no es scroll vertical — el navegador nunca
+  // detectaría que esas imágenes están "cerca" del viewport en un carrusel horizontal.
+  function slideImagen(nombre, idx) {
+    const alt      = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '').trim();
+    const priority = idx < 4 ? ' fetchpriority="high"' : ' fetchpriority="low"';
     return '<div class="carousel-slide">'
-      + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="lazy">'
+      + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="eager" decoding="async"' + priority + '>'
       + '<div class="carousel-caption"><span>' + alt + '</span></div>'
       + '</div>';
   }
@@ -56,7 +62,7 @@
     var trackVideos = document.getElementById('videoCarouselTrack');
 
     if (trackFotos && Array.isArray(datos.images) && datos.images.length > 0) {
-      trackFotos.innerHTML = datos.images.map(slideImagen).join('');
+      trackFotos.innerHTML = datos.images.map(function(nombre, idx) { return slideImagen(nombre, idx); }).join('');
     }
     if (trackVideos && Array.isArray(datos.videos) && datos.videos.length > 0) {
       trackVideos.innerHTML = datos.videos.map(slideVideo).join('');

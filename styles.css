@@ -580,6 +580,12 @@
     filter: brightness(0.92) saturate(0.85);
     opacity: 0.75;
   }
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ajusta la imagen completa sin recortarla */
+    background: var(--off-white); /* Color de fondo opcional para las zonas vacías de fotos verticales */
+  }
   .carousel-slide.active {
     filter: brightness(1) saturate(1);
     opacity: 1;
@@ -647,9 +653,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 2rem;
-    padding: 0 3rem;
+    padding: 0 1rem;        /* menos padding para dar más espacio a los segmentos */
   }
   .carousel-btn {
     width: 44px;
@@ -693,30 +699,31 @@
   .carousel-btn:hover span { color: var(--white); }
   .carousel-btn:hover .carousel-btn-icon { color: var(--white); }
   .carousel-btn:hover { border-color: var(--black); }
+  /* ── Barra segmentada: cada segmento ocupa una fracción igual del ancho total.
+        El activo se expande con flex-grow y cambia de color.
+        Funciona con cualquier número de slides sin overflow. ── */
   .carousel-dots {
     display: flex;
-    gap: 0.6rem;
+    gap: 3px;
     align-items: center;
-    overflow-x: auto;
-    max-width: 160px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    flex: 1;                /* ocupa todo el espacio entre los dos botones */
+    min-width: 0;
     padding: 4px 0;
-    scroll-behavior: smooth;
+    overflow: hidden;       /* nunca desborda */
   }
-  .carousel-dots::-webkit-scrollbar { display: none; }
   .carousel-dot {
-    width: 6px;
-    height: 6px;
+    flex: 1;                /* todos iguales por defecto */
+    height: 3px;
     background: var(--gray-light);
     cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: flex 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background 0.35s ease;
     border-radius: 0;
-    flex-shrink: 0;
+    min-width: 4px;         /* nunca desaparece del todo */
   }
   .carousel-dot.active {
+    flex: 3;                /* el activo ocupa el triple de ancho */
     background: var(--black);
-    width: 24px;
   }
   .carousel-counter {
     font-family: var(--serif-sc);
@@ -1110,7 +1117,7 @@ footer {
     bottom: 2rem;
     right: 2rem;
     background: var(--black);
-    color: var(--gold-pale);
+    color: #b8941f;
     padding: 1rem 1.5rem;
     font-family: var(--serif-title);
     font-size: 0.85rem;
@@ -1121,7 +1128,7 @@ footer {
     transition: var(--transition);
     max-width: 300px;
     line-height: 1.6;
-    border-left: 2px solid var(--gray-mid);
+    border-left: 2px solid #b8941f;
   }
   .notification.show { transform: translateY(0); opacity: 1; }
 
@@ -1175,7 +1182,7 @@ footer {
       gap: 1rem;
     }
     .carousel-dots {
-      max-width: 120px;
+      /* flex: 1 ya maneja el ancho — sin max-width en móvil */
     }
   }
 
@@ -1740,7 +1747,7 @@ footer {
   #videos .carousel-btn::after { background: rgba(184,148,31,0.12); }
   #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.9); }
   #videos .carousel-btn:hover span { color: var(--black); }
-  #videos .carousel-dot { background: rgba(0,0,0,0.15); }
+  #videos .carousel-dot { background: rgba(0,0,0,0.15); height: 3px; }
   #videos .carousel-dot.active { background: rgba(184,148,31,0.85); }
   #videos .carousel-counter { color: rgba(0,0,0,0.4); }
   #videos .carousel-progress {
@@ -1813,6 +1820,24 @@ footer {
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Evita el salto de layout mientras carga */
+  background: var(--off-white);
+}
+
+/* Skeleton shimmer mientras la imagen no ha cargado aún */
+.img-loading .carousel-img {
+  background: linear-gradient(
+    90deg,
+    var(--off-white) 25%,
+    #e8e4dc 50%,
+    var(--off-white) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ─── Galería: section-inner CTA ─── */
