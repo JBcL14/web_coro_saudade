@@ -20,7 +20,7 @@
   // GitHub Pages con dominio propio → '/'   (raíz del dominio)
   // GitHub Pages sin dominio → '/nombre-del-repo/'
   const BASE = window.location.pathname.includes('/web_coro_saudade/') 
-  ? '/nombre-del-repo/' 
+  ? '/web_coro_saudade/' 
   : '/';
   const JSON_URL  = BASE + 'assets/carrusel.json';
   const IMG_BASE  = BASE + 'assets/images/carrusel/';
