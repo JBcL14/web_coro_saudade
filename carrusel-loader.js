@@ -19,7 +19,9 @@
   // ── Ajusta estas rutas si tu repo está en un subdirectorio ───────────────
   // GitHub Pages con dominio propio → '/'   (raíz del dominio)
   // GitHub Pages sin dominio → '/nombre-del-repo/'
-  const BASE      = 'web_coro_saudade/';
+  const BASE = window.location.pathname.includes('/web_coro_saudade/') 
+  ? '/nombre-del-repo/' 
+  : '/';
   const JSON_URL  = BASE + 'assets/carrusel.json';
   const IMG_BASE  = BASE + 'assets/images/carrusel/';
   const VID_BASE  = BASE + 'assets/videos/carrusel/';
@@ -28,7 +30,7 @@
   function slideImagen(nombre) {
     const alt = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '').trim();
     return '<div class="carousel-slide">'
-      + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="lazy">'
+      + '<img src="' + IMG_BASE + nombre + 'ASE" alt="' + alt + '" class="carousel-img" loading="lazy">'
       + '<div class="carousel-caption"><span>' + alt + '</span></div>'
       + '</div>';
   }
