@@ -319,9 +319,10 @@ async function handleSubmit() {
   const sheetsOk    = results[1].status === 'fulfilled' && results[1].value;
   document.getElementById('formContent').style.display = 'none';
   document.getElementById('formSuccess').style.display  = 'block';
+   
   if (formspreeOk || sheetsOk) {
-    const detalle = [formspreeOk ? '✔ Email enviado al coro' : null, sheetsOk ? '✔ Guardado en Google Sheets' : null].filter(Boolean).join(' · ');
-    showNotification(detalle);
+    // Texto elegante sin emojis brillantes que rompan la estética dorada/oscura
+    showNotification('Mensaje enviado con éxito. Nos pondremos en contacto contigo lo antes posible.');
   } else {
     showNotification('Solicitud recibida. Contactaremos contigo en breve.');
   }
