@@ -54,26 +54,10 @@ function initVideoCarousel() {
   }
 
   function updateDots(forceLayout) {
+    // Barra segmentada: solo toggle de clase activa, sin scroll
     dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === currentPage);
     });
-    // Scroll automático para que el dot activo quede centrado (útil con muchos vídeos).
-    // En la llamada inicial (forceLayout=true) esperamos al siguiente frame para que
-    // el navegador haya calculado offsetLeft / offsetWidth antes de leer.
-    function scrollToDot() {
-      const activeDot = dotsEl.querySelector('.carousel-dot.active');
-      if (activeDot) {
-        const dotLeft   = activeDot.offsetLeft;
-        const dotWidth  = activeDot.offsetWidth;
-        const container = dotsEl.offsetWidth;
-        dotsEl.scrollLeft = dotLeft - container / 2 + dotWidth / 2;
-      }
-    }
-    if (forceLayout) {
-      requestAnimationFrame(scrollToDot);
-    } else {
-      scrollToDot();
-    }
   }
 
   function updateCounter() {
@@ -351,17 +335,37 @@ function initVideoCarousel() {
   goTo(0, false, true);   // forceLayout=true → espera al siguiente frame para centrar el dot
   resetAuto();
 
- // ── Primer fotograma en iOS/Safari
-  // Safari ignora preload="metadata" hasta que se llama a load() por JS.
-  // Poner currentTime = 0.001 fuerza el decode del primer frame sin iniciar reproducción.
+  // ── Precarga de metadatos y primer fotograma ─────────────────────────────────────
+  // 1. Todos los vídeos cargan metadatos al init; el actual y el adyacente
+  //    usan preload="auto" para play inmediato sin buffering visible.
+  // 2. currentTime=0.001 fuerza el primer fotograma en Safari/iOS.
+  function actualizarPreload(paginaActual) {
+    slides.forEach(function(slide, idx) {
+      var vid = slide.querySelector('.vc-video');
+      if (!vid) return;
+      var esActual    = idx === paginaActual;
+      var esAdyacente = idx === (paginaActual + 1) % total ||
+                        idx === (paginaActual - 1 + total) % total;
+      vid.preload = (esActual || esAdyacente) ? 'auto' : 'metadata';
+    });
+  }
+
   slides.forEach(function(slide) {
     var vid = slide.querySelector('.vc-video');
     if (!vid) return;
     vid.load();
-    var onCanPlay = function() {
+    vid.addEventListener('loadedmetadata', function onMeta() {
       vid.currentTime = 0.001;
-      vid.removeEventListener('loadedmetadata', onCanPlay);
-    };
-    vid.addEventListener('loadedmetadata', onCanPlay);
+      vid.removeEventListener('loadedmetadata', onMeta);
+    });
   });
+
+  // Cuando el usuario cambia de slide, actualizar preload del nuevo actual
+  var _goToOriginal = goTo;
+  goTo = function(page, animate, forceLayout) {
+    _goToOriginal(page, animate, forceLayout);
+    actualizarPreload(currentPage);
+  };
+
+  actualizarPreload(0);
 }
