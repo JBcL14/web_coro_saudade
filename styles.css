@@ -1111,7 +1111,7 @@ footer {
     bottom: 2rem;
     right: 2rem;
     background: var(--black);
-    color: var(--gold-pale);
+    color: #b8941f;
     padding: 1rem 1.5rem;
     font-family: var(--serif-title);
     font-size: 0.85rem;
@@ -1122,7 +1122,7 @@ footer {
     transition: var(--transition);
     max-width: 300px;
     line-height: 1.6;
-    border-left: 2px solid var(--gray-mid);
+    border-left: 2px solid #b8941f;
   }
   .notification.show { transform: translateY(0); opacity: 1; }
 
