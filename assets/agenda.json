@@ -1,5 +1,5 @@
 {
-  "generado": "2026-06-23T10:00:00.000Z",
+  "generado": "2026-06-23T19:26:53.714Z",
   "anio": 2026,
   "proximos": [
     {
@@ -21,10 +21,10 @@
       "dia": 22,
       "mes": "May",
       "anio": 2026,
-      "titulo": "Concierto El Desván",
+      "titulo": "Concierto el Desván",
       "lugar": "Sala Indara · Pamplona",
-      "hora": "21:00",
-      "descripcion": "Colaboración con El Desván",
+      "hora": "Sat Dec 30 1899 21:00:00 GMT-0014 (Central European Standard Time)",
+      "descripcion": "",
       "tipo": "Colaboración",
       "destacado": true
     },
@@ -35,7 +35,7 @@
       "anio": 2026,
       "titulo": "Músicas del mundo",
       "lugar": "Iglesia de la Natividad · Garísoain",
-      "hora": "12:00",
+      "hora": "Sat Dec 30 1899 12:00:00 GMT-0014 (Central European Standard Time)",
       "descripcion": "",
       "tipo": "Destacado",
       "destacado": true
@@ -47,8 +47,8 @@
       "anio": 2026,
       "titulo": "Ciclo Coral — Nuevo Casino de Pamplona",
       "lugar": "Nuevo Casino · Pamplona",
-      "hora": "12:00",
-      "descripcion": "Federación de Coros de Navarra",
+      "hora": "Sat Dec 30 1899 12:00:00 GMT-0014 (Central European Standard Time)",
+      "descripcion": "",
       "tipo": "Destacado",
       "destacado": true
     }
