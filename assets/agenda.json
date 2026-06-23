@@ -1,0 +1,56 @@
+{
+  "generado": "2026-06-23T10:00:00.000Z",
+  "anio": 2026,
+  "proximos": [
+    {
+      "fecha": "2026-10-03",
+      "dia": 3,
+      "mes": "Oct",
+      "anio": 2026,
+      "titulo": "REYNO de Artajona",
+      "lugar": "Artajona",
+      "hora": "",
+      "descripcion": "",
+      "tipo": "Concierto",
+      "destacado": false
+    }
+  ],
+  "destacados": [
+    {
+      "fecha": "2026-05-22",
+      "dia": 22,
+      "mes": "May",
+      "anio": 2026,
+      "titulo": "Concierto El Desván",
+      "lugar": "Sala Indara · Pamplona",
+      "hora": "21:00",
+      "descripcion": "Colaboración con El Desván",
+      "tipo": "Colaboración",
+      "destacado": true
+    },
+    {
+      "fecha": "2026-05-17",
+      "dia": 17,
+      "mes": "May",
+      "anio": 2026,
+      "titulo": "Músicas del mundo",
+      "lugar": "Iglesia de la Natividad · Garísoain",
+      "hora": "12:00",
+      "descripcion": "",
+      "tipo": "Destacado",
+      "destacado": true
+    },
+    {
+      "fecha": "2026-02-22",
+      "dia": 22,
+      "mes": "Feb",
+      "anio": 2026,
+      "titulo": "Ciclo Coral — Nuevo Casino de Pamplona",
+      "lugar": "Nuevo Casino · Pamplona",
+      "hora": "12:00",
+      "descripcion": "Federación de Coros de Navarra",
+      "tipo": "Destacado",
+      "destacado": true
+    }
+  ]
+}
