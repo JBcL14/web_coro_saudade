@@ -1,11 +1,12 @@
 {
-  "generado": "2026-06-23T19:49:21.895Z",
+  "generado": "2026-06-23T20:27:46.226Z",
   "anio": 2026,
   "proximos": [
     {
       "fecha": "2026-10-03",
       "dia": 3,
       "mes": "Oct",
+      "mesLargo": "octubre",
       "anio": 2026,
       "titulo": "REYNO de Artajona",
       "lugar": "Artajona",
@@ -20,6 +21,7 @@
       "fecha": "2026-05-22",
       "dia": 22,
       "mes": "May",
+      "mesLargo": "mayo",
       "anio": 2026,
       "titulo": "Concierto el Desván",
       "lugar": "Sala Indara · Pamplona",
@@ -32,6 +34,7 @@
       "fecha": "2026-05-17",
       "dia": 17,
       "mes": "May",
+      "mesLargo": "mayo",
       "anio": 2026,
       "titulo": "Músicas del mundo",
       "lugar": "Iglesia de la Natividad · Garísoain",
@@ -44,6 +47,7 @@
       "fecha": "2026-02-22",
       "dia": 22,
       "mes": "Feb",
+      "mesLargo": "febrero",
       "anio": 2026,
       "titulo": "Ciclo Coral — Nuevo Casino de Pamplona",
       "lugar": "Nuevo Casino · Pamplona",
