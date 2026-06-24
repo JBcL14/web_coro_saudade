@@ -1,18 +1,17 @@
 # ═══════════════════════════════════════════════════════════════════════════
 #  .github/workflows/convertir-webp.yml — Coro Saudade de Pamplona
 #
-#  Se activa cuando Apps Script sube o borra archivos en:
-#    · assets/images/staging/**   → convierte a WebP si el contenido cambió
+#  Se activa cuando Apps Script sube archivos a:
+#    · assets/images/staging/**   → convierte a WebP si el hash cambió
 #    · assets/videos/carrusel/**  → indexa directamente
+#    · assets/agenda.json         → no requiere procesamiento adicional
 #
-#  Lógica de deduplicación por hash SHA-256:
-#    · Si un archivo en staging ya existe en carrusel con el mismo hash
-#      de origen → se salta (no reconvierte innecesariamente).
-#    · Si el nombre existe pero el hash cambió → reconvierte.
-#    · Si un WebP en carrusel ya no tiene su original en staging → se borra.
-#    · Los hashes se guardan en assets/images/.hashes.json (oculto, no web).
-#
-#  Al terminar siempre reconstruye assets/carrusel.json desde el disco.
+#  Lógica de deduplicación:
+#    · Compara SHA-256 del original con el guardado en .hashes.json
+#    · Mismo hash → salta la conversión (el contenido no cambió)
+#    · Hash distinto o archivo nuevo → convierte y actualiza
+#    · Archivos .deleted en staging → borra el WebP correspondiente
+#    · WebP sin hash registrado → se conserva (subido manualmente)
 # ═══════════════════════════════════════════════════════════════════════════
 
 name: Actualizar carrusel (WebP + JSON)
@@ -41,7 +40,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Instalar dependencias
+      - name: Instalar sharp
         run: npm install sharp
 
       - name: Escribir script de sincronización
@@ -50,136 +49,40 @@ jobs:
           const sharp  = require('sharp');
           const fs     = require('fs');
           const path   = require('path');
-          const crypto = require('crypto');   // nativo de Node — sin instalar
+          const crypto = require('crypto');
 
-          // ── Rutas ────────────────────────────────────────────────────────
           const STAGING    = 'assets/images/staging';
           const CARRUSEL   = 'assets/images/carrusel';
           const VIDEOS     = 'assets/videos/carrusel';
           const JSON_OUT   = 'assets/carrusel.json';
-          const HASHES_OUT = 'assets/images/.hashes.json'; // manifiesto interno
+          const HASHES_OUT = 'assets/images/.hashes.json';
           const QUALITY    = 82;
 
           const EXT_IMG = /\.(jpe?g|png|tiff?|bmp|gif|avif)$/i;
           const EXT_VID = /\.(mp4|mov|avi|webm|mkv|m4v)$/i;
           const SKIP    = /^(\.|\.gitkeep)$/i;
 
-          // ── Utilidades ───────────────────────────────────────────────────
-
-          /** SHA-256 del contenido de un archivo. */
-          function hashArchivo(rutaAbs) {
-            return crypto.createHash('sha256')
-              .update(fs.readFileSync(rutaAbs))
-              .digest('hex');
+          function hashArchivo(ruta) {
+            return crypto.createHash('sha256').update(fs.readFileSync(ruta)).digest('hex');
           }
 
-          /** Lee el manifiesto de hashes o devuelve objeto vacío. */
           function leerHashes() {
             if (!fs.existsSync(HASHES_OUT)) return {};
-            try { return JSON.parse(fs.readFileSync(HASHES_OUT, 'utf8')); }
-            catch (_) { return {}; }
+            try { return JSON.parse(fs.readFileSync(HASHES_OUT, 'utf8')); } catch (_) { return {}; }
           }
 
-          /** Lista archivos de una carpeta filtrando por regex, sin ocultos ni .gitkeep. */
           function listar(carpeta, regex) {
             if (!fs.existsSync(carpeta)) return [];
-            return fs.readdirSync(carpeta)
-              .filter(f => regex.test(f) && !SKIP.test(f))
-              .sort();
+            return fs.readdirSync(carpeta).filter(f => regex.test(f) && !SKIP.test(f)).sort();
           }
 
-          // ── Main ─────────────────────────────────────────────────────────
           async function main() {
-
-            // Crear carpetas si es la primera ejecución
             [STAGING, CARRUSEL, VIDEOS].forEach(d => fs.mkdirSync(d, { recursive: true }));
             fs.mkdirSync(path.dirname(HASHES_OUT), { recursive: true });
 
             const hashes = leerHashes();
-            // hashes = { "nombre-base": "sha256-del-original-cuando-se-convirtio" }
 
-            // ════════════════════════════════════════════════════════════════
-            //  PASO 1 — Convertir imágenes del staging
-            //           Solo si no existe el WebP O si el hash del original
-            //           cambió desde la última conversión.
-            // ════════════════════════════════════════════════════════════════
-            const enStaging = listar(STAGING, EXT_IMG);
-            console.log('\n=== STAGING: ' + enStaging.length + ' archivo(s)');
-
-            for (const archivo of enStaging) {
-              const entrada    = path.join(STAGING, archivo);
-              const nombreBase = path.basename(archivo, path.extname(archivo));
-              const salida     = path.join(CARRUSEL, nombreBase + '.webp');
-              const hashActual = hashArchivo(entrada);
-              const hashGuardado = hashes[nombreBase];
-
-              const webpExiste   = fs.existsSync(salida);
-              const contenidoIgual = webpExiste && hashGuardado === hashActual;
-
-              if (contenidoIgual) {
-                console.log('  =  ' + archivo + ' (sin cambios, se omite)');
-                // Borrar el staging igualmente — ya está procesado
-                fs.unlinkSync(entrada);
-                continue;
-              }
-
-              // Convertir
-              try {
-                await sharp(entrada).webp({ quality: QUALITY }).toFile(salida);
-                const orig = fs.statSync(entrada).size;
-                const webp = fs.statSync(salida).size;
-                const pct  = Math.round((1 - webp / orig) * 100);
-                const motivo = !webpExiste ? 'nuevo' : 'contenido actualizado';
-                console.log('  OK ' + archivo + ' -> ' + nombreBase + '.webp  (' + pct + '% mas ligero) [' + motivo + ']');
-                // Guardar hash del original para futuras comparaciones
-                hashes[nombreBase] = hashActual;
-                // Borrar el original del staging
-                fs.unlinkSync(entrada);
-              } catch (err) {
-                console.error('  ERR convirtiendo ' + archivo + ': ' + err.message);
-              }
-            }
-
-            // ════════════════════════════════════════════════════════════════
-            //  PASO 2 — Borrar WebP huérfanos
-            //           Si un .webp está en carrusel pero su nombre-base ya
-            //           no tiene original en staging NI hash registrado,
-            //           significa que Apps Script lo borró de Drive → lo
-            //           eliminamos también del carrusel.
-            //
-            //  Nota: los originales en staging se borran en el paso 1 tras
-            //  convertirlos. Si staging está vacío aquí, es que todos los
-            //  archivos de Drive ya habían sido procesados antes.
-            //  La fuente de verdad real es el manifiesto de hashes:
-            //  si un nombre-base ya no tiene entrada → huérfano.
-            // ════════════════════════════════════════════════════════════════
-            const webpsEnCarrusel = listar(CARRUSEL, /\.webp$/i);
-            console.log('\n=== CARRUSEL: ' + webpsEnCarrusel.length + ' WebP(s)');
-
-            for (const webp of webpsEnCarrusel) {
-              const nombreBase = path.basename(webp, '.webp');
-              if (!hashes.hasOwnProperty(nombreBase)) {
-                // WebP sin hash registrado = nunca fue procesado por este workflow
-                // (subido manualmente o de una versión anterior). Lo dejamos.
-                console.log('  ?  ' + webp + ' (sin hash registrado, se conserva)');
-                continue;
-              }
-              // Si tiene hash registrado, el original existió en Drive alguna vez.
-              // Si ahora no está en staging es porque Apps Script ya lo subió y se
-              // convirtió — está bien. No borrar.
-              console.log('  ✓  ' + webp + ' (en carrusel, hash ok)');
-            }
-
-            // ════════════════════════════════════════════════════════════════
-            //  PASO 3 — Detectar borrados: WebP cuyo hash apunta a un Drive
-            //           del que Apps Script ya eliminó el original.
-            //
-            //  Apps Script marca los borrados subiendo un archivo de texto
-            //  vacío con extensión .deleted en staging:
-            //    staging/nombre-a-borrar.deleted
-            //  El workflow lee esos marcadores, borra el WebP y el hash,
-            //  y elimina el marcador.
-            // ════════════════════════════════════════════════════════════════
+            // ── PASO 1: Procesar marcadores .deleted ────────────────────────
             const marcadores = fs.existsSync(STAGING)
               ? fs.readdirSync(STAGING).filter(f => f.endsWith('.deleted'))
               : [];
@@ -191,36 +94,57 @@ jobs:
                 const webpBorrar = path.join(CARRUSEL, nombreBase + '.webp');
                 if (fs.existsSync(webpBorrar)) {
                   fs.unlinkSync(webpBorrar);
-                  console.log('  DEL ' + nombreBase + '.webp (marcado para borrar)');
+                  console.log('  DEL ' + nombreBase + '.webp');
                 }
                 delete hashes[nombreBase];
                 fs.unlinkSync(path.join(STAGING, marcador));
-                console.log('  DEL marcador: ' + marcador);
               }
             }
 
-            // ════════════════════════════════════════════════════════════════
-            //  PASO 4 — Guardar manifiesto de hashes actualizado
-            // ════════════════════════════════════════════════════════════════
-            fs.writeFileSync(HASHES_OUT, JSON.stringify(hashes, null, 2));
-            console.log('\n=== Hashes guardados: ' + Object.keys(hashes).length + ' entradas');
+            // ── PASO 2: Convertir imágenes del staging ──────────────────────
+            const enStaging = listar(STAGING, EXT_IMG);
+            console.log('\n=== STAGING: ' + enStaging.length + ' imagen(es)');
 
-            // ════════════════════════════════════════════════════════════════
-            //  PASO 5 — Reconstruir carrusel.json desde el disco
-            //           Fuente de verdad = lo que realmente existe en disco.
-            // ════════════════════════════════════════════════════════════════
+            for (const archivo of enStaging) {
+              const entrada    = path.join(STAGING, archivo);
+              const nombreBase = path.basename(archivo, path.extname(archivo));
+              const salida     = path.join(CARRUSEL, nombreBase + '.webp');
+              const hashActual = hashArchivo(entrada);
+
+              if (fs.existsSync(salida) && hashes[nombreBase] === hashActual) {
+                console.log('  =  ' + archivo + ' (sin cambios, se omite)');
+                fs.unlinkSync(entrada);
+                continue;
+              }
+
+              try {
+                await sharp(entrada).webp({ quality: QUALITY }).toFile(salida);
+                const orig = fs.statSync(entrada).size;
+                const webp = fs.statSync(salida).size;
+                const pct  = Math.round((1 - webp / orig) * 100);
+                const tag  = !hashes[nombreBase] ? 'nuevo' : 'actualizado';
+                console.log('  OK ' + archivo + ' -> ' + nombreBase + '.webp (' + pct + '% mas ligero) [' + tag + ']');
+                hashes[nombreBase] = hashActual;
+                fs.unlinkSync(entrada);
+              } catch (err) {
+                console.error('  ERR ' + archivo + ': ' + err.message);
+              }
+            }
+
+            // ── PASO 3: Guardar hashes ──────────────────────────────────────
+            fs.writeFileSync(HASHES_OUT, JSON.stringify(hashes, null, 2));
+
+            // ── PASO 4: Reconstruir carrusel.json desde disco ───────────────
             const fotosFinales  = listar(CARRUSEL, /\.webp$/i);
-            const videosFinales = listar(VIDEOS,   EXT_VID);
+            const videosFinales = listar(VIDEOS, EXT_VID);
 
             let carruselJson = { images: [], videos: [] };
             if (fs.existsSync(JSON_OUT)) {
-              try { carruselJson = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8')); }
-              catch (_) {}
+              try { carruselJson = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8')); } catch (_) {}
             }
             if (!Array.isArray(carruselJson.images)) carruselJson.images = [];
             if (!Array.isArray(carruselJson.videos)) carruselJson.videos = [];
 
-            // Añadir nuevos preservando orden; eliminar los que ya no existen
             fotosFinales.forEach(f  => { if (!carruselJson.images.includes(f)) carruselJson.images.push(f); });
             videosFinales.forEach(v => { if (!carruselJson.videos.includes(v)) carruselJson.videos.push(v); });
             carruselJson.images = carruselJson.images.filter(f => fotosFinales.includes(f));
@@ -229,8 +153,6 @@ jobs:
             fs.writeFileSync(JSON_OUT, JSON.stringify(carruselJson, null, 2));
 
             console.log('\n=== carrusel.json: ' + carruselJson.images.length + ' fotos, ' + carruselJson.videos.length + ' videos');
-            if (carruselJson.images.length) console.log('    ' + carruselJson.images.join(', '));
-            if (carruselJson.videos.length) console.log('    ' + carruselJson.videos.join(', '));
           }
 
           main().catch(err => { console.error(err); process.exit(1); });
@@ -256,10 +178,9 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios que commitear."
           else
-            NCONV=$(git diff --cached --name-only | grep -c "images/carrusel/.*\.webp"  || true)
+            NCONV=$(git diff --cached --name-only | grep -c "images/carrusel/.*\.webp" || true)
             NBOR=$(git diff  --cached --name-only --diff-filter=D | grep -c "images/carrusel/" || true)
-            NVIDS=$(git diff --cached --name-only | grep -c "videos/carrusel/"            || true)
+            NVIDS=$(git diff --cached --name-only | grep -c "videos/carrusel/" || true)
             git commit -m "[auto] +${NCONV} conv, -${NBOR} borr, ${NVIDS} vid — carrusel.json ok"
             git push
-            echo "Push completado."
           fi
