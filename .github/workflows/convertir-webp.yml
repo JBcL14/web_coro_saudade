@@ -2,15 +2,16 @@
 #  .github/workflows/convertir-webp.yml — Coro Saudade de Pamplona
 #
 #  Se activa cuando Apps Script sube archivos a staging/ o videos/carrusel/.
-#  Apps Script ya vació esas carpetas antes de subir, así que este workflow
-#  recibe siempre el estado completo y actualizado de Drive.
 #
-#  Pasos:
-#    1. Convierte TODAS las imágenes de staging/ a WebP
-#    2. Vacía assets/images/carrusel/ y pone los WebP nuevos
-#    3. Borra el contenido de staging/ (ya procesado)
-#    4. Reconstruye assets/carrusel.json desde disco
-#    5. Commit y push con reintento si hay conflicto de rama
+#  Apps Script hace el trabajo de limpieza ANTES de subir:
+#    · Vacía staging/, carrusel/ y videos/ en GitHub
+#    · Luego sube todo desde Drive
+#
+#  Este workflow SOLO convierte — nunca borra carpetas:
+#    1. Convierte cada imagen de staging/ a WebP → carrusel/
+#    2. Borra los originales de staging/ (ya procesados)
+#    3. Reconstruye assets/carrusel.json desde disco
+#    4. Commit y push con reintento si hay conflicto de rama
 # ═══════════════════════════════════════════════════════════════════════════
 
 name: Actualizar carrusel (WebP + JSON)
@@ -73,19 +74,17 @@ jobs:
           }
 
           async function main() {
-            // Asegurar que las carpetas existen
+            // Apps Script ya vació staging/ carrusel/ y videos/ antes de subir.
+            // Este workflow solo convierte — nunca borra nada.
             [STAGING, CARRUSEL, VIDEOS].forEach(d => fs.mkdirSync(d, { recursive: true }));
 
-            // ── PASO 1: Vaciar carrusel/ (lo vamos a rellenar desde staging) ──
-            const webpsAnteriores = listar(CARRUSEL, /\.webp$/i);
-            webpsAnteriores.forEach(f => {
-              fs.unlinkSync(path.join(CARRUSEL, f));
-            });
-            console.log('Carrusel vaciado: ' + webpsAnteriores.length + ' WebP(s) borrados.');
-
-            // ── PASO 2: Convertir todas las imágenes de staging a WebP ────────
+            // ── PASO 1: Convertir todas las imágenes de staging a WebP ────────
             const enStaging = listar(STAGING, EXT_IMG);
             console.log('Imágenes en staging: ' + enStaging.length);
+
+            if (enStaging.length === 0) {
+              console.log('Sin imágenes en staging. Solo actualizando carrusel.json.');
+            }
 
             for (const archivo of enStaging) {
               const entrada    = path.join(STAGING, archivo);
@@ -106,7 +105,8 @@ jobs:
               fs.unlinkSync(entrada);
             }
 
-            // ── PASO 3: Reconstruir carrusel.json desde disco ─────────────────
+            // ── PASO 2: Reconstruir carrusel.json desde disco ─────────────────
+            // Fuente de verdad = lo que existe físicamente en carrusel/ y videos/
             const fotos  = listar(CARRUSEL, /\.webp$/i);
             const videos = listar(VIDEOS, EXT_VID);
 
