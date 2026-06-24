@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coro Saudade — Voces que emocionan</title>
+  <meta name="description" content="Coro Saudade: un coro polifónico que fusiona la tradición coral con la emoción contemporánea. Conciertos, historia, repertorio y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ══════════════ CURSOR PERSONALIZADO ══════════════ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ══════════════ LOADER ══════════════ -->
+  <div class="loader" id="loader">
+    <div class="loader-inner">
+      <div class="loader-note">♩</div>
+      <div class="loader-title">Coro Saudade</div>
+      <div class="loader-bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ NAVEGACIÓN ══════════════ -->
+  <nav class="nav" id="nav">
+    <a href="#inicio" class="nav-logo" data-page="inicio">
+      <span class="nav-logo-symbol">♬</span>
+      <span>Coro Saudade</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#inicio"   class="nav-link active" data-page="inicio">Inicio</a></li>
+      <li><a href="#historia" class="nav-link" data-page="historia">Historia</a></li>
+      <li><a href="#voces"    class="nav-link" data-page="voces">Voces</a></li>
+      <li><a href="#repertorio" class="nav-link" data-page="repertorio">Repertorio</a></li>
+      <li><a href="#conciertos" class="nav-link" data-page="conciertos">Conciertos</a></li>
+      <li><a href="#contacto" class="nav-link" data-page="contacto">Contacto</a></li>
+    </ul>
+    <button class="nav-burger" id="navBurger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ══════════════ MENÚ MÓVIL ══════════════ -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#inicio"     class="mobile-link" data-page="inicio">Inicio</a></li>
+      <li><a href="#historia"   class="mobile-link" data-page="historia">Historia</a></li>
+      <li><a href="#voces"      class="mobile-link" data-page="voces">Voces</a></li>
+      <li><a href="#repertorio" class="mobile-link" data-page="repertorio">Repertorio</a></li>
+      <li><a href="#conciertos" class="mobile-link" data-page="conciertos">Conciertos</a></li>
+      <li><a href="#contacto"   class="mobile-link" data-page="contacto">Contacto</a></li>
+    </ul>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 1 — INICIO / HERO
+  ══════════════════════════════════════════ -->
+  <section class="page" id="inicio">
+    <div class="hero">
+      <div class="hero-bg">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+        <div class="hero-lines"></div>
+      </div>
+      <div class="hero-content">
+        <p class="hero-overline reveal">Ensemble Vocal · Desde 2008</p>
+        <h1 class="hero-title reveal delay-1">
+          <span class="hero-title-main">Coro</span>
+          <span class="hero-title-accent">Saudade</span>
+        </h1>
+        <p class="hero-subtitle reveal delay-2">
+          Donde la memoria se convierte en música<br />
+          y la emoción encuentra su voz.
+        </p>
+        <div class="hero-cta reveal delay-3">
+          <a href="#conciertos" class="btn-primary">Próximos Conciertos</a>
+          <a href="#historia"   class="btn-ghost">Nuestra Historia</a>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>Descubrir</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <!-- Cita destacada -->
+    <div class="quote-band">
+      <div class="quote-inner">
+        <blockquote>
+          <span class="quote-mark">"</span>
+          La saudade es el amor que permanece cuando todo lo demás se va.
+          <span class="quote-mark">"</span>
+        </blockquote>
+        <cite>— Fernando Pessoa</cite>
+      </div>
+    </div>
+
+    <!-- Highlights rápidos -->
+    <div class="highlights">
+      <div class="highlight-card">
+        <div class="highlight-num">40+</div>
+        <div class="highlight-label">Voces</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">16</div>
+        <div class="highlight-label">Años de historia</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">200+</div>
+        <div class="highlight-label">Conciertos</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">5</div>
+        <div class="highlight-label">Premios</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 2 — HISTORIA
+  ══════════════════════════════════════════ -->
+  <section class="page" id="historia">
+    <div class="section-header">
+      <span class="section-tag">02 / Historia</span>
+      <h2 class="section-title">Un viaje a través <br /><em>del tiempo y la voz</em></h2>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2008</div>
+        <div class="timeline-card">
+          <h3>El Nacimiento</h3>
+          <p>Fundado por la directora Elena Vidal, el Coro Saudade surge como un proyecto íntimo de doce cantantes apasionados por la música coral polifónica y el fado tradicional. El primer ensayo tuvo lugar en una sala parroquial del centro histórico.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2011</div>
+        <div class="timeline-card">
+          <h3>Primer Gran Concierto</h3>
+          <p>Con el programa <em>"Voces del Atlántico"</em>, el coro debuta en el Auditorio Municipal ante más de 500 personas. La crítica destaca la fusión única entre el repertorio renacentista y las melodías portuguesas contemporáneas.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2014</div>
+        <div class="timeline-card">
+          <h3>Premio Nacional</h3>
+          <p>Obtención del Premio Nacional de Coros de Cámara por su interpretación del <em>Requiem</em> de Fauré. El jurado destaca la cohesión vocal y la profundidad expresiva del conjunto, ahora compuesto por 32 voces.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2017</div>
+        <div class="timeline-card">
+          <h3>Gira Europea</h3>
+          <p>Primera gira internacional con actuaciones en Lisboa, Oporto, París y Viena. El coro colabora con el Ensemble Baroque de Viena en una serie de conciertos que conjugan el fado con el Barroco europeo.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">2021</div>
+        <div class="timeline-card">
+          <h3>Renacimiento Digital</h3>
+          <p>Tras la pandemia, el coro lanza su primer álbum grabado, <em>"Saudade Eterna"</em>, disponible en plataformas digitales. Alcanza más de 200.000 escuchas en su primera semana y recibe críticas internacionales.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">Hoy</div>
+        <div class="timeline-card">
+          <h3>El Presente</h3>
+          <p>Más de 40 coristas, una agenda de conciertos consolidada, y la misma pasión de los inicios. Coro Saudade sigue siendo sinónimo de excelencia vocal y emoción auténtica en cada actuación.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 3 — VOCES / EQUIPO
+  ══════════════════════════════════════════ -->
+  <section class="page" id="voces">
+    <div class="section-header">
+      <span class="section-tag">03 / Las Voces</span>
+      <h2 class="section-title">Las personas <br /><em>detrás de la música</em></h2>
+    </div>
+
+    <!-- Director -->
+    <div class="director-spotlight">
+      <div class="director-avatar">
+        <div class="avatar-ring"></div>
+        <div class="avatar-placeholder">EV</div>
+      </div>
+      <div class="director-info">
+        <span class="director-label">Directora Artística</span>
+        <h3>Elena Vidal</h3>
+        <p>Licenciada en Dirección Coral por el Conservatorio Superior de Música, con estudios de posgrado en Viena y Lisboa. Elena ha dedicado su vida a la búsqueda de la emoción pura a través de la voz coral. Bajo su batuta, el Coro Saudade ha encontrado un sonido propio: cálido, íntimo y profundamente humano.</p>
+        <div class="director-tags">
+          <span>Dirección Coral</span>
+          <span>Polifonía</span>
+          <span>Fado</span>
+          <span>Barroco</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones vocales -->
+    <div class="voice-sections">
+      <h3 class="voice-sections-title">Nuestras Cuerdas</h3>
+      <div class="voice-grid">
+        <div class="voice-card soprano">
+          <div class="voice-clef">𝄞</div>
+          <h4>Sopranos</h4>
+          <p class="voice-count">12 voces</p>
+          <p>La voz más aguda y luminosa del coro. Nuestras sopranos brillan en los momentos de mayor intensidad emocional y en las líneas melódicas más elevadas.</p>
+        </div>
+        <div class="voice-card contralto">
+          <div class="voice-clef">𝄢</div>
+          <h4>Contraltos</h4>
+          <p class="voice-count">10 voces</p>
+          <p>El calor y la profundidad de las contraltos aportan la riqueza armónica característica del sonido Saudade. Una cuerda de enorme sensibilidad musical.</p>
+        </div>
+        <div class="voice-card tenor">
+          <div class="voice-clef">𝄞</div>
+          <h4>Tenores</h4>
+          <p class="voice-count">9 voces</p>
+          <p>Con presencia y brillo, los tenores sustentan el edificio sonoro del coro y aportan ese timbre brillante que hace vibrar los grandes momentos corales.</p>
+        </div>
+        <div class="voice-card bajo">
+          <div class="voice-clef">𝄢</div>
+          <h4>Bajos</h4>
+          <p class="voice-count">10 voces</p>
+          <p>El fundamento de todo. Los bajos son los cimientos sobre los que se construye la arquitectura sonora de cada obra, aportando gravedad y presencia.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA unirse -->
+    <div class="join-cta">
+      <div class="join-content">
+        <h3>¿Quieres cantar con nosotros?</h3>
+        <p>Realizamos audiciones cada septiembre para cubrir plazas en todas las cuerdas. No se requiere formación musical formal, sí pasión y compromiso.</p>
+        <a href="#contacto" class="btn-primary">Solicitar Audición</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 4 — REPERTORIO
+  ══════════════════════════════════════════ -->
+  <section class="page" id="repertorio">
+    <div class="section-header">
+      <span class="section-tag">04 / Repertorio</span>
+      <h2 class="section-title">Seis siglos de <br /><em>música en nuestra voz</em></h2>
+    </div>
+
+    <div class="repertorio-filters">
+      <button class="filter-btn active" data-filter="all">Todo</button>
+      <button class="filter-btn" data-filter="renacimiento">Renacimiento</button>
+      <button class="filter-btn" data-filter="barroco">Barroco</button>
+      <button class="filter-btn" data-filter="romantico">Romántico</button>
+      <button class="filter-btn" data-filter="contemporaneo">Contemporáneo</button>
+      <button class="filter-btn" data-filter="fado">Fado & Folk</button>
+    </div>
+
+    <div class="repertorio-grid" id="repertorioGrid">
+      <!-- JS inserta las tarjetas -->
+    </div>
+
+    <div class="discografia">
+      <h3>Discografía</h3>
+      <div class="album-showcase">
+        <div class="album-card">
+          <div class="album-cover">
+            <div class="album-cover-art">
+              <div class="album-vinyl"></div>
+              <div class="album-lines">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="album-info">
+            <h4>Saudade Eterna</h4>
+            <p class="album-year">2021</p>
+            <p>Nuestro primer álbum grabado en estudio. 14 piezas que recorren cinco siglos de música coral, con el filo emocional que caracteriza al Coro Saudade.</p>
+            <div class="album-platforms">
+              <a href="#" class="platform-badge">Spotify</a>
+              <a href="#" class="platform-badge">Apple Music</a>
+              <a href="#" class="platform-badge">YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 5 — CONCIERTOS
+  ══════════════════════════════════════════ -->
+  <section class="page" id="conciertos">
+    <div class="section-header">
+      <span class="section-tag">05 / Conciertos</span>
+      <h2 class="section-title">Vive la música <br /><em>en directo</em></h2>
+    </div>
+
+    <div class="concerts-layout">
+      <div class="concerts-upcoming">
+        <h3>Próximas Actuaciones</h3>
+        <div class="concert-list" id="concertList">
+          <!-- JS inserta los conciertos -->
+        </div>
+      </div>
+      <div class="concerts-past">
+        <h3>Galería de Momentos</h3>
+        <div class="gallery-grid">
+          <div class="gallery-item gi-1">
+            <div class="gallery-placeholder">
+              <span>♬</span>
+              <p>Concierto de Navidad 2023</p>
+            </div>
+          </div>
+          <div class="gallery-item gi-2">
+            <div class="gallery-placeholder">
+              <span>♩</span>
+              <p>Gira Europea</p>
+            </div>
+          </div>
+          <div class="gallery-item gi-3">
+            <div class="gallery-placeholder">
+              <span>♪</span>
+              <p>Festival de Coros</p>
+            </div>
+          </div>
+          <div class="gallery-item gi-4">
+            <div class="gallery-placeholder">
+              <span>♫</span>
+              <p>Concierto Benéfico</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SECCIÓN 6 — CONTACTO
+  ══════════════════════════════════════════ -->
+  <section class="page" id="contacto">
+    <div class="section-header">
+      <span class="section-tag">06 / Contacto</span>
+      <h2 class="section-title">Hablemos de <br /><em>música</em></h2>
+    </div>
+
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="contact-block">
+          <div class="contact-icon">✉</div>
+          <h4>Email</h4>
+          <a href="mailto:info@corosaudade.com">info@corosaudade.com</a>
+        </div>
+        <div class="contact-block">
+          <div class="contact-icon">📍</div>
+          <h4>Ensayos</h4>
+          <p>Centro Cultural La Nave<br />Calle de la Música, 14<br />28004 Madrid</p>
+        </div>
+        <div class="contact-block">
+          <div class="contact-icon">🕐</div>
+          <h4>Horario de Ensayos</h4>
+          <p>Martes y Jueves<br />20:00 – 22:00 h</p>
+        </div>
+        <div class="contact-social">
+          <a href="#" class="social-link">Instagram</a>
+          <a href="#" class="social-link">Facebook</a>
+          <a href="#" class="social-link">YouTube</a>
+          <a href="#" class="social-link">Spotify</a>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-group">
+          <label for="name">Nombre completo</label>
+          <input type="text" id="name" name="name" placeholder="Tu nombre" required />
+          <span class="form-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tu@email.com" required />
+          <span class="form-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="subject">Asunto</label>
+          <select id="subject" name="subject">
+            <option value="">— Selecciona —</option>
+            <option value="concierto">Contratar para un concierto</option>
+            <option value="audicion">Solicitar audición</option>
+            <option value="prensa">Prensa y medios</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Mensaje</label>
+          <textarea id="message" name="message" rows="5" placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+          <span class="form-error"></span>
+        </div>
+        <button type="submit" class="btn-primary btn-full">Enviar Mensaje</button>
+        <div class="form-success" id="formSuccess">
+          ♬ Mensaje enviado. Te responderemos pronto.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">♬ Coro Saudade</span>
+        <p>Voces que emocionan desde 2008.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#historia">Historia</a>
+        <a href="#voces">Voces</a>
+        <a href="#repertorio">Repertorio</a>
+        <a href="#conciertos">Conciertos</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <p class="footer-copy">© 2024 Coro Saudade. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
