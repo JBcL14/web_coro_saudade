@@ -434,6 +434,33 @@
     color: var(--gray-mid);
   }
 
+  /* ─── EVENTOS: subsecciones ─── */
+  .events-subsection {
+    margin-bottom: 2.8rem;
+  }
+  .events-subsection--past {
+    margin-top: 3.5rem;
+  }
+  .events-subsection-title {
+    font-family: var(--serif-sc);
+    font-size: 0.9rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--gold-pale);
+  }
+  .events-subsection-title .ornament-diamond {
+    width: 0.55em;
+    height: 0.55em;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
   /* ─── EVENTOS ─── */
   #eventos {
     background: var(--off-white);
@@ -460,13 +487,13 @@
   .event-item::before {
     content: '';
     position: absolute;
-    left: -3rem; top: 0; bottom: 0;
+    left: 0rem; top: 0; bottom: 0;
     width: 0;
-    background: var(--off-white);
+    background: #ddd5c4;
     transition: width 0.4s ease;
     z-index: 0;
   }
-  .event-item:hover::before { width: calc(100% + 6rem); }
+  .event-item:hover::before { width: calc(100%); }
   .event-item > * { position: relative; z-index: 1; }
   .event-date { text-align: center; }
   .event-day {
@@ -498,12 +525,13 @@
   }
   .event-badge {
     font-family: var(--serif-sc);
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     letter-spacing: 0.2em;
     border: 1px solid var(--gold-pale);
     padding: 0.35rem 0.9rem;
     color: var(--gray-mid);
     white-space: nowrap;
+    margin-right: 1.5rem;
   }
   .event-badge.featured {
     border-color: var(--black);
@@ -1115,6 +1143,13 @@ footer {
     .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
     .event-item { grid-template-columns: 70px 1fr; }
     .event-badge { display: none; }
+    .events-subsection-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+    }
+    .events-subsection--past { margin-top: 2.5rem; }
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
