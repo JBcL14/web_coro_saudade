@@ -1,5 +1,5 @@
 {
-  "generado": "2026-06-24T06:52:43.152Z",
+  "generado": "2026-06-24T22:30:01.692Z",
   "anio": 2026,
   "proximos": [
     {
@@ -11,6 +11,19 @@
       "titulo": "REYNO de Artajona",
       "lugar": "Artajona",
       "hora": "",
+      "descripcion": "",
+      "tipo": "Concierto",
+      "destacado": false
+    },
+    {
+      "fecha": "2026-12-12",
+      "dia": 12,
+      "mes": "Dic",
+      "mesLargo": "diciembre",
+      "anio": 2026,
+      "titulo": "Concierto de Navidad",
+      "lugar": "",
+      "hora": "Sat Dec 30 1899 20:00:00 GMT-0014 (Central European Standard Time)",
       "descripcion": "",
       "tipo": "Concierto",
       "destacado": false
