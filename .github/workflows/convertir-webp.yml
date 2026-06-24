@@ -76,32 +76,54 @@ jobs:
             return fs.readdirSync(carpeta).filter(f => regex.test(f) && !SKIP.test(f)).sort();
           }
 
+          // Borra un archivo de Git correctamente: primero del disco, luego
+          // git rm lo detecta en el staging de Git cuando hacemos git add -A.
+          function borrarWebP(nombreBase) {
+            // Buscar el WebP por nombre exacto o por prefijo (por si el nombre
+            // sanitizado difiere ligeramente entre versiones del script)
+            const candidatos = fs.existsSync(CARRUSEL)
+              ? fs.readdirSync(CARRUSEL).filter(f => {
+                  const base = path.basename(f, '.webp');
+                  return base === nombreBase || base.startsWith(nombreBase);
+                })
+              : [];
+
+            if (candidatos.length === 0) {
+              console.log('  DEL (no encontrado en carrusel): ' + nombreBase + '.webp');
+              return;
+            }
+            candidatos.forEach(webp => {
+              fs.unlinkSync(path.join(CARRUSEL, webp));
+              console.log('  DEL ' + webp + ' [borrado del disco]');
+            });
+          }
+
           async function main() {
             [STAGING, CARRUSEL, VIDEOS].forEach(d => fs.mkdirSync(d, { recursive: true }));
             fs.mkdirSync(path.dirname(HASHES_OUT), { recursive: true });
 
             const hashes = leerHashes();
 
-            // ── PASO 1: Procesar marcadores .deleted ────────────────────────
+            // ── PASO 1: Procesar marcadores .deleted ──────────────────────
+            // Los marcadores son archivos vacíos con extensión .deleted que
+            // Apps Script sube al staging cuando borra una foto de Drive.
             const marcadores = fs.existsSync(STAGING)
               ? fs.readdirSync(STAGING).filter(f => f.endsWith('.deleted'))
               : [];
 
             if (marcadores.length > 0) {
-              console.log('\n=== BORRADOS MARCADOS: ' + marcadores.length);
+              console.log('\n=== BORRADOS: ' + marcadores.length + ' marcador(es)');
               for (const marcador of marcadores) {
                 const nombreBase = path.basename(marcador, '.deleted');
-                const webpBorrar = path.join(CARRUSEL, nombreBase + '.webp');
-                if (fs.existsSync(webpBorrar)) {
-                  fs.unlinkSync(webpBorrar);
-                  console.log('  DEL ' + nombreBase + '.webp');
-                }
+                borrarWebP(nombreBase);
                 delete hashes[nombreBase];
+                // Borrar también el marcador del staging
                 fs.unlinkSync(path.join(STAGING, marcador));
+                console.log('  DEL marcador: ' + marcador);
               }
             }
 
-            // ── PASO 2: Convertir imágenes del staging ──────────────────────
+            // ── PASO 2: Convertir imágenes nuevas o modificadas ───────────
             const enStaging = listar(STAGING, EXT_IMG);
             console.log('\n=== STAGING: ' + enStaging.length + ' imagen(es)');
 
@@ -127,14 +149,14 @@ jobs:
                 hashes[nombreBase] = hashActual;
                 fs.unlinkSync(entrada);
               } catch (err) {
-                console.error('  ERR ' + archivo + ': ' + err.message);
+                console.error('  ERR convirtiendo ' + archivo + ': ' + err.message);
               }
             }
 
-            // ── PASO 3: Guardar hashes ──────────────────────────────────────
+            // ── PASO 3: Guardar manifiesto de hashes ──────────────────────
             fs.writeFileSync(HASHES_OUT, JSON.stringify(hashes, null, 2));
 
-            // ── PASO 4: Reconstruir carrusel.json desde disco ───────────────
+            // ── PASO 4: Reconstruir carrusel.json desde disco (fuente de verdad)
             const fotosFinales  = listar(CARRUSEL, /\.webp$/i);
             const videosFinales = listar(VIDEOS, EXT_VID);
 
@@ -147,12 +169,15 @@ jobs:
 
             fotosFinales.forEach(f  => { if (!carruselJson.images.includes(f)) carruselJson.images.push(f); });
             videosFinales.forEach(v => { if (!carruselJson.videos.includes(v)) carruselJson.videos.push(v); });
+            // Eliminar del JSON los que ya no existen en disco
             carruselJson.images = carruselJson.images.filter(f => fotosFinales.includes(f));
             carruselJson.videos = carruselJson.videos.filter(v => videosFinales.includes(v));
 
             fs.writeFileSync(JSON_OUT, JSON.stringify(carruselJson, null, 2));
 
-            console.log('\n=== carrusel.json: ' + carruselJson.images.length + ' fotos, ' + carruselJson.videos.length + ' videos');
+            console.log('\n=== RESULTADO: ' + carruselJson.images.length + ' fotos WebP, ' + carruselJson.videos.length + ' videos');
+            console.log('    Fotos: ' + (carruselJson.images.join(', ') || '(ninguna)'));
+            console.log('    Videos: ' + (carruselJson.videos.join(', ') || '(ninguno)'));
           }
 
           main().catch(err => { console.error(err); process.exit(1); });
@@ -163,12 +188,16 @@ jobs:
           node ./sincronizar.js
           rm ./sincronizar.js
 
+
+
       - name: Commit y push
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add \
+          # -A rastrea tanto archivos nuevos/modificados como los BORRADOS del disco.
+          # Sin -A, los fs.unlinkSync() del script Node no se reflejan en el commit.
+          git add -A \
             assets/images/carrusel/ \
             assets/images/staging/ \
             assets/images/.hashes.json \
@@ -178,9 +207,11 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios que commitear."
           else
-            NCONV=$(git diff --cached --name-only | grep -c "images/carrusel/.*\.webp" || true)
-            NBOR=$(git diff  --cached --name-only --diff-filter=D | grep -c "images/carrusel/" || true)
+            NCONV=$(git diff --cached --name-only --diff-filter=A | grep -c "images/carrusel/.*\.webp" || true)
+            NBOR=$(git diff  --cached --name-only --diff-filter=D | grep -c "images/carrusel/.*\.webp" || true)
             NVIDS=$(git diff --cached --name-only | grep -c "videos/carrusel/" || true)
-            git commit -m "[auto] +${NCONV} conv, -${NBOR} borr, ${NVIDS} vid — carrusel.json ok"
+            echo "Resumen: +${NCONV} fotos nuevas, -${NBOR} fotos borradas, ${NVIDS} videos"
+            git commit -m "[auto] +${NCONV} foto(s), -${NBOR} borrada(s), ${NVIDS} video(s) — carrusel.json ok"
             git push
+            echo "Push completado."
           fi
