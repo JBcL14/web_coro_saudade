@@ -102,7 +102,23 @@
     }
   }
 
+  // ── Skeleton mientras carga ─────────────────────────────────────────────
+  function skeletonEvento() {
+    return '<div class="event-skeleton">'
+      + '<div><div class="skeleton-block skeleton-day"></div><div class="skeleton-block skeleton-month"></div></div>'
+      + '<div><div class="skeleton-block skeleton-title"></div><div class="skeleton-block skeleton-sub"></div></div>'
+      + '<div class="skeleton-block skeleton-badge"></div>'
+      + '</div>';
+  }
+
+  function mostrarSkeleton() {
+    var listas = document.querySelectorAll('#eventos .events-list');
+    listas.forEach(function(l) { l.innerHTML = skeletonEvento() + skeletonEvento() + skeletonEvento(); });
+  }
+
   // ── Carga el JSON ────────────────────────────────────────────────────────
+  mostrarSkeleton();
+
   fetch(JSON_URL + '?_=' + Date.now())
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -113,7 +129,8 @@
     })
     .catch(function(err) {
       console.warn('[agenda-loader] No se pudo cargar ' + JSON_URL + ':', err.message);
-      // Si falla la carga del JSON el HTML estático del index.html sirve de fallback
+      // Limpiar skeletons y dejar las listas vacías (fallback silencioso)
+      document.querySelectorAll('#eventos .events-list').forEach(function(l) { l.innerHTML = ''; });
     });
 
 })();
