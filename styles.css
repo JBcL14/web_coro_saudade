@@ -239,12 +239,11 @@
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
-    background: var(--white);
   }
   .hero-banner img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center 30%;
     display: block;
     filter: grayscale(18%) brightness(0.88) sepia(8%);
@@ -1193,40 +1192,23 @@ footer {
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    /* ── MÓVIL: imagen hero completa ──────────────────────────────────────
-       OPCIÓN A (activa): franjas laterales con color crema del fondo.
-         La imagen se ve entera, las franjas se integran con la página.
-       OPCIÓN B (comentada): cover que llega a los bordes, sin franjas,
-         con object-position ajustado para no cortar el centro de la foto.
-       Descomenta la opción que prefieras y comenta la otra.
-    ────────────────────────────────────────────────────────────────────── */
-
-    /* ── OPCIÓN A: contain + fondo crema (sin franjas negras) ── */
+    /* Hero móvil: imagen completa de borde a borde, fondo crema */
+    #inicio {
+      padding-top: 92px;    /* espacio para la navbar */
+      align-items: stretch; /* permite que .hero-banner ocupe el 100% del ancho */
+    }
     .hero-banner {
       height: auto;
-      aspect-ratio: 16 / 9;   /* ajusta al ratio real de inicio.webp si es distinto */
-      background: var(--white); /* crema #f0ece3, mismo color que el fondo de la página */
+      aspect-ratio: 16 / 9; /* ajusta al ratio real de inicio.webp */
+      width: 100%;
+      background: var(--white); /* crema #f0ece3, sin negro */
     }
     .hero-banner img {
-      object-fit: contain;
+      object-fit: contain;      /* imagen completa, sin recorte */
       object-position: center center;
       filter: grayscale(18%) brightness(0.88) sepia(8%);
     }
-
-    /* ── OPCIÓN B: cover hasta los bordes, sin franjas ── */
-    /*
-    .hero-banner {
-      height: clamp(220px, 56vw, 360px);
-      background: var(--white);
-    }
-    .hero-banner img {
-      object-fit: cover;
-      object-position: center 35%;
-      filter: grayscale(18%) brightness(0.88) sepia(8%);
-    }
-    */
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
-    #inicio { padding-top: 92px; }
 
     /* ── Botones del carrusel en móvil: más grandes y bien visibles ── */
     .carousel-btn {
