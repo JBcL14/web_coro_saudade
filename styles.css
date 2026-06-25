@@ -1192,7 +1192,21 @@ footer {
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    .hero-banner { height: clamp(180px, 45vw, 320px); }
+    /* En móvil: imagen completa sin recorte lateral.
+       Usamos aspect-ratio para que el contenedor adopte la proporción
+       de la imagen (panorámica típica ~16:9 o ~3:1 según la foto).
+       object-fit: contain asegura que no se recorte nada.
+       El fondo negro evita franjas blancas si la foto no es exactamente 16:9. */
+    .hero-banner {
+      height: auto;
+      aspect-ratio: 16 / 9;   /* ajusta al ratio real de inicio.webp si difiere */
+      background: #000;
+    }
+    .hero-banner img {
+      object-fit: contain;
+      object-position: center center;
+      filter: grayscale(18%) brightness(0.88) sepia(8%);
+    }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
     #inicio { padding-top: 92px; }
 
