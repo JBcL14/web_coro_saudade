@@ -1192,21 +1192,38 @@ footer {
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    /* En móvil: imagen completa sin recorte lateral.
-       Usamos aspect-ratio para que el contenedor adopte la proporción
-       de la imagen (panorámica típica ~16:9 o ~3:1 según la foto).
-       object-fit: contain asegura que no se recorte nada.
-       El fondo negro evita franjas blancas si la foto no es exactamente 16:9. */
+    /* ── MÓVIL: imagen hero completa ──────────────────────────────────────
+       OPCIÓN A (activa): franjas laterales con color crema del fondo.
+         La imagen se ve entera, las franjas se integran con la página.
+       OPCIÓN B (comentada): cover que llega a los bordes, sin franjas,
+         con object-position ajustado para no cortar el centro de la foto.
+       Descomenta la opción que prefieras y comenta la otra.
+    ────────────────────────────────────────────────────────────────────── */
+
+    /* ── OPCIÓN A: contain + fondo crema (sin franjas negras) ── */
     .hero-banner {
       height: auto;
-      aspect-ratio: 16 / 9;   /* ajusta al ratio real de inicio.webp si difiere */
-      background: #000;
+      aspect-ratio: 16 / 9;   /* ajusta al ratio real de inicio.webp si es distinto */
+      background: var(--white); /* crema #f0ece3, mismo color que el fondo de la página */
     }
     .hero-banner img {
       object-fit: contain;
       object-position: center center;
       filter: grayscale(18%) brightness(0.88) sepia(8%);
     }
+
+    /* ── OPCIÓN B: cover hasta los bordes, sin franjas ── */
+    /*
+    .hero-banner {
+      height: clamp(220px, 56vw, 360px);
+      background: var(--white);
+    }
+    .hero-banner img {
+      object-fit: cover;
+      object-position: center 35%;
+      filter: grayscale(18%) brightness(0.88) sepia(8%);
+    }
+    */
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
     #inicio { padding-top: 92px; }
 
