@@ -655,6 +655,23 @@
     transition: opacity 0.4s ease;
   }
   .carousel-slide.active .carousel-note { opacity: 0.45; }
+  .carousel-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(14,12,9,0.65), transparent);
+    padding: 2.5rem 1.5rem 1.4rem;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    transform: translateY(4px);
+  }
+  .carousel-slide.active:hover .carousel-caption,
+  .carousel-slide:hover .carousel-caption { opacity: 1; transform: translateY(0); }
+  .carousel-caption span {
+    font-family: var(--serif-title);
+    font-size: 0.85rem;
+    color: var(--white);
+    font-style: italic;
+  }
   /* Progress bar */
   .carousel-progress {
     position: absolute;
