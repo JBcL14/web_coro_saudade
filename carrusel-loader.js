@@ -1,96 +1,95 @@
 /* ═══════════════════════════════════════════════════════════════════
    carrusel-loader.js — Coro Saudade de Pamplona
-   Lee assets/carrusel.json, rellena los dos carruseles y después
-   inicializa main.js y video-carousel.js cuando el DOM está listo.
+   Lee carrusel.json desde GitHub Pages y rellena los carruseles
+   de forma dinámica, sin tocar index.html cada vez que hay fotos nuevas.
 
-   ORDEN EN index.html (los tres con defer):
-     <script src="carrusel-loader.js" defer></script>
-     <script src="video-carousel.js"  defer></script>
-     <script src="main.js"            defer></script>
+   INCLUIR en index.html ANTES de main.js y video-carousel.js:
+     <script src="carrusel-loader.js"></script>
 
-   Con defer todos se descargan en paralelo pero se ejecutan en orden,
-   así que carrusel-loader siempre va primero y rellena los tracks
-   antes de que main.js y video-carousel.js lean los slides.
+   Funciona con GitHub Pages. Si tu web tiene otro dominio, ajusta
+   CARRUSEL_JSON_URL a la URL pública del archivo.
    ═══════════════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
-  // ── Ajusta estas rutas si tu repo está en un subdirectorio ───────────────
-  // GitHub Pages con dominio propio → '/'   (raíz del dominio)
-  // GitHub Pages sin dominio → '/nombre-del-repo/'
-  const BASE = window.location.pathname.includes('/web_coro_saudade/') 
-  ? '/web_coro_saudade/' 
-  : '/';
-  const JSON_URL  = BASE + 'assets/carrusel.json';
-  const IMG_BASE  = BASE + 'assets/images/carrusel/';
-  const VID_BASE  = BASE + 'assets/videos/carrusel/';
+  // ── URL pública del JSON en tu repositorio GitHub Pages ───────────────────
+  // Formato: https://TU_USUARIO.github.io/TU_REPO/assets/carrusel.json
+  // Si usas dominio propio configurado en GitHub Pages, ponlo aquí:
+  const CARRUSEL_JSON_URL = '/assets/carrusel.json';
 
-  // ── Plantilla para cada slide de foto ────────────────────────────────────
-  // Las primeras 4 imágenes se cargan de forma inmediata (eager + fetchpriority high).
-  // El resto usan eager también pero sin alta prioridad, para que el navegador
-  // las descargue en paralelo en segundo plano sin bloquear el render inicial.
-  // No usamos lazy porque el carrusel no es scroll vertical — el navegador nunca
-  // detectaría que esas imágenes están "cerca" del viewport en un carrusel horizontal.
-  function slideImagen(nombre, idx) {
-    const alt      = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '').trim();
-    const priority = idx < 4 ? ' fetchpriority="high"' : ' fetchpriority="low"';
-    return '<div class="carousel-slide">'
-      + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="eager" decoding="async"' + priority + '>'
-      + '<div class="carousel-caption"><span>' + alt + '</span></div>'
-      + '</div>';
+  // Rutas base donde están los archivos en el repo/servidor
+  const BASE_IMAGES = '/assets/images/carrusel/';
+  const BASE_VIDEOS = '/assets/videos/carrusel/';
+
+  // ── Plantillas HTML ───────────────────────────────────────────────────────
+
+  function htmlSlideImagen(nombre) {
+    const alt = nombre.replace(/[-_]/g, ' ').replace(/\.webp$/i, '');
+    return `<div class="carousel-slide">
+  <img src="${BASE_IMAGES}${nombre}" alt="${alt}" class="carousel-img" loading="lazy">
+  <div class="carousel-caption"><span>${alt}</span></div>
+</div>`;
   }
 
-  // ── Plantilla para cada slide de vídeo ───────────────────────────────────
-  var PLAY  = '<svg viewBox="0 0 24 24" class="icon-play"><path d="M8 5v14l11-7z"/></svg>';
-  var PAUSE = '<svg viewBox="0 0 24 24" class="icon-pause"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+  const PLAY_ICON  = '<svg viewBox="0 0 24 24" class="icon-play"><path d="M8 5v14l11-7z"/></svg>';
+  const PAUSE_ICON = '<svg viewBox="0 0 24 24" class="icon-pause"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
-  function slideVideo(nombre) {
-    var titulo = nombre.replace(/[-_]/g, ' ').replace(/\.\w+$/i, '').trim();
-    return '<div class="carousel-slide vc-slide">'
-      + '<video src="' + VID_BASE + nombre + '" preload="metadata" playsinline loop muted class="vc-video"></video>'
-      + '<div class="vc-overlay" role="button" aria-label="Reproducir/Pausar">'
-      + '<div class="vc-play-btn" aria-hidden="true">' + PLAY + PAUSE + '</div>'
-      + '</div>'
-      + '<div class="carousel-caption"><span>' + titulo + '</span></div>'
-      + '</div>';
+  function htmlSlideVideo(nombre) {
+    const titulo = nombre.replace(/[-_]/g, ' ').replace(/\.\w+$/i, '');
+    return `<div class="carousel-slide vc-slide">
+  <video src="${BASE_VIDEOS}${nombre}" preload="metadata" playsinline loop muted class="vc-video"></video>
+  <div class="vc-overlay" role="button" aria-label="Reproducir/Pausar">
+    <div class="vc-play-btn" aria-hidden="true">
+      ${PLAY_ICON}
+      ${PAUSE_ICON}
+    </div>
+  </div>
+  <div class="carousel-caption"><span>${titulo}</span></div>
+</div>`;
   }
 
-  // ── Inyecta el HTML en los tracks ────────────────────────────────────────
-  function inyectar(datos) {
-    var trackFotos  = document.getElementById('carouselTrack');
-    var trackVideos = document.getElementById('videoCarouselTrack');
+  // ── Inyección en el DOM ───────────────────────────────────────────────────
 
-    if (trackFotos && Array.isArray(datos.images) && datos.images.length > 0) {
-      trackFotos.innerHTML = datos.images.map(function(nombre, idx) { return slideImagen(nombre, idx); }).join('');
+  function inyectarContenido(datos) {
+    // Galería de fotos
+    const trackFotos = document.getElementById('carouselTrack');
+    if (trackFotos && Array.isArray(datos.images) && datos.images.length) {
+      trackFotos.innerHTML = datos.images.map(htmlSlideImagen).join('\n');
     }
-    if (trackVideos && Array.isArray(datos.videos) && datos.videos.length > 0) {
-      trackVideos.innerHTML = datos.videos.map(slideVideo).join('');
+
+    // Carrusel de vídeos
+    const trackVideos = document.getElementById('videoCarouselTrack');
+    if (trackVideos && Array.isArray(datos.videos) && datos.videos.length) {
+      trackVideos.innerHTML = datos.videos.map(htmlSlideVideo).join('\n');
     }
   }
 
-  // ── Carga el JSON y rellena los tracks ───────────────────────────────────
-  // Se ejecuta con defer, así que el DOM ya existe cuando esto corre.
-  // main.js y video-carousel.js (también defer, declarados DESPUÉS en el HTML)
-  // todavía no han corrido → cuando les llegue el turno los tracks ya tienen slides.
-  fetch(JSON_URL + '?_=' + Date.now())
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (datos) {
-      inyectar(datos);
-      // Llamar a los inicializadores DESPUÉS de que los slides estén en el DOM.
-      // Con defer, main.js y video-carousel.js ya están parseados cuando esto corre,
-      // así que sus funciones están disponibles globalmente.
-      if (typeof initCarousel      === 'function') initCarousel();
-      if (typeof initVideoCarousel === 'function') initVideoCarousel();
-    })
-    .catch(function (err) {
-      console.warn('[carrusel-loader] No se pudo cargar ' + JSON_URL + ':', err.message);
-      // Fallback: intentar inicializar con lo que haya en el DOM (slides estáticos)
-      if (typeof initCarousel      === 'function') initCarousel();
-      if (typeof initVideoCarousel === 'function') initVideoCarousel();
-    });
+  // ── Carga del JSON y arranque ─────────────────────────────────────────────
+
+  function cargarYRenderizar() {
+    fetch(CARRUSEL_JSON_URL + '?v=' + Date.now()) // cache-bust
+      .then(function (resp) {
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.json();
+      })
+      .then(function (datos) {
+        inyectarContenido(datos);
+        // Disparar evento para que main.js y video-carousel.js
+        // (si ya están cargados) reinicialicen los carruseles
+        document.dispatchEvent(new CustomEvent('carruselDatosListos'));
+      })
+      .catch(function (err) {
+        console.warn('[carrusel-loader] No se pudo cargar carrusel.json:', err.message);
+        // El HTML estático de index.html actúa como fallback — no bloqueante
+      });
+  }
+
+  // Ejecutar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', cargarYRenderizar);
+  } else {
+    cargarYRenderizar();
+  }
 
 })();
