@@ -37,7 +37,6 @@
     const priority = idx < 4 ? ' fetchpriority="high"' : ' fetchpriority="low"';
     return '<div class="carousel-slide">'
       + '<img src="' + IMG_BASE + nombre + '" alt="' + alt + '" class="carousel-img" loading="eager" decoding="async"' + priority + '>'
-      + '<div class="carousel-caption"><span>' + alt + '</span></div>'
       + '</div>';
   }
 
@@ -46,13 +45,11 @@
   var PAUSE = '<svg viewBox="0 0 24 24" class="icon-pause"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
   function slideVideo(nombre) {
-    var titulo = nombre.replace(/[-_]/g, ' ').replace(/\.\w+$/i, '').trim();
     return '<div class="carousel-slide vc-slide">'
       + '<video src="' + VID_BASE + nombre + '" preload="metadata" playsinline loop muted class="vc-video"></video>'
       + '<div class="vc-overlay" role="button" aria-label="Reproducir/Pausar">'
       + '<div class="vc-play-btn" aria-hidden="true">' + PLAY + PAUSE + '</div>'
       + '</div>'
-      + '<div class="carousel-caption"><span>' + titulo + '</span></div>'
       + '</div>';
   }
 
