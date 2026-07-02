@@ -539,6 +539,38 @@
     background: transparent;
   }
 
+  /* ─── AGENDA: estado vacío ─── */
+  .events-empty {
+    font-family: var(--serif-title);
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--gray-mid);
+    padding: 2rem 0;
+    line-height: 1.8;
+  }
+
+  /* ─── AGENDA: skeleton mientras carga el JSON ─── */
+  .event-skeleton {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--gold-pale);
+  }
+  .event-skeleton:first-child { border-top: 1px solid var(--gold-pale); }
+  .skeleton-block {
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--off-white) 25%, #e8e4dc 50%, var(--off-white) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+  .skeleton-day   { width: 40px; height: 40px; margin: 0 auto 6px; }
+  .skeleton-month { width: 55px; height: 10px; margin: 0 auto; }
+  .skeleton-title { width: 60%; height: 16px; margin-bottom: 10px; }
+  .skeleton-sub   { width: 40%; height: 11px; }
+  .skeleton-badge { width: 70px; height: 26px; margin-right: 1.5rem; }
+
   /* ─── CAROUSEL / GALERÍA ─── */
   #galeria {
     background: var(--white);
@@ -1160,9 +1192,23 @@ footer {
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    .hero-banner { height: clamp(180px, 45vw, 320px); }
+    /* Hero móvil: imagen completa de borde a borde, fondo crema */
+    #inicio {
+      padding-top: 92px;    /* espacio para la navbar */
+      align-items: stretch; /* permite que .hero-banner ocupe el 100% del ancho */
+    }
+    .hero-banner {
+      height: auto;
+      aspect-ratio: 16 / 9; /* ajusta al ratio real de inicio.webp */
+      width: 100%;
+      background: var(--white); /* crema #f0ece3, sin negro */
+    }
+    .hero-banner img {
+      object-fit: contain;      /* imagen completa, sin recorte */
+      object-position: center center;
+      filter: grayscale(18%) brightness(0.88) sepia(8%);
+    }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
-    #inicio { padding-top: 92px; }
 
     /* ── Botones del carrusel en móvil: más grandes y bien visibles ── */
     .carousel-btn {

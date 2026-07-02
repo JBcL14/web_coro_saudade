@@ -282,19 +282,8 @@
         <svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg>
         Próximos Conciertos
       </h3>
-      <div class="events-list">
-        <div class="event-item fade-in">
-          <div class="event-date">
-            <span class="event-day">3</span>
-            <span class="event-month">Oct 2026</span>
-          </div>
-          <div class="event-info">
-            <h3>REYNO de Artajona</h3>
-            <p>Artajona</p>
-          </div>
-          <span class="event-badge">Próximo</span>
-        </div>
-      </div>
+      <!-- agenda-loader.js rellena esta lista desde assets/agenda.json -->
+      <div class="events-list"></div>
     </div>
 
     <!-- Subsección: Conciertos Destacados -->
@@ -303,41 +292,8 @@
         <svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg>
         Conciertos Destacados
       </h3>
-      <div class="events-list">
-        <div class="event-item fade-in">
-          <div class="event-date">
-            <span class="event-day">22</span>
-            <span class="event-month">May 2026</span>
-          </div>
-          <div class="event-info">
-            <h3>Concierto El Desván</h3>
-            <p>Sala Indara · Pamplona · 21:00 h</p>
-          </div>
-          <span class="event-badge featured">Colaboración</span>
-        </div>
-        <div class="event-item fade-in">
-          <div class="event-date">
-            <span class="event-day">17</span>
-            <span class="event-month">May 2026</span>
-          </div>
-          <div class="event-info">
-            <h3>Músicas del mundo</h3>
-            <p>Iglesia de la Natividad · Garísoain · 12:00 h</p>
-          </div>
-          <span class="event-badge featured">Destacado</span>
-        </div>
-        <div class="event-item fade-in">
-          <div class="event-date">
-            <span class="event-day">22</span>
-            <span class="event-month">Feb 2026</span>
-          </div>
-          <div class="event-info">
-            <h3>Ciclo Coral — Nuevo Casino de Pamplona</h3>
-            <p>Nuevo Casino · Pamplona · 12:00 h · Federación de Coros de Navarra</p>
-          </div>
-          <span class="event-badge featured">Destacado</span>
-        </div>
-      </div>
+      <!-- agenda-loader.js rellena esta lista desde assets/agenda.json -->
+      <div class="events-list"></div>
     </div>
 
     <div class="section-cta-center section-cta-center--mt3">
@@ -594,9 +550,9 @@
 
 
 <!-- carrusel-loader.js lee assets/carrusel.json y rellena los carruseles automáticamente -->
+<script src="agenda-loader.js" defer></script>
 <script src="carrusel-loader.js" defer></script>
 <script src="video-carousel.js" defer></script>
 <script src="main.js" defer></script>
-<script src="agenda.js" defer></script>
 </body>
 </html>
