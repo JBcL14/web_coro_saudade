@@ -1,0 +1,18 @@
+# ═══════════════════════════════════════════════════════════════════
+# wrangler.toml — configuración de Cloudflare Pages
+#
+# El sitio es estático (raíz del repo) y las Pages Functions viven en
+# /functions. El binding "MEDIA" conecta con el bucket R2 donde se
+# suben las imágenes y vídeos de los carruseles.
+#
+# IMPORTANTE: crea antes el bucket en Cloudflare → R2 con el nombre
+# "coro-saudade-media" (o cambia bucket_name aquí).
+# ═══════════════════════════════════════════════════════════════════
+
+name = "web-coro-saudade"
+compatibility_date = "2026-07-01"
+pages_build_output_dir = "."
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "coro-saudade-media"

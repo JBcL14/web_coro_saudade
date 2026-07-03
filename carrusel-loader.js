@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════
    carrusel-loader.js — Coro Saudade de Pamplona
-   Lee assets/carrusel.json, rellena los dos carruseles y después
+   Lee /api/carrusel (bucket R2 en Cloudflare Pages) o, como respaldo,
+   assets/carrusel.json; rellena los dos carruseles y después
    inicializa main.js y video-carousel.js cuando el DOM está listo.
 
    ORDEN EN index.html (los tres con defer):
@@ -19,12 +20,20 @@
   // ── Ajusta estas rutas si tu repo está en un subdirectorio ───────────────
   // GitHub Pages con dominio propio → '/'   (raíz del dominio)
   // GitHub Pages sin dominio → '/nombre-del-repo/'
-  const BASE = window.location.pathname.includes('/web_coro_saudade/') 
-  ? '/web_coro_saudade/' 
+  const BASE = window.location.pathname.includes('/web_coro_saudade/')
+  ? '/web_coro_saudade/'
   : '/';
-  const JSON_URL  = BASE + 'assets/carrusel.json';
-  const IMG_BASE  = BASE + 'assets/images/carrusel/';
-  const VID_BASE  = BASE + 'assets/videos/carrusel/';
+
+  // Cloudflare Pages + R2: /api/carrusel lista los medios del bucket
+  // y /media/ los sirve (functions/api/carrusel.js y functions/media/).
+  const JSON_URL  = BASE + 'api/carrusel';
+  var   IMG_BASE  = BASE + 'media/images/';
+  var   VID_BASE  = BASE + 'media/videos/';
+
+  // Respaldo (en local o GitHub Pages, sin Functions): archivos del repo.
+  const JSON_LOCAL = BASE + 'assets/carrusel.json';
+  const IMG_LOCAL  = BASE + 'assets/images/carrusel/';
+  const VID_LOCAL  = BASE + 'assets/videos/carrusel/';
 
   // ── Plantilla para cada slide de foto ────────────────────────────────────
   // Las primeras 4 imágenes se cargan de forma inmediata (eager + fetchpriority high).
@@ -70,24 +79,37 @@
   // Se ejecuta con defer, así que el DOM ya existe cuando esto corre.
   // main.js y video-carousel.js (también defer, declarados DESPUÉS en el HTML)
   // todavía no han corrido → cuando les llegue el turno los tracks ya tienen slides.
-  fetch(JSON_URL + '?_=' + Date.now())
-    .then(function (r) {
+  function inicializar() {
+    // Llamar a los inicializadores DESPUÉS de que los slides estén en el DOM.
+    // Con defer, main.js y video-carousel.js ya están parseados cuando esto corre,
+    // así que sus funciones están disponibles globalmente.
+    if (typeof initCarousel      === 'function') initCarousel();
+    if (typeof initVideoCarousel === 'function') initVideoCarousel();
+  }
+
+  function pedirJson(url) {
+    return fetch(url + '?_=' + Date.now()).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
+    });
+  }
+
+  pedirJson(JSON_URL)
+    .catch(function (err) {
+      // Sin Functions (local / GitHub Pages): usar el JSON y los archivos del repo
+      console.warn('[carrusel-loader] ' + JSON_URL + ' no disponible (' + err.message + '); usando ' + JSON_LOCAL);
+      IMG_BASE = IMG_LOCAL;
+      VID_BASE = VID_LOCAL;
+      return pedirJson(JSON_LOCAL);
     })
     .then(function (datos) {
       inyectar(datos);
-      // Llamar a los inicializadores DESPUÉS de que los slides estén en el DOM.
-      // Con defer, main.js y video-carousel.js ya están parseados cuando esto corre,
-      // así que sus funciones están disponibles globalmente.
-      if (typeof initCarousel      === 'function') initCarousel();
-      if (typeof initVideoCarousel === 'function') initVideoCarousel();
+      inicializar();
     })
     .catch(function (err) {
-      console.warn('[carrusel-loader] No se pudo cargar ' + JSON_URL + ':', err.message);
-      // Fallback: intentar inicializar con lo que haya en el DOM (slides estáticos)
-      if (typeof initCarousel      === 'function') initCarousel();
-      if (typeof initVideoCarousel === 'function') initVideoCarousel();
+      console.warn('[carrusel-loader] No se pudo cargar el carrusel:', err.message);
+      // Fallback final: inicializar con lo que haya en el DOM (slides estáticos)
+      inicializar();
     });
 
 })();

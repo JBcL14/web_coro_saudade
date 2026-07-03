@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Subir medios · Coro Saudade</title>
+<style>
+  :root {
+    --crema: #f0ece3;
+    --tinta: #2b2620;
+    --acento: #8a6d3b;
+    --error: #a33c2f;
+    --ok: #3d6b3d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--crema);
+    color: var(--tinta);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; font-weight: normal; font-style: italic; margin-bottom: 0.4rem; }
+  p.nota { font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.5rem; }
+  section {
+    background: #fff;
+    border: 1px solid rgba(43,38,32,0.15);
+    border-radius: 8px;
+    padding: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+  label { display: block; font-size: 0.85rem; margin-bottom: 0.35rem; opacity: 0.8; }
+  input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid rgba(43,38,32,0.3);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background: var(--crema);
+  }
+  button {
+    margin-top: 0.9rem;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 5px;
+    background: var(--tinta);
+    color: var(--crema);
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  button:hover { background: var(--acento); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  #mensaje { margin-top: 0.9rem; font-size: 0.9rem; white-space: pre-line; }
+  #mensaje.error { color: var(--error); }
+  #mensaje.ok { color: var(--ok); }
+  h2 { font-size: 1.1rem; font-weight: normal; margin-bottom: 0.8rem; }
+  ul.lista { list-style: none; }
+  ul.lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px dashed rgba(43,38,32,0.15);
+    font-size: 0.9rem;
+  }
+  ul.lista li:last-child { border-bottom: none; }
+  ul.lista button {
+    margin: 0;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8rem;
+    background: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+  }
+  ul.lista button:hover { background: var(--error); color: #fff; }
+  .vacio { font-size: 0.9rem; opacity: 0.6; font-style: italic; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Subir imágenes y vídeos</h1>
+  <p class="nota">
+    Los archivos se guardan en el bucket R2 y aparecen automáticamente en los
+    carruseles de la web. Imágenes: webp, jpg, png, gif, avif · Vídeos: mp4,
+    webm, mov (máx. ~95 MB por archivo).
+  </p>
+
+  <section>
+    <label for="token">Clave de acceso (UPLOAD_TOKEN)</label>
+    <input type="password" id="token" autocomplete="current-password" placeholder="Introduce la clave">
+
+    <label for="archivos" style="margin-top:1rem;">Archivos</label>
+    <input type="file" id="archivos" multiple
+           accept=".webp,.jpg,.jpeg,.png,.gif,.avif,.mp4,.webm,.mov,.m4v">
+
+    <button id="btnSubir">Subir</button>
+    <div id="mensaje"></div>
+  </section>
+
+  <section>
+    <h2>Imágenes en el carrusel</h2>
+    <ul class="lista" id="listaImagenes"><li class="vacio">Cargando…</li></ul>
+  </section>
+
+  <section>
+    <h2>Vídeos en el carrusel</h2>
+    <ul class="lista" id="listaVideos"><li class="vacio">Cargando…</li></ul>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var inputToken = document.getElementById('token');
+  var inputArchivos = document.getElementById('archivos');
+  var btnSubir = document.getElementById('btnSubir');
+  var mensaje = document.getElementById('mensaje');
+
+  // Recordar la clave entre visitas (solo en este navegador)
+  inputToken.value = localStorage.getItem('saudade_upload_token') || '';
+  inputToken.addEventListener('change', function () {
+    localStorage.setItem('saudade_upload_token', inputToken.value);
+  });
+
+  function avisar(texto, clase) {
+    mensaje.textContent = texto;
+    mensaje.className = clase || '';
+  }
+
+  function pintarLista(elemento, nombres, prefijo) {
+    if (!nombres.length) {
+      elemento.innerHTML = '<li class="vacio">No hay archivos todavía.</li>';
+      return;
+    }
+    elemento.innerHTML = '';
+    nombres.forEach(function (nombre) {
+      var li = document.createElement('li');
+      var span = document.createElement('span');
+      span.textContent = nombre;
+      var btn = document.createElement('button');
+      btn.textContent = 'Borrar';
+      btn.addEventListener('click', function () { borrar(prefijo + nombre); });
+      li.appendChild(span);
+      li.appendChild(btn);
+      elemento.appendChild(li);
+    });
+  }
+
+  function cargarLista() {
+    fetch('/api/carrusel?_=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (datos) {
+        pintarLista(document.getElementById('listaImagenes'), datos.images || [], 'images/');
+        pintarLista(document.getElementById('listaVideos'), datos.videos || [], 'videos/');
+      })
+      .catch(function () {
+        avisar('No se pudo cargar la lista de medios.', 'error');
+      });
+  }
+
+  function borrar(clave) {
+    if (!confirm('¿Borrar ' + clave + ' del bucket R2?')) return;
+    fetch('/api/subir?clave=' + encodeURIComponent(clave), {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + inputToken.value }
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Error al borrar');
+        avisar('Borrado: ' + clave, 'ok');
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); });
+  }
+
+  btnSubir.addEventListener('click', function () {
+    if (!inputToken.value) { avisar('Introduce la clave de acceso.', 'error'); return; }
+    if (!inputArchivos.files.length) { avisar('Selecciona al menos un archivo.', 'error'); return; }
+
+    var form = new FormData();
+    for (var i = 0; i < inputArchivos.files.length; i++) {
+      form.append('archivos', inputArchivos.files[i]);
+    }
+
+    btnSubir.disabled = true;
+    avisar('Subiendo…');
+
+    fetch('/api/subir', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + inputToken.value },
+      body: form
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Error al subir');
+        var texto = 'Subidos: ' + (res.d.subidos.length ? res.d.subidos.join(', ') : 'ninguno');
+        if (res.d.rechazados && res.d.rechazados.length) {
+          texto += '\nRechazados: ' + res.d.rechazados.map(function (x) { return x.nombre + ' (' + x.motivo + ')'; }).join(', ');
+        }
+        avisar(texto, res.d.subidos.length ? 'ok' : 'error');
+        inputArchivos.value = '';
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); })
+      .finally(function () { btnSubir.disabled = false; });
+  });
+
+  cargarLista();
+})();
+</script>
+</body>
+</html>
