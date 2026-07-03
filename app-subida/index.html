@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'">
+<title>Saudade Medios</title>
+<style>
+  :root {
+    --crema: #f0ece3;
+    --tinta: #2b2620;
+    --acento: #8a6d3b;
+    --error: #a33c2f;
+    --ok: #3d6b3d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--crema);
+    color: var(--tinta);
+    min-height: 100vh;
+    padding: 1.6rem 1.2rem;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; font-weight: normal; font-style: italic; margin-bottom: 0.3rem; }
+  p.nota { font-size: 0.85rem; opacity: 0.75; margin-bottom: 1.2rem; }
+  section {
+    background: #fff;
+    border: 1px solid rgba(43,38,32,0.15);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  label { display: block; font-size: 0.82rem; margin-bottom: 0.3rem; opacity: 0.8; }
+  input[type="password"], input[type="url"] {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid rgba(43,38,32,0.3);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    background: var(--crema);
+    margin-bottom: 0.8rem;
+  }
+  button {
+    padding: 0.55rem 1.3rem;
+    border: none;
+    border-radius: 5px;
+    background: var(--tinta);
+    color: var(--crema);
+    font-family: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  button:hover { background: var(--acento); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  button.secundario {
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.4);
+  }
+  button.secundario:hover { background: rgba(43,38,32,0.08); }
+  .fila { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+  #seleccion { font-size: 0.85rem; opacity: 0.75; margin-top: 0.7rem; white-space: pre-line; }
+  #mensaje { margin-top: 0.8rem; font-size: 0.88rem; white-space: pre-line; }
+  #mensaje.error { color: var(--error); }
+  #mensaje.ok { color: var(--ok); }
+  h2 { font-size: 1.05rem; font-weight: normal; margin-bottom: 0.7rem; }
+  ul.lista { list-style: none; }
+  ul.lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed rgba(43,38,32,0.15);
+    font-size: 0.88rem;
+  }
+  ul.lista li:last-child { border-bottom: none; }
+  ul.lista button {
+    padding: 0.22rem 0.65rem;
+    font-size: 0.78rem;
+    background: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+  }
+  ul.lista button:hover { background: var(--error); color: #fff; }
+  .vacio { font-size: 0.88rem; opacity: 0.6; font-style: italic; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Saudade Medios</h1>
+  <p class="nota">
+    Sube imágenes y vídeos a los carruseles de la web (bucket R2 de Cloudflare).
+    Imágenes: webp, jpg, png, gif, avif · Vídeos: mp4, webm, mov (máx. ~95 MB por archivo).
+  </p>
+
+  <section>
+    <label for="url">Dirección de la web</label>
+    <input type="url" id="url" placeholder="https://tu-proyecto.pages.dev">
+
+    <label for="token">Clave de acceso (UPLOAD_TOKEN)</label>
+    <input type="password" id="token" placeholder="Introduce la clave">
+
+    <div class="fila">
+      <button id="btnGuardar" class="secundario">Guardar configuración</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="fila">
+      <button id="btnElegir" class="secundario">Elegir archivos…</button>
+      <button id="btnSubir">Subir</button>
+    </div>
+    <div id="seleccion">Ningún archivo seleccionado.</div>
+    <div id="mensaje"></div>
+  </section>
+
+  <section>
+    <h2>Imágenes en el carrusel</h2>
+    <ul class="lista" id="listaImagenes"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+  </section>
+
+  <section>
+    <h2>Vídeos en el carrusel</h2>
+    <ul class="lista" id="listaVideos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var inputUrl = document.getElementById('url');
+  var inputToken = document.getElementById('token');
+  var btnGuardar = document.getElementById('btnGuardar');
+  var btnElegir = document.getElementById('btnElegir');
+  var btnSubir = document.getElementById('btnSubir');
+  var seleccion = document.getElementById('seleccion');
+  var mensaje = document.getElementById('mensaje');
+
+  var rutasElegidas = [];
+
+  function avisar(texto, clase) {
+    mensaje.textContent = texto;
+    mensaje.className = clase || '';
+  }
+
+  function nombreDeRuta(ruta) {
+    return ruta.split(/[\\/]/).pop();
+  }
+
+  function pintarSeleccion() {
+    seleccion.textContent = rutasElegidas.length
+      ? rutasElegidas.map(nombreDeRuta).join('\n')
+      : 'Ningún archivo seleccionado.';
+  }
+
+  function pintarLista(elemento, nombres, prefijo) {
+    if (!nombres.length) {
+      elemento.innerHTML = '<li class="vacio">No hay archivos todavía.</li>';
+      return;
+    }
+    elemento.innerHTML = '';
+    nombres.forEach(function (nombre) {
+      var li = document.createElement('li');
+      var span = document.createElement('span');
+      span.textContent = nombre;
+      var btn = document.createElement('button');
+      btn.textContent = 'Borrar';
+      btn.addEventListener('click', function () { borrar(prefijo + nombre); });
+      li.appendChild(span);
+      li.appendChild(btn);
+      elemento.appendChild(li);
+    });
+  }
+
+  function cargarLista() {
+    window.api.listar()
+      .then(function (datos) {
+        pintarLista(document.getElementById('listaImagenes'), datos.images || [], 'images/');
+        pintarLista(document.getElementById('listaVideos'), datos.videos || [], 'videos/');
+      })
+      .catch(function (err) {
+        avisar('No se pudo cargar la lista: ' + err.message, 'error');
+      });
+  }
+
+  function borrar(clave) {
+    if (!confirm('¿Borrar ' + clave + ' del bucket R2?')) return;
+    window.api.borrar(clave)
+      .then(function () {
+        avisar('Borrado: ' + clave, 'ok');
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); });
+  }
+
+  btnGuardar.addEventListener('click', function () {
+    window.api.guardarConfig({ url: inputUrl.value.trim(), token: inputToken.value })
+      .then(function () {
+        avisar('Configuración guardada.', 'ok');
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); });
+  });
+
+  btnElegir.addEventListener('click', function () {
+    window.api.elegir().then(function (rutas) {
+      if (rutas.length) rutasElegidas = rutas;
+      pintarSeleccion();
+    });
+  });
+
+  btnSubir.addEventListener('click', function () {
+    if (!inputToken.value) { avisar('Introduce la clave de acceso.', 'error'); return; }
+    if (!rutasElegidas.length) { avisar('Elige al menos un archivo.', 'error'); return; }
+
+    btnSubir.disabled = true;
+    avisar('Subiendo… (los vídeos grandes pueden tardar)');
+
+    window.api.guardarConfig({ url: inputUrl.value.trim(), token: inputToken.value })
+      .then(function () { return window.api.subir(rutasElegidas); })
+      .then(function (res) {
+        var texto = 'Subidos: ' + (res.subidos.length ? res.subidos.join(', ') : 'ninguno');
+        if (res.rechazados && res.rechazados.length) {
+          texto += '\nRechazados: ' + res.rechazados.map(function (x) { return x.nombre + ' (' + x.motivo + ')'; }).join(', ');
+        }
+        avisar(texto, res.subidos.length ? 'ok' : 'error');
+        rutasElegidas = [];
+        pintarSeleccion();
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); })
+      .finally(function () { btnSubir.disabled = false; });
+  });
+
+  // Al arrancar: cargar configuración guardada y, si hay URL, la lista
+  window.api.leerConfig().then(function (cfg) {
+    inputUrl.value = cfg.url;
+    inputToken.value = cfg.token;
+    if (cfg.url) cargarLista();
+  });
+})();
+</script>
+</body>
+</html>

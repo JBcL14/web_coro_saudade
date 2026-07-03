@@ -47,7 +47,15 @@ imágenes y vídeos de los carruseles.
    - Redespliega el proyecto para que se aplique.
 
 4. **Subir imágenes y vídeos**
-   - Abre `https://<tu-proyecto>.pages.dev/subir.html`.
+
+   Hay dos formas equivalentes:
+
+   **a) Aplicación de escritorio** (carpeta `app-subida/`): instala
+   `Saudade Medios Setup <versión>.exe`, introduce la URL de la web y
+   la clave `UPLOAD_TOKEN`, y sube/borra archivos desde el programa.
+   Ver `app-subida/README.md` para compilar el instalador.
+
+   **b) Página web**: abre `https://<tu-proyecto>.pages.dev/subir.html`.
    - Introduce la clave, selecciona los archivos y pulsa *Subir*.
    - Extensiones admitidas — imágenes: webp, jpg, jpeg, png, gif,
      avif · vídeos: mp4, webm, mov, m4v.
