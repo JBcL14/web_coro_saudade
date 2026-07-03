@@ -156,7 +156,7 @@
       : 'Ningún archivo seleccionado.';
   }
 
-  function pintarLista(elemento, nombres, prefijo) {
+  function pintarLista(elemento, nombres, prefijo, borrable) {
     if (!nombres.length) {
       elemento.innerHTML = '<li class="vacio">No hay archivos todavía.</li>';
       return;
@@ -166,20 +166,34 @@
       var li = document.createElement('li');
       var span = document.createElement('span');
       span.textContent = nombre;
-      var btn = document.createElement('button');
-      btn.textContent = 'Borrar';
-      btn.addEventListener('click', function () { borrar(prefijo + nombre); });
       li.appendChild(span);
-      li.appendChild(btn);
+      if (borrable) {
+        var btn = document.createElement('button');
+        btn.textContent = 'Borrar';
+        btn.addEventListener('click', function () { borrar(prefijo + nombre); });
+        li.appendChild(btn);
+      } else {
+        var aviso = document.createElement('span');
+        aviso.className = 'vacio';
+        aviso.textContent = 'del repositorio';
+        li.appendChild(aviso);
+      }
       elemento.appendChild(li);
     });
+    if (!borrable) {
+      var pie = document.createElement('li');
+      pie.className = 'vacio';
+      pie.textContent = 'Estos archivos vienen del repositorio git, no del bucket R2: se sustituyen automáticamente en cuanto subas los primeros archivos.';
+      elemento.appendChild(pie);
+    }
   }
 
   function cargarLista() {
     window.api.listar()
       .then(function (datos) {
-        pintarLista(document.getElementById('listaImagenes'), datos.images || [], 'images/');
-        pintarLista(document.getElementById('listaVideos'), datos.videos || [], 'videos/');
+        var origen = datos.origen || {};
+        pintarLista(document.getElementById('listaImagenes'), datos.images || [], 'images/', origen.images !== 'estatico');
+        pintarLista(document.getElementById('listaVideos'), datos.videos || [], 'videos/', origen.videos !== 'estatico');
       })
       .catch(function (err) {
         avisar('No se pudo cargar la lista: ' + err.message, 'error');

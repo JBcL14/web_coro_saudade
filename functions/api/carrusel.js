@@ -14,7 +14,9 @@
 
 export async function onRequestGet(context) {
   const { env, request } = context;
-  const datos = { images: [], videos: [] };
+  // "origen" indica de dónde sale cada lista: 'r2' (borrable desde la app
+  // de subida) o 'estatico' (archivos del repo git, no borrables desde R2).
+  const datos = { images: [], videos: [], origen: { images: 'r2', videos: 'r2' } };
 
   if (env.MEDIA) {
     try {
@@ -35,8 +37,14 @@ export async function onRequestGet(context) {
       const r = await env.ASSETS.fetch(new URL('/assets/carrusel.json', request.url));
       if (r.ok) {
         const estatico = await r.json();
-        if (datos.images.length === 0 && Array.isArray(estatico.images)) datos.images = estatico.images;
-        if (datos.videos.length === 0 && Array.isArray(estatico.videos)) datos.videos = estatico.videos;
+        if (datos.images.length === 0 && Array.isArray(estatico.images)) {
+          datos.images = estatico.images;
+          datos.origen.images = 'estatico';
+        }
+        if (datos.videos.length === 0 && Array.isArray(estatico.videos)) {
+          datos.videos = estatico.videos;
+          datos.origen.videos = 'estatico';
+        }
       }
     } catch (e) { /* sin respaldo disponible */ }
   }
