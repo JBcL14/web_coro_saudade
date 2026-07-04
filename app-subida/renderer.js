@@ -34,6 +34,48 @@
       : 'Ningún archivo seleccionado.';
   }
 
+  // Convierte la fila en un campo de edición para renombrar el archivo.
+  // (Electron no soporta prompt(), así que se edita en la propia fila.)
+  function editarNombre(li, nombre, prefijo) {
+    li.innerHTML = '';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'renombrar';
+    input.value = nombre.replace(/\.\w+$/, '');
+    var btnOk = document.createElement('button');
+    btnOk.textContent = 'Guardar';
+    var btnNo = document.createElement('button');
+    btnNo.textContent = 'Cancelar';
+
+    function confirmarCambio() {
+      var nuevo = input.value.trim();
+      if (!nuevo) { avisar('El nombre no puede estar vacío.', 'error'); return; }
+      btnOk.disabled = true;
+      window.api.renombrar(prefijo + nombre, nuevo)
+        .then(function (res) {
+          avisar('Renombrado a: ' + res.renombrado, 'ok');
+          cargarLista();
+        })
+        .catch(function (err) {
+          avisar(err.message, 'error');
+          cargarLista();
+        });
+    }
+
+    btnOk.addEventListener('click', confirmarCambio);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') confirmarCambio();
+      if (e.key === 'Escape') cargarLista();
+    });
+    btnNo.addEventListener('click', function () { cargarLista(); });
+
+    li.appendChild(input);
+    li.appendChild(btnOk);
+    li.appendChild(btnNo);
+    input.focus();
+    input.select();
+  }
+
   function pintarLista(elemento, nombres, prefijo, borrable) {
     if (!nombres.length) {
       elemento.innerHTML = '<li class="vacio">No hay archivos todavía.</li>';
@@ -46,8 +88,13 @@
       span.textContent = nombre;
       li.appendChild(span);
       if (borrable) {
+        var btnRen = document.createElement('button');
+        btnRen.textContent = 'Renombrar';
+        btnRen.addEventListener('click', function () { editarNombre(li, nombre, prefijo); });
+        li.appendChild(btnRen);
         var btn = document.createElement('button');
         btn.textContent = 'Borrar';
+        btn.className = 'peligro';
         btn.addEventListener('click', function () { borrar(prefijo + nombre); });
         li.appendChild(btn);
       } else {

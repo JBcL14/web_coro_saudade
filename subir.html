@@ -69,15 +69,21 @@
     font-size: 0.9rem;
   }
   ul.lista li:last-child { border-bottom: none; }
+  ul.lista li span:first-child { flex: 1; word-break: break-all; }
   ul.lista button {
     margin: 0;
     padding: 0.25rem 0.7rem;
     font-size: 0.8rem;
     background: transparent;
-    color: var(--error);
-    border: 1px solid var(--error);
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.4);
   }
-  ul.lista button:hover { background: var(--error); color: #fff; }
+  ul.lista button:hover { background: rgba(43,38,32,0.08); color: var(--tinta); }
+  ul.lista button.peligro {
+    color: var(--error);
+    border-color: var(--error);
+  }
+  ul.lista button.peligro:hover { background: var(--error); color: #fff; }
   .vacio { font-size: 0.9rem; opacity: 0.6; font-style: italic; }
 </style>
 </head>
@@ -145,8 +151,13 @@
       span.textContent = nombre;
       li.appendChild(span);
       if (borrable) {
+        var btnRen = document.createElement('button');
+        btnRen.textContent = 'Renombrar';
+        btnRen.addEventListener('click', function () { renombrar(prefijo + nombre, nombre); });
+        li.appendChild(btnRen);
         var btn = document.createElement('button');
         btn.textContent = 'Borrar';
+        btn.className = 'peligro';
         btn.addEventListener('click', function () { borrar(prefijo + nombre); });
         li.appendChild(btn);
       } else {
@@ -176,6 +187,26 @@
       .catch(function () {
         avisar('No se pudo cargar la lista de medios.', 'error');
       });
+  }
+
+  function renombrar(clave, nombreActual) {
+    var nuevo = prompt('Nuevo nombre para ' + nombreActual + ' (la extensión se conserva):', nombreActual.replace(/\.\w+$/, ''));
+    if (!nuevo || !nuevo.trim()) return;
+    fetch('/api/subir', {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + inputToken.value,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ clave: clave, nuevoNombre: nuevo.trim() })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Error al renombrar');
+        avisar('Renombrado a: ' + res.d.renombrado, 'ok');
+        cargarLista();
+      })
+      .catch(function (err) { avisar(err.message, 'error'); });
   }
 
   function borrar(clave) {

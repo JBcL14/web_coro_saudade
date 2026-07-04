@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('api', {
   elegir:        ()        => ipcRenderer.invoke('medios:elegir'),
   subir:         (rutas)   => ipcRenderer.invoke('medios:subir', rutas),
   borrar:        (clave)   => ipcRenderer.invoke('medios:borrar', clave),
+  renombrar:     (clave, nuevoNombre) => ipcRenderer.invoke('medios:renombrar', clave, nuevoNombre),
   confirmar:     (mensaje) => ipcRenderer.invoke('confirmar', mensaje)
 });

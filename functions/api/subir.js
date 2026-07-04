@@ -2,6 +2,10 @@
    functions/api/subir.js — Cloudflare Pages Function
    POST   /api/subir            → sube archivos al bucket R2 (multipart)
    DELETE /api/subir?clave=...  → borra un objeto del bucket
+   PUT    /api/subir            → renombra un objeto (JSON: clave,
+                                  nuevoNombre). R2 no renombra: se
+                                  copia con el nombre nuevo y se borra
+                                  el antiguo. La extensión se conserva.
 
    Protegido con la variable secreta UPLOAD_TOKEN (Pages → Settings →
    Environment variables). Las peticiones deben llevar la cabecera:
@@ -81,6 +85,44 @@ export async function onRequestPost(context) {
   }
 
   return json({ subidos, rechazados });
+}
+
+export async function onRequestPut(context) {
+  const { request, env } = context;
+  if (!autorizado(request, env)) return json({ error: 'No autorizado' }, 401);
+  if (!env.MEDIA) return json({ error: 'Falta el binding R2 "MEDIA" en la configuración de Pages' }, 500);
+
+  let cuerpo;
+  try {
+    cuerpo = await request.json();
+  } catch (e) {
+    return json({ error: 'Se esperaba JSON con clave y nuevoNombre' }, 400);
+  }
+
+  const clave = String(cuerpo.clave || '');
+  const m = /^(images|videos)\/([^/]+)$/.exec(clave);
+  if (!m) return json({ error: 'Clave no válida; debe ser images/<archivo> o videos/<archivo>' }, 400);
+
+  const carpeta = m[1] + '/';
+  const extOriginal = m[2].includes('.') ? '.' + m[2].split('.').pop() : '';
+
+  // El nombre nuevo se limpia igual que al subir; la extensión original se conserva
+  let nuevo = limpiarNombre(String(cuerpo.nuevoNombre || '')).replace(/\.\w+$/, '');
+  if (!nuevo) return json({ error: 'El nombre nuevo está vacío o no es válido' }, 400);
+
+  const claveNueva = carpeta + nuevo + extOriginal;
+  if (claveNueva === clave) return json({ renombrado: clave });
+
+  if (await env.MEDIA.head(claveNueva)) {
+    return json({ error: 'Ya existe un archivo llamado ' + claveNueva }, 409);
+  }
+
+  const objeto = await env.MEDIA.get(clave);
+  if (!objeto) return json({ error: 'El archivo ' + clave + ' no existe en R2' }, 404);
+
+  await env.MEDIA.put(claveNueva, objeto.body, { httpMetadata: objeto.httpMetadata });
+  await env.MEDIA.delete(clave);
+  return json({ renombrado: claveNueva });
 }
 
 export async function onRequestDelete(context) {

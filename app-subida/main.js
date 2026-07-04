@@ -86,6 +86,19 @@ ipcMain.handle('medios:subir', async (evento, rutas) => {
   return comoJson(r);
 });
 
+ipcMain.handle('medios:renombrar', async (evento, clave, nuevoNombre) => {
+  const cfg = leerConfig();
+  const r = await fetch(baseUrl() + '/api/subir', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + cfg.token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ clave: clave, nuevoNombre: nuevoNombre })
+  });
+  return comoJson(r);
+});
+
 // Diálogo nativo de confirmación (window.confirm no es fiable en Electron)
 ipcMain.handle('confirmar', async (evento, mensaje) => {
   const ventana = BrowserWindow.fromWebContents(evento.sender);
