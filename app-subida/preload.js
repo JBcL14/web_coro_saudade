@@ -2,10 +2,11 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  leerConfig:    ()      => ipcRenderer.invoke('config:leer'),
-  guardarConfig: (cfg)   => ipcRenderer.invoke('config:guardar', cfg),
-  listar:        ()      => ipcRenderer.invoke('medios:listar'),
-  elegir:        ()      => ipcRenderer.invoke('medios:elegir'),
-  subir:         (rutas) => ipcRenderer.invoke('medios:subir', rutas),
-  borrar:        (clave) => ipcRenderer.invoke('medios:borrar', clave)
+  leerConfig:    ()        => ipcRenderer.invoke('config:leer'),
+  guardarConfig: (cfg)     => ipcRenderer.invoke('config:guardar', cfg),
+  listar:        ()        => ipcRenderer.invoke('medios:listar'),
+  elegir:        ()        => ipcRenderer.invoke('medios:elegir'),
+  subir:         (rutas)   => ipcRenderer.invoke('medios:subir', rutas),
+  borrar:        (clave)   => ipcRenderer.invoke('medios:borrar', clave),
+  confirmar:     (mensaje) => ipcRenderer.invoke('confirmar', mensaje)
 });

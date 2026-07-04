@@ -86,6 +86,20 @@ ipcMain.handle('medios:subir', async (evento, rutas) => {
   return comoJson(r);
 });
 
+// Diálogo nativo de confirmación (window.confirm no es fiable en Electron)
+ipcMain.handle('confirmar', async (evento, mensaje) => {
+  const ventana = BrowserWindow.fromWebContents(evento.sender);
+  const { response } = await dialog.showMessageBox(ventana, {
+    type: 'question',
+    buttons: ['Borrar', 'Cancelar'],
+    defaultId: 1,
+    cancelId: 1,
+    title: 'Confirmar borrado',
+    message: String(mensaje || '¿Continuar?')
+  });
+  return response === 0;
+});
+
 ipcMain.handle('medios:borrar', async (evento, clave) => {
   const cfg = leerConfig();
   const r = await fetch(baseUrl() + '/api/subir?clave=' + encodeURIComponent(clave), {

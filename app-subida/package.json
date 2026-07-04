@@ -1,7 +1,7 @@
 {
   "name": "saudade-medios",
   "productName": "Saudade Medios",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Aplicación de escritorio para subir imágenes y vídeos a los carruseles del Coro Saudade (Cloudflare Pages + R2)",
   "main": "main.js",
   "author": "Coro Saudade de Pamplona",
@@ -20,7 +20,8 @@
     "files": [
       "main.js",
       "preload.js",
-      "index.html"
+      "index.html",
+      "renderer.js"
     ],
     "win": {
       "target": "nsis"
