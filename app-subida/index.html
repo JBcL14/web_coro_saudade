@@ -31,7 +31,8 @@
     margin-bottom: 1.2rem;
   }
   label { display: block; font-size: 0.82rem; margin-bottom: 0.3rem; opacity: 0.8; }
-  input[type="password"], input[type="url"] {
+  input[type="password"], input[type="url"], input[type="text"],
+  input[type="date"], input[type="time"], select {
     width: 100%;
     padding: 0.55rem;
     border: 1px solid rgba(43,38,32,0.3);
@@ -40,6 +41,7 @@
     font-size: 0.92rem;
     background: var(--crema);
     margin-bottom: 0.8rem;
+    color: var(--tinta);
   }
   button {
     padding: 0.55rem 1.3rem;
@@ -60,11 +62,33 @@
   }
   button.secundario:hover { background: rgba(43,38,32,0.08); }
   .fila { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.9rem; }
+  .check { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; opacity: 1; font-size: 0.88rem; }
+  .check input { width: auto; margin: 0; }
   #seleccion { font-size: 0.85rem; opacity: 0.75; margin-top: 0.7rem; white-space: pre-line; }
-  #mensaje { margin-top: 0.8rem; font-size: 0.88rem; white-space: pre-line; }
-  #mensaje.error { color: var(--error); }
-  #mensaje.ok { color: var(--ok); }
+  .mensaje { margin-top: 0.8rem; font-size: 0.88rem; white-space: pre-line; }
+  .mensaje.error { color: var(--error); }
+  .mensaje.ok { color: var(--ok); }
   h2 { font-size: 1.05rem; font-weight: normal; margin-bottom: 0.7rem; }
+  /* Pestañas */
+  nav.tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; }
+  nav.tabs button {
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.3);
+    border-radius: 6px 6px 0 0;
+    border-bottom: none;
+    padding: 0.55rem 1.2rem;
+    opacity: 0.65;
+  }
+  nav.tabs button:hover { background: rgba(43,38,32,0.06); }
+  nav.tabs button.activa {
+    background: #fff;
+    opacity: 1;
+    font-style: italic;
+  }
+  .pagina.oculta { display: none; }
+  /* Listas */
   ul.lista { list-style: none; }
   ul.lista li {
     display: flex;
@@ -76,7 +100,7 @@
     font-size: 0.88rem;
   }
   ul.lista li:last-child { border-bottom: none; }
-  ul.lista li span:first-child { flex: 1; word-break: break-all; }
+  ul.lista li span:first-child { flex: 1; word-break: break-word; }
   ul.lista button {
     padding: 0.22rem 0.65rem;
     font-size: 0.78rem;
@@ -98,6 +122,7 @@
     font-family: inherit;
     font-size: 0.85rem;
     background: var(--crema);
+    margin: 0;
   }
   .vacio { font-size: 0.88rem; opacity: 0.6; font-style: italic; }
 </style>
@@ -106,8 +131,7 @@
 <main>
   <h1>Saudade Medios</h1>
   <p class="nota">
-    Sube imágenes y vídeos a los carruseles de la web (bucket R2 de Cloudflare).
-    Imágenes: webp, jpg, png, gif, avif · Vídeos: mp4, webm, mov (máx. ~95 MB por archivo).
+    Gestiona los carruseles (bucket R2 de Cloudflare) y la agenda de conciertos de la web.
   </p>
 
   <section>
@@ -120,27 +144,102 @@
     <div class="fila">
       <button id="btnGuardar" class="secundario">Guardar configuración</button>
     </div>
+    <div class="mensaje" id="mensajeConfig"></div>
   </section>
 
-  <section>
-    <div class="fila">
-      <button id="btnElegir" class="secundario">Elegir archivos…</button>
-      <button id="btnSubir">Subir</button>
-      <button id="btnActualizar" class="secundario">Actualizar listas</button>
-    </div>
-    <div id="seleccion">Ningún archivo seleccionado.</div>
-    <div id="mensaje"></div>
-  </section>
+  <nav class="tabs">
+    <button id="tabMedios" class="activa">Fotos y vídeos</button>
+    <button id="tabConciertos">Conciertos</button>
+  </nav>
 
-  <section>
-    <h2>Imágenes en el carrusel</h2>
-    <ul class="lista" id="listaImagenes"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
-  </section>
+  <!-- ══════════ Página 1: fotos y vídeos ══════════ -->
+  <div id="paginaMedios" class="pagina">
+    <section>
+      <p class="nota">
+        Imágenes: webp, jpg, png, gif, avif · Vídeos: mp4, webm, mov (máx. ~95 MB por archivo).
+      </p>
+      <div class="fila">
+        <button id="btnElegir" class="secundario">Elegir archivos…</button>
+        <button id="btnSubir">Subir</button>
+        <button id="btnActualizar" class="secundario">Actualizar listas</button>
+      </div>
+      <div id="seleccion">Ningún archivo seleccionado.</div>
+      <div class="mensaje" id="mensaje"></div>
+    </section>
 
-  <section>
-    <h2>Vídeos en el carrusel</h2>
-    <ul class="lista" id="listaVideos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
-  </section>
+    <section>
+      <h2>Imágenes en el carrusel</h2>
+      <ul class="lista" id="listaImagenes"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+
+    <section>
+      <h2>Vídeos en el carrusel</h2>
+      <ul class="lista" id="listaVideos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+  </div>
+
+  <!-- ══════════ Página 2: conciertos ══════════ -->
+  <div id="paginaConciertos" class="pagina oculta">
+    <section>
+      <h2>Añadir concierto</h2>
+      <div class="grid2">
+        <div>
+          <label for="cFecha">Fecha *</label>
+          <input type="date" id="cFecha">
+        </div>
+        <div>
+          <label for="cHora">Hora</label>
+          <input type="time" id="cHora">
+        </div>
+      </div>
+
+      <label for="cTitulo">Título *</label>
+      <input type="text" id="cTitulo" placeholder="p. ej. Concierto de Navidad">
+
+      <label for="cLugar">Lugar *</label>
+      <input type="text" id="cLugar" placeholder="p. ej. Iglesia de San Nicolás · Pamplona">
+
+      <div class="grid2">
+        <div>
+          <label for="cTipo">Tipo *</label>
+          <input type="text" list="tipos" id="cTipo" value="Concierto">
+          <datalist id="tipos">
+            <option value="Concierto"></option>
+            <option value="Colaboración"></option>
+            <option value="Destacado"></option>
+          </datalist>
+        </div>
+        <div>
+          <label for="cSeccion">Sección de la web</label>
+          <select id="cSeccion">
+            <option value="proximos">Próximos conciertos</option>
+            <option value="destacados">Conciertos destacados (pasados)</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="cDescripcion">Descripción</label>
+      <input type="text" id="cDescripcion" placeholder="Opcional">
+
+      <label class="check"><input type="checkbox" id="cDestacado"> Resaltar en la lista de próximos</label>
+
+      <div class="fila">
+        <button id="btnAnadirConcierto">Añadir concierto</button>
+        <button id="btnActualizarAgenda" class="secundario">Actualizar listas</button>
+      </div>
+      <div class="mensaje" id="mensajeConcierto"></div>
+    </section>
+
+    <section>
+      <h2>Próximos conciertos</h2>
+      <ul class="lista" id="listaProximos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+
+    <section>
+      <h2>Conciertos destacados</h2>
+      <ul class="lista" id="listaDestacados"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+  </div>
 </main>
 
 <!-- La CSP (default-src 'self') bloquea scripts inline: el código vive en renderer.js -->

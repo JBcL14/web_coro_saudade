@@ -131,7 +131,7 @@
   // Recordar la clave entre visitas (solo en este navegador)
   inputToken.value = localStorage.getItem('saudade_upload_token') || '';
   inputToken.addEventListener('change', function () {
-    localStorage.setItem('saudade_upload_token', inputToken.value);
+    localStorage.setItem('saudade_upload_token', inputToken.value.trim());
   });
 
   function avisar(texto, clase) {
@@ -195,7 +195,7 @@
     fetch('/api/subir', {
       method: 'PUT',
       headers: {
-        'Authorization': 'Bearer ' + inputToken.value,
+        'Authorization': 'Bearer ' + inputToken.value.trim(),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ clave: clave, nuevoNombre: nuevo.trim() })
@@ -213,7 +213,7 @@
     if (!confirm('¿Borrar ' + clave + ' del bucket R2?')) return;
     fetch('/api/subir?clave=' + encodeURIComponent(clave), {
       method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + inputToken.value }
+      headers: { 'Authorization': 'Bearer ' + inputToken.value.trim() }
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
@@ -238,7 +238,7 @@
 
     fetch('/api/subir', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + inputToken.value },
+      headers: { 'Authorization': 'Bearer ' + inputToken.value.trim() },
       body: form
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })

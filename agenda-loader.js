@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════
    agenda-loader.js — Coro Saudade de Pamplona
-   Lee assets/agenda.json y rellena dinámicamente la sección #eventos.
+   Lee /api/agenda (R2 en Cloudflare Pages) o, como respaldo,
+   assets/agenda.json; rellena dinámicamente la sección #eventos.
 
    ORDEN EN index.html (con defer, antes de main.js):
      <script src="agenda-loader.js" defer></script>
@@ -15,7 +16,10 @@
   var BASE = window.location.pathname.includes('/web_coro_saudade/')
     ? '/web_coro_saudade/'
     : '/';
-  var JSON_URL = BASE + 'assets/agenda.json';
+  // Cloudflare Pages + R2: /api/agenda sirve la agenda del bucket.
+  var JSON_URL = BASE + 'api/agenda';
+  // Respaldo (en local o GitHub Pages, sin Functions): JSON del repo.
+  var JSON_LOCAL = BASE + 'assets/agenda.json';
 
   // ── SVGs reutilizables ───────────────────────────────────────────────────
   var DIAMOND = '<svg class="ornament-diamond" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="6,0 12,6 6,12 0,6"/></svg>';
@@ -119,16 +123,24 @@
   // ── Carga el JSON ────────────────────────────────────────────────────────
   mostrarSkeleton();
 
-  fetch(JSON_URL + '?_=' + Date.now())
-    .then(function(r) {
+  function pedirJson(url) {
+    return fetch(url + '?_=' + Date.now()).then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
+    });
+  }
+
+  pedirJson(JSON_URL)
+    .catch(function(err) {
+      // Sin Functions (local / GitHub Pages): usar el JSON del repo
+      console.warn('[agenda-loader] ' + JSON_URL + ' no disponible (' + err.message + '); usando ' + JSON_LOCAL);
+      return pedirJson(JSON_LOCAL);
     })
     .then(function(datos) {
       renderizar(datos);
     })
     .catch(function(err) {
-      console.warn('[agenda-loader] No se pudo cargar ' + JSON_URL + ':', err.message);
+      console.warn('[agenda-loader] No se pudo cargar la agenda:', err.message);
       // Limpiar skeletons y dejar las listas vacías (fallback silencioso)
       document.querySelectorAll('#eventos .events-list').forEach(function(l) { l.innerHTML = ''; });
     });

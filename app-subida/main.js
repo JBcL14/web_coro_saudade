@@ -99,6 +99,34 @@ ipcMain.handle('medios:renombrar', async (evento, clave, nuevoNombre) => {
   return comoJson(r);
 });
 
+// ── Agenda de conciertos (vía /api/agenda) ─────────────────────────────────
+ipcMain.handle('agenda:listar', async () => {
+  const r = await fetch(baseUrl() + '/api/agenda?_=' + Date.now());
+  return comoJson(r);
+});
+
+ipcMain.handle('agenda:anadir', async (evento, datos) => {
+  const cfg = leerConfig();
+  const r = await fetch(baseUrl() + '/api/agenda', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + cfg.token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datos)
+  });
+  return comoJson(r);
+});
+
+ipcMain.handle('agenda:borrar', async (evento, seccion, indice) => {
+  const cfg = leerConfig();
+  const r = await fetch(baseUrl() + '/api/agenda?seccion=' + encodeURIComponent(seccion) + '&indice=' + indice, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + cfg.token }
+  });
+  return comoJson(r);
+});
+
 // Diálogo nativo de confirmación (window.confirm no es fiable en Electron)
 ipcMain.handle('confirmar', async (evento, mensaje) => {
   const ventana = BrowserWindow.fromWebContents(evento.sender);

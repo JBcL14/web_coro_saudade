@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('api', {
   subir:         (rutas)   => ipcRenderer.invoke('medios:subir', rutas),
   borrar:        (clave)   => ipcRenderer.invoke('medios:borrar', clave),
   renombrar:     (clave, nuevoNombre) => ipcRenderer.invoke('medios:renombrar', clave, nuevoNombre),
-  confirmar:     (mensaje) => ipcRenderer.invoke('confirmar', mensaje)
+  confirmar:     (mensaje) => ipcRenderer.invoke('confirmar', mensaje),
+  agendaListar:  ()        => ipcRenderer.invoke('agenda:listar'),
+  agendaAnadir:  (datos)   => ipcRenderer.invoke('agenda:anadir', datos),
+  agendaBorrar:  (seccion, indice) => ipcRenderer.invoke('agenda:borrar', seccion, indice)
 });
