@@ -1,0 +1,5 @@
+# Redirecciones de Cloudflare Pages
+# El antiguo panel de subida ya no existe: cualquier intento de
+# acceder a él va a la portada.
+/subir       /  301
+/subir.html  /  301
