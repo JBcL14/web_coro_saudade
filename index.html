@@ -3,113 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Próximamente</title>
+    <title>Próximamente — Coro Saudade de Pamplona</title>
+    <!-- Importación de las tipografías oficiales del proyecto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --black:       #192338;
+            --white:       #f0ece3;   /* crema medio */
+            --off-white:   #e6e0d4;   /* crema más oscuro */
+            --gold:        #192338;   
+            --gray-mid:    #5c5549;   /* gris cálido oscuro */
+            --serif-title: 'Cormorant Infant', Georgia, serif;
+            --serif-felt:  'IM Fell English', Georgia, serif;
+        }
+
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #2e1065, #0f172a);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            font-family: var(--serif-title);
+            background-color: var(--white);
+            color: var(--black);
+            font-size: 19px;
+            line-height: 1.75;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #f8fafc;
             overflow: hidden;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            padding: 2rem;
         }
 
         .container {
             text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            max-width: 650px;
+            width: 100%;
+            animation: fadeUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        /* Ornamento de líneas degradadas idéntico al estilo del sitio */
+        .ornament-line {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
             width: 100%;
         }
 
-        .logo-placeholder {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #818cf8, #c084fc);
-            border-radius: 16px;
-            margin: 0 auto 2rem auto;
-            box-shadow: 0 10px 25px -5px rgba(129, 140, 248, 0.4);
+        .ornament-line::before,
+        .ornament-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(184,148,31,0.4), transparent);
+        }
+
+        .ornament-line span {
+            color: var(--gray-mid);
+            font-size: 1.3rem;
+            font-family: var(--serif-felt);
         }
 
         h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: var(--serif-title);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        h1 em {
+            font-style: italic;
+            font-weight: 300;
+            color: var(--gray-mid);
+            font-family: var(--serif-title);
         }
 
         p {
+            font-family: var(--serif-title);
             font-size: 1.15rem;
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            color: var(--gray-mid);
+            font-style: italic;
+            max-width: 520px;
+            margin: 0 auto 3rem auto;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #cbd5e1;
-            margin-bottom: 1.5rem;
-            backdrop-filter: blur(4px);
-        }
-
+        /* Spinner elegante y pausado a juego con la estética del coro */
         .spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(25, 35, 56, 0.1);
             border-radius: 50%;
-            border-top-color: #818cf8;
+            border-top-color: var(--gray-mid);
             margin: 0 auto;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 480px) {
-            h1 { font-size: 2.25rem; }
-            p { font-size: 1rem; }
+            body { padding: 1.5rem; }
+            h1 { font-size: 2.5rem; }
+            p { font-size: 1.05rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Icono/Logo minimalista -->
-        <div class="logo-placeholder"></div>
+        <!-- Ornamento clásico adaptado -->
+        <div class="ornament-line">
+            <span>§</span>
+        </div>
         
-        <!-- Etiqueta de estado -->
-        <div class="badge">Sitio en construcción</div>
+        <!-- Título principal con la palabra enfatizada en cursiva como tus secciones -->
+        <h1>Sitioweb <em>próximamente</em></h1>
         
-        <!-- Mensaje principal -->
-        <h1>Próximamente</h1>
-        
-        <!-- Texto secundario -->
-        <p>Estamos trabajando en algo increíble. Nuestro sitio web estará disponible muy pronto. Disculpa las molestias.</p>
+        <!-- Mensaje secundario con tu tipografía e interlineado corporativo -->
+        <p>Estamos preparando el nuevo espacio digital del Coro Saudade de Pamplona. Volveremos a estar disponibles muy pronto.</p>
         
         <!-- Indicador de carga sutil -->
         <div class="spinner"></div>
