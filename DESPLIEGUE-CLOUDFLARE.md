@@ -16,8 +16,10 @@ imágenes y vídeos de los carruseles.
     Si el archivo no está en R2, sirven el estático del repo.
   - `POST/DELETE /api/subir` — sube o borra archivos del bucket.
     Protegido con la variable secreta `UPLOAD_TOKEN`.
-- `subir.html` es la aplicación de subida: pide la clave
-  (`UPLOAD_TOKEN`), sube archivos y permite borrarlos.
+- La gestión (subir, renombrar y borrar medios; añadir y borrar
+  conciertos) se hace con la aplicación de escritorio de la carpeta
+  `app-subida/`, protegida con la clave `UPLOAD_TOKEN`. No hay panel
+  web de administración.
 - Mientras no subas nada a R2, la web se ve exactamente igual que
   ahora (usa los archivos del repo). En cuanto haya archivos en R2,
   los carruseles muestran los del bucket.
@@ -48,14 +50,10 @@ imágenes y vídeos de los carruseles.
 
 4. **Subir imágenes y vídeos**
 
-   Hay dos formas equivalentes:
-
-   **a) Aplicación de escritorio** (carpeta `app-subida/`): instala
+   Con la **aplicación de escritorio** (carpeta `app-subida/`): instala
    `Saudade Medios Setup <versión>.exe`, introduce la URL de la web y
-   la clave `UPLOAD_TOKEN`, y sube/borra archivos desde el programa.
-   Ver `app-subida/README.md` para compilar el instalador.
-
-   **b) Página web**: abre `https://<tu-proyecto>.pages.dev/subir.html`.
+   la clave `UPLOAD_TOKEN`, y gestiona medios y conciertos desde el
+   programa. Ver `app-subida/README.md` para compilar el instalador.
    - Introduce la clave, selecciona los archivos y pulsa *Subir*.
    - Extensiones admitidas — imágenes: webp, jpg, jpeg, png, gif,
      avif · vídeos: mp4, webm, mov, m4v.

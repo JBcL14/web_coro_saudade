@@ -3,7 +3,7 @@
 
    Toda la red se hace aquí (no en el renderer) para evitar problemas
    de CORS: la app habla con las Pages Functions de la web
-   (/api/carrusel y /api/subir) igual que lo hace subir.html.
+   (/api/carrusel, /api/subir y /api/agenda).
 
    La configuración (URL de la web + clave UPLOAD_TOKEN) se guarda en
    config.json dentro de la carpeta de datos de usuario de la app.

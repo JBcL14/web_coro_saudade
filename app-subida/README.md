@@ -1,8 +1,9 @@
 # Saudade Medios — aplicación de escritorio
 
-Aplicación de escritorio (Electron) para subir imágenes y vídeos a los
-carruseles de la web del Coro Saudade. Hace lo mismo que `subir.html`,
-pero como programa instalable en Windows.
+Aplicación de escritorio (Electron) para gestionar la web del Coro
+Saudade: subir, renombrar y borrar imágenes y vídeos de los carruseles
+(bucket R2) y añadir o borrar conciertos de la agenda. Es la única
+herramienta de administración; no existe panel web.
 
 ## Uso
 
