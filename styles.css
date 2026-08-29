@@ -539,38 +539,6 @@
     background: transparent;
   }
 
-  /* ─── AGENDA: estado vacío ─── */
-  .events-empty {
-    font-family: var(--serif-title);
-    font-size: 0.92rem;
-    font-style: italic;
-    color: var(--gray-mid);
-    padding: 2rem 0;
-    line-height: 1.8;
-  }
-
-  /* ─── AGENDA: skeleton mientras carga el JSON ─── */
-  .event-skeleton {
-    display: grid;
-    grid-template-columns: 90px 1fr auto;
-    gap: 2.5rem;
-    align-items: center;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--gold-pale);
-  }
-  .event-skeleton:first-child { border-top: 1px solid var(--gold-pale); }
-  .skeleton-block {
-    border-radius: 2px;
-    background: linear-gradient(90deg, var(--off-white) 25%, #e8e4dc 50%, var(--off-white) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
-  }
-  .skeleton-day   { width: 40px; height: 40px; margin: 0 auto 6px; }
-  .skeleton-month { width: 55px; height: 10px; margin: 0 auto; }
-  .skeleton-title { width: 60%; height: 16px; margin-bottom: 10px; }
-  .skeleton-sub   { width: 40%; height: 11px; }
-  .skeleton-badge { width: 70px; height: 26px; margin-right: 1.5rem; }
-
   /* ─── CAROUSEL / GALERÍA ─── */
   #galeria {
     background: var(--white);
@@ -685,9 +653,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: 2rem;
-    padding: 0 1rem;        /* menos padding para dar más espacio a los segmentos */
+    padding: 0 3rem;
   }
   .carousel-btn {
     width: 44px;
@@ -731,31 +699,30 @@
   .carousel-btn:hover span { color: var(--white); }
   .carousel-btn:hover .carousel-btn-icon { color: var(--white); }
   .carousel-btn:hover { border-color: var(--black); }
-  /* ── Barra segmentada: cada segmento ocupa una fracción igual del ancho total.
-        El activo se expande con flex-grow y cambia de color.
-        Funciona con cualquier número de slides sin overflow. ── */
   .carousel-dots {
     display: flex;
-    gap: 3px;
+    gap: 0.6rem;
     align-items: center;
-    flex: 1;                /* ocupa todo el espacio entre los dos botones */
-    min-width: 0;
+    overflow-x: auto;
+    max-width: 160px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     padding: 4px 0;
-    overflow: hidden;       /* nunca desborda */
+    scroll-behavior: smooth;
   }
+  .carousel-dots::-webkit-scrollbar { display: none; }
   .carousel-dot {
-    flex: 1;                /* todos iguales por defecto */
-    height: 3px;
+    width: 6px;
+    height: 6px;
     background: var(--gray-light);
     cursor: pointer;
-    transition: flex 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                background 0.35s ease;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-radius: 0;
-    min-width: 4px;         /* nunca desaparece del todo */
+    flex-shrink: 0;
   }
   .carousel-dot.active {
-    flex: 3;                /* el activo ocupa el triple de ancho */
     background: var(--black);
+    width: 24px;
   }
   .carousel-counter {
     font-family: var(--serif-sc);
@@ -1149,7 +1116,7 @@ footer {
     bottom: 2rem;
     right: 2rem;
     background: var(--black);
-    color: #b8941f;
+    color: var(--gold-pale);
     padding: 1rem 1.5rem;
     font-family: var(--serif-title);
     font-size: 0.85rem;
@@ -1160,7 +1127,7 @@ footer {
     transition: var(--transition);
     max-width: 300px;
     line-height: 1.6;
-    border-left: 2px solid #b8941f;
+    border-left: 2px solid var(--gray-mid);
   }
   .notification.show { transform: translateY(0); opacity: 1; }
 
@@ -1192,23 +1159,9 @@ footer {
     .form-row { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr 1fr; }
     .carousel-slide { flex: 0 0 100%; }
-    /* Hero móvil: imagen completa de borde a borde, fondo crema */
-    #inicio {
-      padding-top: 92px;    /* espacio para la navbar */
-      align-items: stretch; /* permite que .hero-banner ocupe el 100% del ancho */
-    }
-    .hero-banner {
-      height: auto;
-      aspect-ratio: 16 / 9; /* ajusta al ratio real de inicio.webp */
-      width: 100%;
-      background: var(--white); /* crema #f0ece3, sin negro */
-    }
-    .hero-banner img {
-      object-fit: contain;      /* imagen completa, sin recorte */
-      object-position: center center;
-      filter: grayscale(18%) brightness(0.88) sepia(8%);
-    }
+    .hero-banner { height: clamp(180px, 45vw, 320px); }
     .hero-logo-img { width: clamp(90px, 30vw, 160px); }
+    #inicio { padding-top: 92px; }
 
     /* ── Botones del carrusel en móvil: más grandes y bien visibles ── */
     .carousel-btn {
@@ -1228,7 +1181,7 @@ footer {
       gap: 1rem;
     }
     .carousel-dots {
-      /* flex: 1 ya maneja el ancho — sin max-width en móvil */
+      max-width: 120px;
     }
   }
 
@@ -1793,7 +1746,7 @@ footer {
   #videos .carousel-btn::after { background: rgba(184,148,31,0.12); }
   #videos .carousel-btn:hover { border-color: rgba(184,148,31,0.9); }
   #videos .carousel-btn:hover span { color: var(--black); }
-  #videos .carousel-dot { background: rgba(0,0,0,0.15); height: 3px; }
+  #videos .carousel-dot { background: rgba(0,0,0,0.15); }
   #videos .carousel-dot.active { background: rgba(184,148,31,0.85); }
   #videos .carousel-counter { color: rgba(0,0,0,0.4); }
   #videos .carousel-progress {
@@ -1866,24 +1819,6 @@ footer {
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Evita el salto de layout mientras carga */
-  background: var(--off-white);
-}
-
-/* Skeleton shimmer mientras la imagen no ha cargado aún */
-.img-loading .carousel-img {
-  background: linear-gradient(
-    90deg,
-    var(--off-white) 25%,
-    #e8e4dc 50%,
-    var(--off-white) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-}
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 
 /* ─── Galería: section-inner CTA ─── */
