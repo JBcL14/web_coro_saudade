@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'">
+<title>Saudade Medios</title>
+<style>
+  :root {
+    --crema: #f0ece3;
+    --tinta: #2b2620;
+    --acento: #8a6d3b;
+    --error: #a33c2f;
+    --ok: #3d6b3d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--crema);
+    color: var(--tinta);
+    min-height: 100vh;
+    padding: 1.6rem 1.2rem;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; font-weight: normal; font-style: italic; margin-bottom: 0.3rem; }
+  p.nota { font-size: 0.85rem; opacity: 0.75; margin-bottom: 1.2rem; }
+  section {
+    background: #fff;
+    border: 1px solid rgba(43,38,32,0.15);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  label { display: block; font-size: 0.82rem; margin-bottom: 0.3rem; opacity: 0.8; }
+  input[type="password"], input[type="url"], input[type="text"],
+  input[type="date"], input[type="time"], select {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid rgba(43,38,32,0.3);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    background: var(--crema);
+    margin-bottom: 0.8rem;
+    color: var(--tinta);
+  }
+  button {
+    padding: 0.55rem 1.3rem;
+    border: none;
+    border-radius: 5px;
+    background: var(--tinta);
+    color: var(--crema);
+    font-family: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  button:hover { background: var(--acento); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  button.secundario {
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.4);
+  }
+  button.secundario:hover { background: rgba(43,38,32,0.08); }
+  .fila { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.9rem; }
+  .check { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; opacity: 1; font-size: 0.88rem; }
+  .check input { width: auto; margin: 0; }
+  #seleccion { font-size: 0.85rem; opacity: 0.75; margin-top: 0.7rem; white-space: pre-line; }
+  .mensaje { margin-top: 0.8rem; font-size: 0.88rem; white-space: pre-line; }
+  .mensaje.error { color: var(--error); }
+  .mensaje.ok { color: var(--ok); }
+  h2 { font-size: 1.05rem; font-weight: normal; margin-bottom: 0.7rem; }
+  /* Pestañas */
+  nav.tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; }
+  nav.tabs button {
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.3);
+    border-radius: 6px 6px 0 0;
+    border-bottom: none;
+    padding: 0.55rem 1.2rem;
+    opacity: 0.65;
+  }
+  nav.tabs button:hover { background: rgba(43,38,32,0.06); }
+  nav.tabs button.activa {
+    background: #fff;
+    opacity: 1;
+    font-style: italic;
+  }
+  .pagina.oculta { display: none; }
+  /* Listas */
+  ul.lista { list-style: none; }
+  ul.lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed rgba(43,38,32,0.15);
+    font-size: 0.88rem;
+  }
+  ul.lista li:last-child { border-bottom: none; }
+  ul.lista li span:first-child { flex: 1; word-break: break-word; }
+  ul.lista button {
+    padding: 0.22rem 0.65rem;
+    font-size: 0.78rem;
+    background: transparent;
+    color: var(--tinta);
+    border: 1px solid rgba(43,38,32,0.4);
+  }
+  ul.lista button:hover { background: rgba(43,38,32,0.08); }
+  ul.lista button.peligro {
+    color: var(--error);
+    border-color: var(--error);
+  }
+  ul.lista button.peligro:hover { background: var(--error); color: #fff; }
+  ul.lista input.renombrar {
+    flex: 1;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--acento);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: var(--crema);
+    margin: 0;
+  }
+  .vacio { font-size: 0.88rem; opacity: 0.6; font-style: italic; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Saudade Medios</h1>
+  <p class="nota">
+    Gestiona los carruseles (bucket R2 de Cloudflare) y la agenda de conciertos de la web.
+  </p>
+
+  <section>
+    <label for="url">Dirección de la web</label>
+    <input type="url" id="url" placeholder="https://tu-proyecto.pages.dev">
+
+    <label for="token">Clave de acceso (UPLOAD_TOKEN)</label>
+    <input type="password" id="token" placeholder="Introduce la clave">
+
+    <div class="fila">
+      <button id="btnGuardar" class="secundario">Guardar configuración</button>
+    </div>
+    <div class="mensaje" id="mensajeConfig"></div>
+  </section>
+
+  <nav class="tabs">
+    <button id="tabMedios" class="activa">Fotos y vídeos</button>
+    <button id="tabConciertos">Conciertos</button>
+  </nav>
+
+  <!-- ══════════ Página 1: fotos y vídeos ══════════ -->
+  <div id="paginaMedios" class="pagina">
+    <section>
+      <p class="nota">
+        Imágenes: webp, jpg, png, gif, avif · Vídeos: mp4, webm, mov (máx. ~95 MB por archivo).
+      </p>
+      <div class="fila">
+        <button id="btnElegir" class="secundario">Elegir archivos…</button>
+        <button id="btnSubir">Subir</button>
+        <button id="btnActualizar" class="secundario">Actualizar listas</button>
+      </div>
+      <div id="seleccion">Ningún archivo seleccionado.</div>
+      <div class="mensaje" id="mensaje"></div>
+    </section>
+
+    <section>
+      <h2>Imágenes en el carrusel</h2>
+      <ul class="lista" id="listaImagenes"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+
+    <section>
+      <h2>Vídeos en el carrusel</h2>
+      <ul class="lista" id="listaVideos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+  </div>
+
+  <!-- ══════════ Página 2: conciertos ══════════ -->
+  <div id="paginaConciertos" class="pagina oculta">
+    <section>
+      <h2>Añadir concierto</h2>
+      <div class="grid2">
+        <div>
+          <label for="cFecha">Fecha *</label>
+          <input type="date" id="cFecha">
+        </div>
+        <div>
+          <label for="cHora">Hora</label>
+          <input type="time" id="cHora">
+        </div>
+      </div>
+
+      <label for="cTitulo">Título *</label>
+      <input type="text" id="cTitulo" placeholder="p. ej. Concierto de Navidad">
+
+      <label for="cLugar">Lugar *</label>
+      <input type="text" id="cLugar" placeholder="p. ej. Iglesia de San Nicolás · Pamplona">
+
+      <div class="grid2">
+        <div>
+          <label for="cTipo">Tipo *</label>
+          <input type="text" list="tipos" id="cTipo" value="Concierto">
+          <datalist id="tipos">
+            <option value="Concierto"></option>
+            <option value="Colaboración"></option>
+            <option value="Destacado"></option>
+          </datalist>
+        </div>
+        <div>
+          <label for="cSeccion">Sección de la web</label>
+          <select id="cSeccion">
+            <option value="proximos">Próximos conciertos</option>
+            <option value="destacados">Conciertos destacados (pasados)</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="cDescripcion">Descripción</label>
+      <input type="text" id="cDescripcion" placeholder="Opcional">
+
+      <label class="check"><input type="checkbox" id="cDestacado"> Resaltar en la lista de próximos</label>
+
+      <div class="fila">
+        <button id="btnAnadirConcierto">Añadir concierto</button>
+        <button id="btnActualizarAgenda" class="secundario">Actualizar listas</button>
+      </div>
+      <div class="mensaje" id="mensajeConcierto"></div>
+    </section>
+
+    <section>
+      <h2>Próximos conciertos</h2>
+      <ul class="lista" id="listaProximos"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+
+    <section>
+      <h2>Conciertos destacados</h2>
+      <ul class="lista" id="listaDestacados"><li class="vacio">Configura la web y guarda para cargar la lista.</li></ul>
+    </section>
+  </div>
+</main>
+
+<!-- La CSP (default-src 'self') bloquea scripts inline: el código vive en renderer.js -->
+<script src="renderer.js" defer></script>
+</body>
+</html>

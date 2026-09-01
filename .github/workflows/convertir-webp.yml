@@ -1,0 +1,163 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  .github/workflows/convertir-webp.yml — Coro Saudade de Pamplona
+#
+#  Se activa cuando Apps Script sube archivos a staging/ o videos/carrusel/.
+#
+#  Apps Script hace el trabajo de limpieza ANTES de subir:
+#    · Vacía staging/, carrusel/ y videos/ en GitHub
+#    · Luego sube todo desde Drive
+#
+#  Este workflow SOLO convierte — nunca borra carpetas:
+#    1. Convierte cada imagen de staging/ a WebP → carrusel/
+#    2. Borra los originales de staging/ (ya procesados)
+#    3. Reconstruye assets/carrusel.json desde disco
+#    4. Commit y push con reintento si hay conflicto de rama
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Actualizar carrusel (WebP + JSON)
+
+on:
+  push:
+    paths:
+      - 'assets/images/staging/**'
+      - 'assets/videos/carrusel/**'
+  workflow_dispatch:
+
+# Un solo run a la vez por rama. Si llega un push mientras hay un run activo,
+# cancela el anterior y ejecuta el nuevo (que tiene el estado más reciente).
+concurrency:
+  group: carrusel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar sharp
+        run: npm install sharp
+
+      - name: Escribir script de conversión
+        run: |
+          cat > ./convertir.js << 'JSEOF'
+          const sharp = require('sharp');
+          const fs    = require('fs');
+          const path  = require('path');
+
+          const STAGING  = 'assets/images/staging';
+          const CARRUSEL = 'assets/images/carrusel';
+          const VIDEOS   = 'assets/videos/carrusel';
+          const JSON_OUT = 'assets/carrusel.json';
+          const QUALITY  = 82;
+
+          const EXT_IMG = /\.(jpe?g|png|tiff?|bmp|gif|avif)$/i;
+          const EXT_VID = /\.(mp4|mov|avi|webm|mkv|m4v)$/i;
+          const SKIP    = /^\.gitkeep$/i;
+
+          function listar(carpeta, regex) {
+            if (!fs.existsSync(carpeta)) return [];
+            return fs.readdirSync(carpeta)
+              .filter(f => regex.test(f) && !SKIP.test(f))
+              .sort();
+          }
+
+          async function main() {
+            // Apps Script ya vació staging/ carrusel/ y videos/ antes de subir.
+            // Este workflow solo convierte — nunca borra nada.
+            [STAGING, CARRUSEL, VIDEOS].forEach(d => fs.mkdirSync(d, { recursive: true }));
+
+            // ── PASO 1: Convertir todas las imágenes de staging a WebP ────────
+            const enStaging = listar(STAGING, EXT_IMG);
+            console.log('Imágenes en staging: ' + enStaging.length);
+
+            if (enStaging.length === 0) {
+              console.log('Sin imágenes en staging. Solo actualizando carrusel.json.');
+            }
+
+            for (const archivo of enStaging) {
+              const entrada    = path.join(STAGING, archivo);
+              const nombreBase = path.basename(archivo, path.extname(archivo));
+              const salida     = path.join(CARRUSEL, nombreBase + '.webp');
+
+              try {
+                await sharp(entrada).webp({ quality: QUALITY }).toFile(salida);
+                const orig = fs.statSync(entrada).size;
+                const webp = fs.statSync(salida).size;
+                const pct  = Math.round((1 - webp / orig) * 100);
+                console.log('  OK ' + archivo + ' → ' + nombreBase + '.webp (' + pct + '% más ligero)');
+              } catch (err) {
+                console.error('  ERR convirtiendo ' + archivo + ': ' + err.message);
+              }
+
+              // Borrar el original del staging una vez convertido
+              fs.unlinkSync(entrada);
+            }
+
+            // ── PASO 2: Reconstruir carrusel.json desde disco ─────────────────
+            // Fuente de verdad = lo que existe físicamente en carrusel/ y videos/
+            const fotos  = listar(CARRUSEL, /\.webp$/i);
+            const videos = listar(VIDEOS, EXT_VID);
+
+            const json = { images: fotos, videos: videos };
+            fs.writeFileSync(JSON_OUT, JSON.stringify(json, null, 2));
+
+            console.log('\ncarrusel.json actualizado:');
+            console.log('  images (' + fotos.length + '): ' + fotos.join(', '));
+            console.log('  videos (' + videos.length + '): ' + videos.join(', '));
+          }
+
+          main().catch(err => { console.error(err); process.exit(1); });
+          JSEOF
+
+      - name: Ejecutar conversión
+        run: |
+          node ./convertir.js
+          rm ./convertir.js
+
+      - name: Commit y push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # -A para capturar tanto añadidos como borrados del disco
+          git add -A \
+            assets/images/carrusel/ \
+            assets/images/staging/ \
+            assets/videos/carrusel/ \
+            assets/carrusel.json
+
+          if git diff --cached --quiet; then
+            echo "Sin cambios que commitear."
+            exit 0
+          fi
+
+          NFOTOS=$(git diff --cached --name-only --diff-filter=A | grep -c "images/carrusel/.*\.webp" || true)
+          NVIDEOS=$(git diff --cached --name-only | grep -c "videos/carrusel/" || true)
+          git commit -m "[auto] ${NFOTOS} foto(s) WebP + ${NVIDEOS} video(s) — carrusel.json ok"
+
+          # Reintentar push hasta 3 veces con rebase si la rama avanzó mientras
+          # el workflow estaba ejecutándose (push concurrente de Apps Script).
+          for i in 1 2 3; do
+            if git push; then
+              echo "Push completado (intento ${i})."
+              break
+            fi
+            if [ "$i" -eq 3 ]; then
+              echo "ERROR: push fallido tras 3 intentos." >&2
+              exit 1
+            fi
+            echo "Push rechazado. Rebase y reintentando (${i}/3)..."
+            git pull --rebase origin ${{ github.ref_name }}
+          done
